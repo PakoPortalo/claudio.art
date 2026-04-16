@@ -136,7 +136,7 @@
     {% endif %}
 
     {% if request.page_type == 'index' %}
-      <script src="{{ 'claudio-ripple.js' | asset_url }}" defer></script>
+      <script src="{{ 'claudio-ripple.js' | asset_url }}" type="module"></script>
     {% endif %}
   </body>
 </html>

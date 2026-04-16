@@ -1,0 +1,101 @@
+<div class="fluid-hero" style="width:100%;height:{{ section.settings.height }}vh;position:relative;background:#070410;">
+  <canvas id="claudio-fluid-canvas" style="display:block;width:100%;height:100%;"></canvas>
+</div>
+
+<script type="module">
+  import { FluidText } from '{{ 'claudio-fluid.js' | asset_url }}';
+
+  const canvas = document.getElementById('claudio-fluid-canvas');
+
+  const fluid = new FluidText(canvas, ['CLAUDIO'], {
+    FONT_SCALE:    {{ section.settings.font_scale | divided_by: 100.0 }},
+    BG:            '{{ section.settings.bg_color }}',
+    DISTORT:       {{ section.settings.distort | divided_by: 1000.0 }},
+    SPLAT_RADIUS:  {{ section.settings.splat_radius | divided_by: 100000.0 }},
+    SPLAT_FORCE:   {{ section.settings.splat_force }},
+    VELOCITY_DISS: {{ section.settings.velocity_diss | divided_by: 100.0 }},
+  });
+
+  window.addEventListener('resize', () => fluid.resize());
+
+  let last = performance.now();
+  (function loop(now) {
+    requestAnimationFrame(loop);
+    const dt = Math.min((now - last) / 1000, 1 / 30);
+    last = now;
+    fluid.tick(dt);
+  })(performance.now());
+</script>
+
+{% schema %}
+{
+  "name": "Fluid Hero",
+  "settings": [
+    {
+      "type": "range",
+      "id": "height",
+      "label": "Altura (vh)",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "default": 100
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Color de fondo",
+      "default": "#070410"
+    },
+    {
+      "type": "range",
+      "id": "font_scale",
+      "label": "Tamaño del texto (%)",
+      "min": 5,
+      "max": 40,
+      "step": 1,
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "distort",
+      "label": "Distorsión (x1000)",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "splat_radius",
+      "label": "Radio del efecto (x100000)",
+      "min": 50,
+      "max": 500,
+      "step": 10,
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "splat_force",
+      "label": "Fuerza del efecto",
+      "min": 1000,
+      "max": 8000,
+      "step": 500,
+      "default": 4000
+    },
+    {
+      "type": "range",
+      "id": "velocity_diss",
+      "label": "Disipación velocidad (%)",
+      "min": 70,
+      "max": 99,
+      "step": 1,
+      "default": 90
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fluid Hero"
+    }
+  ]
+}
+{% endschema %}
