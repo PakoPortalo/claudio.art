@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Navbar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #000; }
+
+    .navbar {
+      width: 100%;
+      background: var(--accent);
+      transition: background 3s ease;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 0 40px;
+      height: 52px;
+    }
+    .navbar__logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #000;
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      text-transform: lowercase;
+    }
+    .navbar__links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      justify-content: flex-end;
+    }
+    .navbar__links a {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #000;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.85;
+      transition: opacity 0.15s;
+    }
+    .navbar__links a:hover { opacity: 1; font-weight: 700; }
+
+    .navbar__swatches {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .swatch:hover  { transform: scale(1.2); }
+    .swatch.active { border-color: #000; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a class="navbar__logo" href="#">claudio</a>
+    <ul class="navbar__links">
+      <li><a href="#">Obra</a></li>
+      <li><a href="#">Tienda</a></li>
+      <li><a href="#">Sobre</a></li>
+    </ul>
+    <div class="navbar__swatches">
+      <div class="swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
+      <div class="swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
+      <div class="swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
+      <div class="swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
+      <div class="swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
+    </div>
+  </nav>
+
+  <script>
+    document.querySelectorAll('.swatch').forEach(swatch => {
+      swatch.addEventListener('click', () => {
+        document.documentElement.style.setProperty('--accent', swatch.dataset.color);
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+        swatch.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
