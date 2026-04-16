@@ -36,6 +36,12 @@
       background_image: section.settings.background_image,
       background_image_position: section.settings.background_image_position
     %}
+    {% if request.page_type == 'index' and section.index == 1 %}
+      <video class="claudio-underground-video" autoplay muted loop playsinline>
+        <source src="{{ 'underground-video.mp4' | asset_url }}" type="video/mp4">
+      </video>
+      <div class="claudio-underground-overlay"></div>
+    {% endif %}
   </div>
 
   <div
@@ -93,5 +99,22 @@
 
   .custom-section-content {
     z-index: var(--layer-flat);
+  }
+
+  .claudio-underground-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+  }
+
+  .claudio-underground-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: #c9584c;
+    mix-blend-mode: multiply;
+    z-index: 1;
   }
 {% endstylesheet %}

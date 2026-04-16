@@ -148,8 +148,8 @@
       "scheme-3": {
         "settings": {
           "background": "#c9584c",
-          "foreground_heading": "#000000",
-          "foreground": "#000000",
+          "foreground_heading": "#ffffff",
+          "foreground": "#ffffff",
           "primary": "#2b0101",
           "primary_hover": "#000000",
           "border": "#2b0101",
@@ -428,8 +428,8 @@
         "scheme-3": {
           "settings": {
             "background": "#c9584c",
-            "foreground_heading": "#000000",
-            "foreground": "#000000",
+            "foreground_heading": "#ffffff",
+            "foreground": "#ffffff",
             "primary": "#2b0101",
             "primary_hover": "#000000",
             "border": "#2b0101",
