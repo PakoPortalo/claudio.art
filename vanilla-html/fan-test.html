@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Fan test</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    #fan-wrapper {
+      width: 1100px;
+      height: 520px;
+      perspective: 1100px;
+      perspective-origin: 50% 58%;
+    }
+
+    #fan-stage {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .fan-card {
+      position: absolute;
+      width: 272px;
+      height: 380px;
+      left: 50%;
+      top: 50%;
+      margin-left: -136px;
+      margin-top: -190px;
+      transform-origin: 50% 115%;
+      transform-style: preserve-3d;
+    }
+
+    .fan-painting {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transform-origin: 50% 50%;
+      will-change: transform;
+    }
+
+    .face {
+      position: absolute;
+      width: 100%; height: 100%;
+      backface-visibility: hidden;
+    }
+    .face--front {
+      transform: translateZ(3px);
+      overflow: hidden;
+      background: #fff;
+    }
+    .face--front img {
+      width: 100%; height: 100%;
+      object-fit: contain; display: block;
+    }
+    .face--back {
+      transform: rotateY(180deg) translateZ(3px);
+      overflow: hidden;
+    }
+    .face--back img {
+      width: 100%; height: 100%;
+      object-fit: contain; display: block;
+    }
+    .face--left {
+      position: absolute;
+      width: 6px; height: 100%; top: 0; left: 0;
+      transform-origin: left center;
+      transform: rotateY(-90deg) translateX(-3px);
+      background-image: url('../assets/producto-claudio/back.jpg');
+      background-size: cover; background-position: center;
+    }
+    .face--right {
+      position: absolute;
+      width: 6px; height: 100%; top: 0; right: 0;
+      transform-origin: right center;
+      transform: rotateY(90deg) translateX(3px);
+      background-image: url('../assets/producto-claudio/back.jpg');
+      background-size: cover; background-position: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="fan-wrapper">
+    <div id="fan-stage">
+
+      <div class="fan-card">
+        <div class="fan-painting" data-i="0">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-naranja.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting" data-i="1">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-rojo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting" data-i="2">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-azul.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting" data-i="3">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-amarillo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting" data-i="4">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-verde.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const FAN = [
+      { tx: -380, tz: -40, rz: -12 },
+      { tx: -200, tz: -20, rz:  -6 },
+      { tx:    0, tz:   0, rz:   0 },
+      { tx:  200, tz: -20, rz:   6 },
+      { tx:  380, tz: -40, rz:  12 },
+    ];
+
+    const MAX_RY = 3;    // grados máximos — limitado para evitar intersecciones
+    const ZONE   = 80;   // px desde el centro de la carta donde actúa el tracking
+    const LERP_K = 0.07;
+
+    const cards    = document.querySelectorAll('.fan-card');
+    const paintings = document.querySelectorAll('.fan-painting');
+    const currRY   = [0, 0, 0, 0, 0];
+    let mouseX     = window.innerWidth / 2;
+
+    document.addEventListener('mousemove', e => { mouseX = e.clientX; });
+
+    cards.forEach((card, i) => {
+      const { tx, tz, rz } = FAN[i];
+      card.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateZ(${rz}deg)`;
+    });
+
+    function lerp(a, b, k) { return a + (b - a) * k; }
+
+    function tick() {
+      requestAnimationFrame(tick);
+
+      paintings.forEach((painting, i) => {
+        const rect        = cards[i].getBoundingClientRect();
+        const cardCenterX = rect.left + rect.width / 2;
+        const dx          = mouseX - cardCenterX;
+
+        // Clamp a ZONE px: fuera del radio, rotación máxima fija
+        const target = Math.max(-MAX_RY, Math.min(MAX_RY, (dx / ZONE) * MAX_RY));
+
+        currRY[i] = lerp(currRY[i], target, LERP_K);
+        painting.style.transform = `rotateY(${currRY[i].toFixed(2)}deg)`;
+      });
+    }
+
+    tick();
+  </script>
+
+</body>
+</html>
