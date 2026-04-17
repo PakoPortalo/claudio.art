@@ -145,6 +145,161 @@
       opacity: 0.70;
       pointer-events: none;
     }
+    /* ─── DROP ───────────────────────────────────────────────────── */
+    .drop {
+      min-height: 100vh;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+    }
+    .drop__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .drop__painting-outer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .drop__painting-scene { perspective: 900px; perspective-origin: 50% 50%; }
+    .drop__painting {
+      width: 300px;
+      height: 380px;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: grab;
+      user-select: none;
+    }
+    .drop__painting:active { cursor: grabbing; }
+    .drop__painting.is-paused::after {
+      content: '▶';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(0,0,0,0.25);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .drop[data-state="agotado"] .drop__painting {
+      filter: saturate(0) brightness(0.7);
+    }
+    .painting__face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    .painting__face--front { transform: translateZ(10px); overflow: hidden; background: #e0d8ce; }
+    .painting__face--front img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .painting__face--back {
+      transform: rotateY(180deg) translateZ(10px);
+      background: repeating-linear-gradient(180deg,transparent 0px,transparent 22px,rgba(0,0,0,0.05) 22px,rgba(0,0,0,0.05) 23px),
+                  linear-gradient(175deg, #cdb38d 0%, #BCA17F 45%, #a88a68 100%);
+    }
+    .painting__face--left {
+      position: absolute; width: 20px; height: 100%; top: 0; left: 0;
+      transform-origin: left center; transform: rotateY(-90deg) translateX(-10px);
+      background: repeating-linear-gradient(180deg,transparent 0px,transparent 22px,rgba(0,0,0,0.07) 22px,rgba(0,0,0,0.07) 23px),
+                  linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+    }
+    .painting__face--right {
+      position: absolute; width: 20px; height: 100%; top: 0; right: 0;
+      transform-origin: right center; transform: rotateY(90deg) translateX(10px);
+      background: repeating-linear-gradient(180deg,transparent 0px,transparent 22px,rgba(0,0,0,0.07) 22px,rgba(0,0,0,0.07) 23px),
+                  linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+    }
+    .drop__shadow {
+      width: 300px; height: 60px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 50%;
+      filter: blur(12px);
+      margin-top: 24px;
+      pointer-events: none;
+    }
+    .drop__info { display: flex; flex-direction: column; }
+    .drop__edition {
+      font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 28px; transition: color 3s ease;
+    }
+    .drop__divider { width: 40px; height: 1px; background: rgba(0,0,0,0.12); margin-bottom: 28px; }
+    .drop__state { display: none; }
+    .drop__state.is-active { display: block; }
+    .drop__countdown-label {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.2em; text-transform: uppercase; color: rgba(0,0,0,0.3); margin-bottom: 12px;
+    }
+    .drop__timer {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 5.5rem;
+      line-height: 1; letter-spacing: -0.02em; color: #000; margin-bottom: 8px;
+    }
+    .drop__timer-units {
+      display: flex; font-family: 'Inter', sans-serif; font-size: 0.65rem;
+      font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(0,0,0,0.3); margin-bottom: 36px;
+    }
+    .drop__timer-unit { flex: 1; max-width: 88px; }
+    .drop__countdown-note {
+      font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.45);
+    }
+    .drop__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05;
+      text-transform: uppercase; color: #000; margin-bottom: 20px;
+    }
+    .drop__title .accent { color: var(--accent); transition: color 3s ease; }
+    .drop__body {
+      font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.5); margin-bottom: 36px; max-width: 340px;
+    }
+    .drop__price {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 2.2rem; color: #000; margin-bottom: 32px;
+    }
+    .drop__btn {
+      display: inline-block; background: var(--accent); color: #000;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 16px 44px;
+      border: none; cursor: pointer; transition: background 3s ease, opacity 0.2s;
+      align-self: flex-start;
+    }
+    .drop__btn:hover { opacity: 0.8; }
+    .drop__agotado-title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05;
+      text-transform: uppercase; color: rgba(0,0,0,0.2); margin-bottom: 20px;
+    }
+    .drop__agotado-body {
+      font-family: 'Inter', sans-serif; font-size: 0.88rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.35); margin-bottom: 36px; max-width: 340px;
+    }
+    .drop__waitlist-label {
+      font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; color: rgba(0,0,0,0.35); margin-bottom: 12px;
+    }
+    .drop__waitlist { display: flex; max-width: 380px; }
+    .drop__waitlist input {
+      flex: 1; background: transparent; border: 1px solid rgba(0,0,0,0.15); border-right: none;
+      padding: 12px 16px; font-family: 'Inter', sans-serif; font-size: 0.8rem;
+      font-weight: 300; color: #000; outline: none;
+    }
+    .drop__waitlist input::placeholder { color: rgba(0,0,0,0.25); }
+    .drop__waitlist button {
+      background: transparent; border: 1px solid rgba(0,0,0,0.15); padding: 12px 20px;
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase; color: rgba(0,0,0,0.4); cursor: pointer;
+    }
+    .drop__waitlist button:hover { color: #000; border-color: #000; }
   </style>
 </head>
 <body>
@@ -182,10 +337,70 @@
     </div>
   </section>
 
-  <!-- ═══ SIGUIENTE MÓDULO (placeholder) ═══════════════════════ -->
-  <div id="next" style="height:100vh; background:#000; display:flex; align-items:center; justify-content:center;">
-    <p style="color:rgba(255,255,255,0.15); font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase;">próximo módulo</p>
-  </div>
+  <!-- ═══ DROP ═════════════════════════════════════════════════ -->
+  <section class="drop" id="next" data-state="disponible">
+    <div class="drop__inner">
+
+      <div class="drop__painting-outer">
+        <div class="drop__painting-scene">
+          <div class="drop__painting" id="drop-painting">
+            <div class="painting__face painting__face--front">
+              <img src="../assets/claudio-cuadro.JPG" alt="Claudio original">
+            </div>
+            <div class="painting__face painting__face--back"></div>
+            <div class="painting__face painting__face--left"></div>
+            <div class="painting__face painting__face--right"></div>
+          </div>
+        </div>
+        <div class="drop__shadow" id="drop-shadow"></div>
+      </div>
+
+      <div class="drop__info">
+        <p class="drop__edition">Edición limitada · 2026</p>
+        <div class="drop__divider"></div>
+
+        <div class="drop__state" id="drop-state-countdown">
+          <p class="drop__countdown-label">Drop en</p>
+          <div class="drop__timer" id="drop-timer">00:00:00</div>
+          <div class="drop__timer-units">
+            <span class="drop__timer-unit">horas</span>
+            <span class="drop__timer-unit">min</span>
+            <span class="drop__timer-unit">seg</span>
+          </div>
+          <p class="drop__countdown-note">
+            El próximo drop llega el <strong id="drop-date-label">20 de abril a las 17:00</strong>.<br>
+            Hazte un hueco.
+          </p>
+        </div>
+
+        <div class="drop__state is-active" id="drop-state-disponible">
+          <h2 class="drop__title">
+            Quedan <span class="accent">7</span> claudios<br>disponibles
+          </h2>
+          <p class="drop__body">
+            No esperes en hacerte con el tuyo.<br>
+            Cada pieza es única, pintada a mano.
+          </p>
+          <p class="drop__price">€ 150</p>
+          <button class="drop__btn">¡Quiero el mío!</button>
+        </div>
+
+        <div class="drop__state" id="drop-state-agotado">
+          <h2 class="drop__agotado-title">Claudios<br>agotados</h2>
+          <p class="drop__agotado-body">
+            Este drop se acabó. El siguiente llega pronto.<br>
+            Déjanos tu email y te avisamos antes que nadie.
+          </p>
+          <p class="drop__waitlist-label">Avísame del próximo drop</p>
+          <div class="drop__waitlist">
+            <input type="email" placeholder="tu@email.com" />
+            <button>Apúntame</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <script type="importmap">
   { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }
@@ -303,6 +518,58 @@
         swatch.classList.add('active');
       });
     });
+  </script>
+
+  <script>
+    /* ─── DROP: pintura 3D ──────────────────────────────────────── */
+    const dropPainting = document.getElementById('drop-painting');
+    const dropShadow   = document.getElementById('drop-shadow');
+
+    let dropAngle = 0, dropPlaying = true, dropDragging = false;
+    let dropHasDragged = false, dropStartX = 0, dropStartAngle = 0;
+    let dropLastTime = performance.now();
+
+    const DROP_RPM = 6, DROP_DEG_S = DROP_RPM * 6;
+    const DROP_BOB_AMP = 4, DROP_BOB_FREQ = 0.25;
+
+    function dropAnimate(now) {
+      requestAnimationFrame(dropAnimate);
+      const dt = Math.min((now - dropLastTime) / 1000, 0.05);
+      dropLastTime = now;
+
+      if (dropPlaying && !dropDragging) dropAngle += DROP_DEG_S * dt;
+
+      const bobY = Math.sin(now / 1000 * DROP_BOB_FREQ * Math.PI * 2) * DROP_BOB_AMP;
+      dropPainting.style.transform = `translateY(${bobY.toFixed(2)}px) rotateY(${dropAngle.toFixed(2)}deg)`;
+
+      const faceOn = Math.abs(Math.cos(dropAngle * Math.PI / 180));
+      dropShadow.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
+    }
+    requestAnimationFrame(dropAnimate);
+
+    dropPainting.addEventListener('click', () => {
+      if (dropHasDragged) return;
+      dropPlaying = !dropPlaying;
+      dropPainting.classList.toggle('is-paused', !dropPlaying);
+    });
+
+    dropPainting.addEventListener('mousedown', e => { e.preventDefault(); dropDragging = true; dropHasDragged = false; dropStartX = e.clientX; dropStartAngle = dropAngle; dropPainting.style.cursor = 'grabbing'; });
+    document.addEventListener('mousemove', e => { if (!dropDragging) return; const d = e.clientX - dropStartX; if (Math.abs(d) > 4) dropHasDragged = true; dropAngle = dropStartAngle + d * 0.45; });
+    document.addEventListener('mouseup', () => { dropDragging = false; dropPainting.style.cursor = 'grab'; });
+    dropPainting.addEventListener('touchstart', e => { e.preventDefault(); dropDragging = true; dropHasDragged = false; dropStartX = e.touches[0].clientX; dropStartAngle = dropAngle; }, { passive: false });
+    document.addEventListener('touchmove', e => { if (dropDragging) { e.preventDefault(); const d = e.touches[0].clientX - dropStartX; if (Math.abs(d) > 4) dropHasDragged = true; dropAngle = dropStartAngle + d * 0.45; } }, { passive: false });
+    document.addEventListener('touchend', () => { dropDragging = false; });
+
+    /* ─── DROP: countdown ───────────────────────────────────────── */
+    const DROP_TARGET = new Date('2026-04-20T17:00:00');
+    function updateDropTimer() {
+      const diff = DROP_TARGET - new Date();
+      if (diff <= 0) { document.getElementById('drop-timer').textContent = '00:00:00'; return; }
+      const p = n => String(Math.floor(n)).padStart(2,'0');
+      document.getElementById('drop-timer').textContent = `${p(diff/3600000)}:${p(diff%3600000/60000)}:${p(diff%60000/1000)}`;
+    }
+    updateDropTimer();
+    setInterval(updateDropTimer, 1000);
   </script>
 </body>
 </html>

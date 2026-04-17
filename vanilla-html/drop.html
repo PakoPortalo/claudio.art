@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Módulo Drop</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #fff; color: #000; }
+
+    /* ─── PREVIEW CONTROLS ──────────────────────────────────────── */
+    .preview-controls {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 100;
+      display: flex;
+      gap: 8px;
+    }
+    .preview-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border: 1px solid rgba(0,0,0,0.2);
+      background: transparent;
+      color: rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .preview-btn:hover,
+    .preview-btn.active { border-color: #000; color: #000; background: rgba(0,0,0,0.05); }
+
+    /* ─── DROP MODULE ───────────────────────────────────────────── */
+    .drop {
+      min-height: 100vh;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 40px;
+    }
+
+    .drop__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    /* ─── PINTURA ────────────────────────────────────────────────── */
+
+    /* Wrapper externo: flex column, SIN perspectiva — la sombra vive aquí */
+    .drop__painting-outer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* Scene: solo la perspectiva 3D, nada más */
+    .drop__painting-scene {
+      perspective: 900px;
+      perspective-origin: 50% 50%;
+    }
+
+    .drop__painting {
+      width: 300px;
+      height: 380px;
+      position: relative;
+      transform-style: preserve-3d;
+      cursor: grab;
+      user-select: none;
+      /* transform viene 100% desde JS */
+    }
+    .drop__painting:active { cursor: grabbing; }
+
+    /* Indicador sutil de pausa */
+    .drop__painting.is-paused::after {
+      content: '▶';
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: rgba(0,0,0,0.25);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    /* Estado agotado — desatura y para */
+    .drop[data-state="agotado"] .drop__painting {
+      filter: saturate(0) brightness(0.7);
+    }
+
+    .painting__face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+
+    /* Profundidad del bloque: 20px  ← cambia este valor y actualiza los cuatro D/2 abajo */
+    .painting__face--front {
+      transform: translateZ(10px); /* D/2 */
+      overflow: hidden;
+      background: #e0d8ce;
+    }
+    .painting__face--front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .painting__face--back {
+      transform: rotateY(180deg) translateZ(10px); /* D/2 */
+      background:
+        repeating-linear-gradient(
+          180deg,
+          transparent 0px,
+          transparent 22px,
+          rgba(0,0,0,0.05) 22px,
+          rgba(0,0,0,0.05) 23px
+        ),
+        linear-gradient(175deg, #cdb38d 0%, #BCA17F 45%, #a88a68 100%);
+    }
+
+    /* Cantos — fórmula: rotateY(±90deg) translateX(∓D/2)
+       Si quieres cambiar el grosor, cambia:
+         · width en left y right  →  D
+         · translateX(±...) en left y right  →  D/2
+         · translateZ(...) en front y back  →  D/2
+       Ejemplo: D=40 → width:40px, translateX(±20px), translateZ(20px) */
+    .painting__face--left {
+      position: absolute;
+      width: 20px; /* D */
+      height: 100%;
+      top: 0;
+      left: 0;
+      transform-origin: left center;
+      transform: rotateY(-90deg) translateX(-10px); /* translateX(-D/2) */
+      background:
+        repeating-linear-gradient(
+          180deg,
+          transparent 0px,
+          transparent 22px,
+          rgba(0,0,0,0.07) 22px,
+          rgba(0,0,0,0.07) 23px
+        ),
+        linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+    }
+    .painting__face--right {
+      position: absolute;
+      width: 20px; /* D */
+      height: 100%;
+      top: 0;
+      right: 0;
+      transform-origin: right center;
+      transform: rotateY(90deg) translateX(10px); /* translateX(D/2) */
+      background:
+        repeating-linear-gradient(
+          180deg,
+          transparent 0px,
+          transparent 22px,
+          rgba(0,0,0,0.07) 22px,
+          rgba(0,0,0,0.07) 23px
+        ),
+        linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+    }
+
+    /* Sombra tosca — muy visible para confirmar que existe */
+    .drop__shadow {
+      width: 300px;
+      height: 60px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 50%;
+      filter: blur(12px);
+      margin-top: 24px;
+      pointer-events: none;
+    }
+
+    /* ─── INFO ──────────────────────────────────────────────────── */
+    .drop__info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drop__edition {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      transition: color 3s ease;
+    }
+
+    .drop__divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(0,0,0,0.12);
+      margin-bottom: 28px;
+    }
+
+    .drop__state { display: none; }
+    .drop__state.is-active { display: block; }
+
+    /* ─── CUENTA ATRÁS ──────────────────────────────────────────── */
+    .drop__countdown-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.3);
+      margin-bottom: 12px;
+    }
+
+    .drop__timer {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 5.5rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #000;
+      margin-bottom: 8px;
+    }
+
+    .drop__timer-units {
+      display: flex;
+      gap: 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.3);
+      margin-bottom: 36px;
+    }
+    .drop__timer-unit { flex: 1; max-width: 88px; }
+
+    .drop__countdown-note {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(0,0,0,0.45);
+    }
+
+    /* ─── DISPONIBLE ────────────────────────────────────────────── */
+    .drop__title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      color: #000;
+      margin-bottom: 20px;
+    }
+    .drop__title .accent { color: var(--accent); transition: color 3s ease; }
+
+    .drop__body {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(0,0,0,0.5);
+      margin-bottom: 36px;
+      max-width: 340px;
+    }
+
+    .drop__price {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 2.2rem;
+      color: #000;
+      margin-bottom: 32px;
+    }
+
+    .drop__btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 44px;
+      border: none;
+      cursor: pointer;
+      transition: background 3s ease, opacity 0.2s;
+      align-self: flex-start;
+    }
+    .drop__btn:hover { opacity: 0.8; }
+
+    /* ─── AGOTADO ───────────────────────────────────────────────── */
+    .drop__agotado-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+
+    .drop__agotado-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(0,0,0,0.35);
+      margin-bottom: 36px;
+      max-width: 340px;
+    }
+
+    .drop__waitlist-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.35);
+      margin-bottom: 12px;
+    }
+
+    .drop__waitlist {
+      display: flex;
+      max-width: 380px;
+    }
+    .drop__waitlist input {
+      flex: 1;
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.15);
+      border-right: none;
+      padding: 12px 16px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 300;
+      color: #000;
+      outline: none;
+    }
+    .drop__waitlist input::placeholder { color: rgba(0,0,0,0.25); }
+    .drop__waitlist input:focus { border-color: rgba(0,0,0,0.4); }
+    .drop__waitlist button {
+      background: transparent;
+      border: 1px solid rgba(0,0,0,0.15);
+      padding: 12px 20px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .drop__waitlist button:hover { color: #000; border-color: #000; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ PREVIEW CONTROLS ════════════════════════════════════════ -->
+  <div class="preview-controls">
+    <button class="preview-btn" onclick="setState('countdown')">Cuenta atrás</button>
+    <button class="preview-btn active" onclick="setState('disponible')">Disponible</button>
+    <button class="preview-btn" onclick="setState('agotado')">Agotado</button>
+  </div>
+
+  <!-- ═══ DROP MODULE ══════════════════════════════════════════════ -->
+  <section class="drop" id="drop" data-state="disponible">
+    <div class="drop__inner">
+
+      <!-- Pintura 3D + sombra en el suelo -->
+      <div class="drop__painting-outer">
+        <div class="drop__painting-scene">
+          <div class="drop__painting" id="painting">
+            <div class="painting__face painting__face--front">
+              <img src="../assets/claudio-cuadro.JPG" alt="Claudio original">
+            </div>
+            <div class="painting__face painting__face--back"></div>
+            <div class="painting__face painting__face--left"></div>
+            <div class="painting__face painting__face--right"></div>
+          </div>
+        </div>
+        <!-- Sombra fuera del contexto 3D: siempre visible en el "suelo" -->
+        <div class="drop__shadow" id="painting-shadow"></div>
+      </div>
+
+      <!-- Info -->
+      <div class="drop__info">
+        <p class="drop__edition">NUEVO DROP · 15 UNIDADES</p>
+        <div class="drop__divider"></div>
+
+        <!-- Estado: cuenta atrás -->
+        <div class="drop__state" id="state-countdown">
+          <p class="drop__countdown-label">Drop en</p>
+          <div class="drop__timer" id="timer-display">00:00:00</div>
+          <div class="drop__timer-units">
+            <span class="drop__timer-unit">horas</span>
+            <span class="drop__timer-unit">min</span>
+            <span class="drop__timer-unit">seg</span>
+          </div>
+          <p class="drop__countdown-note">
+            El próximo drop llega el <strong id="drop-date-label">20 de abril a las 17:00</strong>.<br>
+            Hazte un hueco.
+          </p>
+        </div>
+
+        <!-- Estado: disponible -->
+        <div class="drop__state is-active" id="state-disponible">
+          <h2 class="drop__title">
+            Quedan <span class="accent" id="stock-count">7</span> claudios<br>disponibles
+          </h2>
+          <p class="drop__body">
+            No esperes en hacerte con el tuyo.<br>
+            Cada pieza es única, pintada a mano.
+          </p>
+          <p class="drop__price">€ 150</p>
+          <button class="drop__btn">¡Quiero el mío!</button>
+        </div>
+
+        <!-- Estado: agotado -->
+        <div class="drop__state" id="state-agotado">
+          <h2 class="drop__agotado-title">
+            Claudios<br>agotados
+          </h2>
+          <p class="drop__agotado-body">
+            Este drop se acabó. El siguiente llega pronto.<br>
+            Déjanos tu email y te avisamos antes que nadie.
+          </p>
+          <p class="drop__waitlist-label">Avísame del próximo drop</p>
+          <div class="drop__waitlist">
+            <input type="email" placeholder="tu@email.com" />
+            <button>Apúntame</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Área de scroll para ver la sombra completa -->
+  <div style="height: 60vh; background: #fff;"></div>
+
+  <script>
+    /* ─── STATE SWITCHER ─────────────────────────────────────────── */
+    function setState(state) {
+      document.getElementById('drop').setAttribute('data-state', state);
+      document.querySelectorAll('.drop__state').forEach(el => el.classList.remove('is-active'));
+      document.getElementById('state-' + state).classList.add('is-active');
+      document.querySelectorAll('.preview-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', ['countdown','disponible','agotado'][i] === state);
+      });
+    }
+
+    /* ─── PAINTING CONTROLLER ───────────────────────────────────── */
+    const painting = document.getElementById('painting');
+    const shadow   = document.getElementById('painting-shadow');
+
+    let angle       = 0;      // grados de rotación Y actuales
+    let isPlaying   = true;   // auto-rotar
+    let isDragging  = false;
+    let hasDragged  = false;
+    let dragStartX  = 0;
+    let dragStartAngle = 0;
+    let lastTime    = performance.now();
+
+    const RPM = 6;            // revoluciones por minuto en auto-play
+    const DEG_PER_SEC = RPM * 360 / 60;
+    const BOB_AMP  = 4;       // px arriba/abajo (menos = más sutil)
+    const BOB_FREQ = 0.25;    // Hz (menos = más lento; 0.25 = un ciclo cada 4s)
+
+    function animate(now) {
+      requestAnimationFrame(animate);
+
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+
+      // Auto-rotación cuando no arrastramos y está en play
+      if (isPlaying && !isDragging) {
+        angle += DEG_PER_SEC * dt;
+      }
+
+      // Levitación vertical
+      const bobY = Math.sin(now / 1000 * BOB_FREQ * Math.PI * 2) * BOB_AMP;
+
+      // Aplica transform
+      painting.style.transform = `translateY(${bobY.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
+
+      // Sombra: se achica cuando el cuadro está de canto, se ensancha cuando está de frente
+      const cosA   = Math.cos(angle * Math.PI / 180);
+      const faceOn = Math.abs(cosA); // 1 = de frente, 0 = de canto
+      shadow.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
+    }
+
+    requestAnimationFrame(animate);
+
+    /* ─── CLICK: pausa / reanuda ─────────────────────────────────── */
+    painting.addEventListener('click', () => {
+      if (hasDragged) return; // ignora si fue un drag
+      isPlaying = !isPlaying;
+      painting.classList.toggle('is-paused', !isPlaying);
+    });
+
+    /* ─── DRAG: rotación manual ──────────────────────────────────── */
+    function onDragStart(x) {
+      isDragging   = true;
+      hasDragged   = false;
+      dragStartX   = x;
+      dragStartAngle = angle;
+      painting.style.cursor = 'grabbing';
+    }
+
+    function onDragMove(x) {
+      if (!isDragging) return;
+      const delta = x - dragStartX;
+      if (Math.abs(delta) > 4) hasDragged = true;
+      angle = dragStartAngle + delta * 0.45; // sensibilidad
+    }
+
+    function onDragEnd() {
+      if (!isDragging) return;
+      isDragging = false;
+      painting.style.cursor = 'grab';
+    }
+
+    // Mouse
+    painting.addEventListener('mousedown',  e => { e.preventDefault(); onDragStart(e.clientX); });
+    document.addEventListener('mousemove',  e => onDragMove(e.clientX));
+    document.addEventListener('mouseup',    () => onDragEnd());
+
+    // Touch
+    painting.addEventListener('touchstart', e => { e.preventDefault(); onDragStart(e.touches[0].clientX); }, { passive: false });
+    document.addEventListener('touchmove',  e => { if (isDragging) { e.preventDefault(); onDragMove(e.touches[0].clientX); } }, { passive: false });
+    document.addEventListener('touchend',   () => onDragEnd());
+
+    /* ─── COUNTDOWN ──────────────────────────────────────────────── */
+    const DROP_TARGET = new Date('2026-04-20T17:00:00');
+
+    function updateTimer() {
+      const diff = DROP_TARGET - new Date();
+      if (diff <= 0) { document.getElementById('timer-display').textContent = '00:00:00'; return; }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor(diff % 3600000 / 60000);
+      const s = Math.floor(diff % 60000 / 1000);
+      const p = n => String(n).padStart(2, '0');
+      document.getElementById('timer-display').textContent = `${p(h)}:${p(m)}:${p(s)}`;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+
+    const opts = { day: 'numeric', month: 'long' };
+    document.getElementById('drop-date-label').textContent =
+      DROP_TARGET.toLocaleDateString('es-ES', opts) + ' a las ' +
+      DROP_TARGET.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  </script>
+
+</body>
+</html>
