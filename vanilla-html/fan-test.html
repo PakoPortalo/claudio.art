@@ -10,9 +10,12 @@
       background: #fff;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 80px;
       overflow: hidden;
+      padding: 60px 0;
     }
 
     #fan-wrapper {
@@ -87,6 +90,21 @@
       background-image: url('../assets/producto-claudio/back.jpg');
       background-size: cover; background-position: center;
     }
+    /* Versión bloque */
+    #fan-wrapper-b {
+      width: 1100px;
+      height: 520px;
+      perspective: 1100px;
+      perspective-origin: 50% 58%;
+    }
+
+    #fan-stage-b {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
   </style>
 </head>
 <body>
@@ -142,6 +160,58 @@
     </div>
   </div>
 
+  <!-- ── Versión B: bloque entero ── -->
+  <div id="fan-wrapper-b">
+    <div id="fan-stage-b">
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-naranja.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-rojo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-azul.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-amarillo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-verde.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     const FAN = [
       { tx: -380, tz: -40, rz: -12 },
@@ -151,8 +221,8 @@
       { tx:  380, tz: -40, rz:  12 },
     ];
 
-    const MAX_RY = 3;    // grados máximos — limitado para evitar intersecciones
-    const ZONE   = 80;   // px desde el centro de la carta donde actúa el tracking
+    const MAX_RY = 4.5;    // grados máximos — limitado para evitar intersecciones
+    const ZONE   = 110;   // px desde el centro de la carta donde actúa el tracking
     const LERP_K = 0.07;
 
     const cards    = document.querySelectorAll('.fan-card');
@@ -186,6 +256,29 @@
     }
 
     tick();
+
+    // ── Versión B: bloque ──
+    const stageB   = document.getElementById('fan-stage-b');
+    const cardsB   = stageB.querySelectorAll('.fan-card');
+    const MAX_RY_B = 6;    // rotación máxima del bloque entero
+    const LERP_B   = 0.05;
+    let   currRY_B = 0;
+
+    cardsB.forEach((card, i) => {
+      const { tx, tz, rz } = FAN[i];
+      card.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateZ(${rz}deg)`;
+    });
+
+    function tickB() {
+      requestAnimationFrame(tickB);
+      const cx     = window.innerWidth / 2;
+      const dx     = mouseX - cx;
+      const target = Math.max(-MAX_RY_B, Math.min(MAX_RY_B, (dx / (window.innerWidth / 2)) * MAX_RY_B));
+      currRY_B = lerp(currRY_B, target, LERP_B);
+      stageB.style.transform = `rotateY(${currRY_B.toFixed(2)}deg)`;
+    }
+
+    tickB();
   </script>
 
 </body>
