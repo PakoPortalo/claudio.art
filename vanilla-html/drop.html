@@ -19,8 +19,12 @@
       right: 16px;
       z-index: 100;
       display: flex;
+      flex-direction: column;
       gap: 8px;
+      align-items: flex-end;
     }
+    .preview-controls__row { display: flex; gap: 8px; align-items: center; }
+
     .preview-btn {
       font-family: 'Inter', sans-serif;
       font-size: 0.65rem;
@@ -36,6 +40,16 @@
     }
     .preview-btn:hover,
     .preview-btn.active { border-color: #000; color: #000; background: rgba(0,0,0,0.05); }
+
+    .preview-swatch {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .preview-swatch:hover  { transform: scale(1.2); }
+    .preview-swatch.active { border-color: #000; }
 
     /* ─── DROP MODULE ───────────────────────────────────────────── */
     .drop {
@@ -57,33 +71,25 @@
     }
 
     /* ─── PINTURA ────────────────────────────────────────────────── */
-
-    /* Wrapper externo: flex column, SIN perspectiva — la sombra vive aquí */
     .drop__painting-outer {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0;
     }
-
-    /* Scene: solo la perspectiva 3D, nada más */
     .drop__painting-scene {
       perspective: 900px;
       perspective-origin: 50% 50%;
     }
-
     .drop__painting {
-      width: 300px;
+      width: 272px;
       height: 380px;
       position: relative;
       transform-style: preserve-3d;
       cursor: grab;
       user-select: none;
-      /* transform viene 100% desde JS */
     }
     .drop__painting:active { cursor: grabbing; }
 
-    /* Indicador sutil de pausa */
     .drop__painting.is-paused::after {
       content: '▶';
       position: absolute;
@@ -97,7 +103,6 @@
       pointer-events: none;
     }
 
-    /* Estado agotado — desatura y para */
     .drop[data-state="agotado"] .drop__painting {
       filter: saturate(0) brightness(0.7);
     }
@@ -109,78 +114,51 @@
       backface-visibility: hidden;
     }
 
-    /* Profundidad del bloque: 20px  ← cambia este valor y actualiza los cuatro D/2 abajo */
+    /* Profundidad del bloque: D=6px
+       Para cambiar: width left/right → D, translateX(±...) → D/2, translateZ front/back → D/2 */
     .painting__face--front {
-      transform: translateZ(10px); /* D/2 */
+      transform: translateZ(3px);
       overflow: hidden;
-      background: #e0d8ce;
+      background: #fff;
     }
-    .painting__face--front img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+    .painting-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: contain;
       display: block;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    .painting-img--active { opacity: 1; }
 
     .painting__face--back {
-      transform: rotateY(180deg) translateZ(10px); /* D/2 */
-      background:
-        repeating-linear-gradient(
-          180deg,
-          transparent 0px,
-          transparent 22px,
-          rgba(0,0,0,0.05) 22px,
-          rgba(0,0,0,0.05) 23px
-        ),
-        linear-gradient(175deg, #cdb38d 0%, #BCA17F 45%, #a88a68 100%);
+      transform: rotateY(180deg) translateZ(3px);
+      overflow: hidden;
+    }
+    .painting__face--back img {
+      width: 100%; height: 100%; object-fit: contain; display: block;
     }
 
-    /* Cantos — fórmula: rotateY(±90deg) translateX(∓D/2)
-       Si quieres cambiar el grosor, cambia:
-         · width en left y right  →  D
-         · translateX(±...) en left y right  →  D/2
-         · translateZ(...) en front y back  →  D/2
-       Ejemplo: D=40 → width:40px, translateX(±20px), translateZ(20px) */
     .painting__face--left {
       position: absolute;
-      width: 20px; /* D */
-      height: 100%;
-      top: 0;
-      left: 0;
+      width: 6px; height: 100%; top: 0; left: 0;
       transform-origin: left center;
-      transform: rotateY(-90deg) translateX(-10px); /* translateX(-D/2) */
-      background:
-        repeating-linear-gradient(
-          180deg,
-          transparent 0px,
-          transparent 22px,
-          rgba(0,0,0,0.07) 22px,
-          rgba(0,0,0,0.07) 23px
-        ),
-        linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+      transform: rotateY(-90deg) translateX(-3px);
+      background-image: url('../assets/producto-claudio/back.jpg');
+      background-size: cover; background-position: center;
     }
     .painting__face--right {
       position: absolute;
-      width: 20px; /* D */
-      height: 100%;
-      top: 0;
-      right: 0;
+      width: 6px; height: 100%; top: 0; right: 0;
       transform-origin: right center;
-      transform: rotateY(90deg) translateX(10px); /* translateX(D/2) */
-      background:
-        repeating-linear-gradient(
-          180deg,
-          transparent 0px,
-          transparent 22px,
-          rgba(0,0,0,0.07) 22px,
-          rgba(0,0,0,0.07) 23px
-        ),
-        linear-gradient(90deg, #9a7d5e 0%, #BCA17F 50%, #9a7d5e 100%);
+      transform: rotateY(90deg) translateX(3px);
+      background-image: url('../assets/producto-claudio/back.jpg');
+      background-size: cover; background-position: center;
     }
 
-    /* Sombra tosca — muy visible para confirmar que existe */
     .drop__shadow {
-      width: 300px;
+      width: 272px;
       height: 60px;
       background: rgba(0,0,0,0.2);
       border-radius: 50%;
@@ -190,10 +168,7 @@
     }
 
     /* ─── INFO ──────────────────────────────────────────────────── */
-    .drop__info {
-      display: flex;
-      flex-direction: column;
-    }
+    .drop__info { display: flex; flex-direction: column; }
 
     .drop__edition {
       font-family: 'Inter', sans-serif;
@@ -207,8 +182,7 @@
     }
 
     .drop__divider {
-      width: 40px;
-      height: 1px;
+      width: 40px; height: 1px;
       background: rgba(0,0,0,0.12);
       margin-bottom: 28px;
     }
@@ -219,43 +193,28 @@
     /* ─── CUENTA ATRÁS ──────────────────────────────────────────── */
     .drop__countdown-label {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 1rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.3);
-      margin-bottom: 12px;
+      font-weight: 800; font-size: 1rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(0,0,0,0.3); margin-bottom: 12px;
     }
-
     .drop__timer {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 5.5rem;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      color: #000;
-      margin-bottom: 8px;
+      font-weight: 800; font-size: 5.5rem;
+      line-height: 1; letter-spacing: -0.02em;
+      color: #000; margin-bottom: 8px;
     }
-
     .drop__timer-units {
-      display: flex;
-      gap: 0;
+      display: flex; gap: 0;
       font-family: 'Inter', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 400;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.3);
-      margin-bottom: 36px;
+      font-size: 0.65rem; font-weight: 400;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(0,0,0,0.3); margin-bottom: 36px;
     }
     .drop__timer-unit { flex: 1; max-width: 88px; }
-
     .drop__countdown-note {
       font-family: 'Inter', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(0,0,0,0.45);
+      font-size: 0.85rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.45);
     }
 
     /* ─── DISPONIBLE ────────────────────────────────────────────── */
@@ -263,43 +222,28 @@
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
       font-size: clamp(2.2rem, 4vw, 3.5rem);
-      line-height: 1.05;
-      text-transform: uppercase;
-      color: #000;
-      margin-bottom: 20px;
+      line-height: 1.05; text-transform: uppercase;
+      color: #000; margin-bottom: 20px;
     }
     .drop__title .accent { color: var(--accent); transition: color 3s ease; }
-
     .drop__body {
       font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(0,0,0,0.5);
-      margin-bottom: 36px;
-      max-width: 340px;
+      font-size: 0.88rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.5);
+      margin-bottom: 36px; max-width: 340px;
     }
-
     .drop__price {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 800;
-      font-size: 2.2rem;
-      color: #000;
-      margin-bottom: 32px;
+      font-weight: 800; font-size: 2.2rem;
+      color: #000; margin-bottom: 32px;
     }
-
     .drop__btn {
       display: inline-block;
-      background: var(--accent);
-      color: #000;
+      background: var(--accent); color: #000;
       font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 16px 44px;
-      border: none;
-      cursor: pointer;
+      font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 16px 44px; border: none; cursor: pointer;
       transition: background 3s ease, opacity 0.2s;
       align-self: flex-start;
     }
@@ -310,47 +254,28 @@
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 800;
       font-size: clamp(2.2rem, 4vw, 3.5rem);
-      line-height: 1.05;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.2);
-      margin-bottom: 20px;
+      line-height: 1.05; text-transform: uppercase;
+      color: rgba(0,0,0,0.2); margin-bottom: 20px;
     }
-
     .drop__agotado-body {
       font-family: 'Inter', sans-serif;
-      font-size: 0.88rem;
-      font-weight: 300;
-      line-height: 1.7;
-      color: rgba(0,0,0,0.35);
-      margin-bottom: 36px;
-      max-width: 340px;
+      font-size: 0.88rem; font-weight: 300;
+      line-height: 1.7; color: rgba(0,0,0,0.35);
+      margin-bottom: 36px; max-width: 340px;
     }
-
     .drop__waitlist-label {
       font-family: 'Inter', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.35);
-      margin-bottom: 12px;
+      font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(0,0,0,0.35); margin-bottom: 12px;
     }
-
-    .drop__waitlist {
-      display: flex;
-      max-width: 380px;
-    }
+    .drop__waitlist { display: flex; max-width: 380px; }
     .drop__waitlist input {
-      flex: 1;
-      background: transparent;
-      border: 1px solid rgba(0,0,0,0.15);
-      border-right: none;
+      flex: 1; background: transparent;
+      border: 1px solid rgba(0,0,0,0.15); border-right: none;
       padding: 12px 16px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 300;
-      color: #000;
-      outline: none;
+      font-size: 0.8rem; font-weight: 300; color: #000; outline: none;
     }
     .drop__waitlist input::placeholder { color: rgba(0,0,0,0.25); }
     .drop__waitlist input:focus { border-color: rgba(0,0,0,0.4); }
@@ -359,13 +284,9 @@
       border: 1px solid rgba(0,0,0,0.15);
       padding: 12px 20px;
       font-family: 'Inter', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 500;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: rgba(0,0,0,0.4);
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: rgba(0,0,0,0.4); cursor: pointer; transition: all 0.2s;
     }
     .drop__waitlist button:hover { color: #000; border-color: #000; }
   </style>
@@ -374,28 +295,39 @@
 
   <!-- ═══ PREVIEW CONTROLS ════════════════════════════════════════ -->
   <div class="preview-controls">
-    <button class="preview-btn" onclick="setState('countdown')">Cuenta atrás</button>
-    <button class="preview-btn active" onclick="setState('disponible')">Disponible</button>
-    <button class="preview-btn" onclick="setState('agotado')">Agotado</button>
+    <div class="preview-controls__row">
+      <button class="preview-btn" onclick="setState('countdown')">Cuenta atrás</button>
+      <button class="preview-btn active" onclick="setState('disponible')">Disponible</button>
+      <button class="preview-btn" onclick="setState('agotado')">Agotado</button>
+    </div>
+    <div class="preview-controls__row">
+      <div class="preview-swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
+      <div class="preview-swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
+      <div class="preview-swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
+      <div class="preview-swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
+      <div class="preview-swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
+    </div>
   </div>
 
   <!-- ═══ DROP MODULE ══════════════════════════════════════════════ -->
   <section class="drop" id="drop" data-state="disponible">
     <div class="drop__inner">
 
-      <!-- Pintura 3D + sombra en el suelo -->
+      <!-- Pintura 3D -->
       <div class="drop__painting-outer">
         <div class="drop__painting-scene">
           <div class="drop__painting" id="painting">
             <div class="painting__face painting__face--front">
-              <img src="../assets/claudio-cuadro.JPG" alt="Claudio original">
+              <img id="painting-img-a" class="painting-img painting-img--active" src="../assets/producto-claudio/claudio-rojo.jpg" alt="Claudio">
+              <img id="painting-img-b" class="painting-img" src="" alt="Claudio">
             </div>
-            <div class="painting__face painting__face--back"></div>
+            <div class="painting__face painting__face--back">
+              <img src="../assets/producto-claudio/back-firmado.jpg" alt="">
+            </div>
             <div class="painting__face painting__face--left"></div>
             <div class="painting__face painting__face--right"></div>
           </div>
         </div>
-        <!-- Sombra fuera del contexto 3D: siempre visible en el "suelo" -->
         <div class="drop__shadow" id="painting-shadow"></div>
       </div>
 
@@ -404,7 +336,6 @@
         <p class="drop__edition">NUEVO DROP · 15 UNIDADES</p>
         <div class="drop__divider"></div>
 
-        <!-- Estado: cuenta atrás -->
         <div class="drop__state" id="state-countdown">
           <p class="drop__countdown-label">Drop en</p>
           <div class="drop__timer" id="timer-display">00:00:00</div>
@@ -419,7 +350,6 @@
           </p>
         </div>
 
-        <!-- Estado: disponible -->
         <div class="drop__state is-active" id="state-disponible">
           <h2 class="drop__title">
             Quedan <span class="accent" id="stock-count">7</span> claudios<br>disponibles
@@ -432,11 +362,8 @@
           <button class="drop__btn">¡Quiero el mío!</button>
         </div>
 
-        <!-- Estado: agotado -->
         <div class="drop__state" id="state-agotado">
-          <h2 class="drop__agotado-title">
-            Claudios<br>agotados
-          </h2>
+          <h2 class="drop__agotado-title">Claudios<br>agotados</h2>
           <p class="drop__agotado-body">
             Este drop se acabó. El siguiente llega pronto.<br>
             Déjanos tu email y te avisamos antes que nadie.
@@ -452,10 +379,18 @@
     </div>
   </section>
 
-  <!-- Área de scroll para ver la sombra completa -->
   <div style="height: 60vh; background: #fff;"></div>
 
   <script>
+    /* ─── MAPA ACENTO → IMAGEN ───────────────────────────────────── */
+    const ACCENT_IMG = {
+      '#ff8c6c': 'claudio-naranja.jpg',
+      '#ec6768': 'claudio-rojo.jpg',
+      '#417de1': 'claudio-azul.jpg',
+      '#eed004': 'claudio-amarillo.jpg',
+      '#228761': 'claudio-verde.jpg',
+    };
+
     /* ─── STATE SWITCHER ─────────────────────────────────────────── */
     function setState(state) {
       document.getElementById('drop').setAttribute('data-state', state);
@@ -466,86 +401,148 @@
       });
     }
 
-    /* ─── PAINTING CONTROLLER ───────────────────────────────────── */
-    const painting = document.getElementById('painting');
-    const shadow   = document.getElementById('painting-shadow');
+    /* ─── PAINTING ───────────────────────────────────────────────── */
+    const paintingEl = document.getElementById('painting');
+    const shadowEl   = document.getElementById('painting-shadow');
+    let activeImg    = document.getElementById('painting-img-a');
+    let inactiveImg  = document.getElementById('painting-img-b');
 
-    let angle       = 0;      // grados de rotación Y actuales
-    let isPlaying   = true;   // auto-rotar
-    let isDragging  = false;
-    let hasDragged  = false;
-    let dragStartX  = 0;
-    let dragStartAngle = 0;
-    let lastTime    = performance.now();
+    let angle      = 0;
+    let baseSpeed  = 36; // deg/s = 6 RPM
+    let state      = 'normal';
+    let lastTime   = performance.now();
 
-    const RPM = 6;            // revoluciones por minuto en auto-play
-    const DEG_PER_SEC = RPM * 360 / 60;
-    const BOB_AMP  = 4;       // px arriba/abajo (menos = más sutil)
-    const BOB_FREQ = 0.25;    // Hz (menos = más lento; 0.25 = un ciclo cada 4s)
+    // hold
+    let holdTimer = 0;
+
+    // wobble
+    let wPhase = '', wTimer = 0;
+    let wStartAngle = 0, wRecoilTarget = 0;
+    let wSnapStart = 0, wSnapTarget = 0;
+
+    // drag
+    let isDragging = false, hasDragged = false;
+    let dragStartX = 0, dragStartAngle = 0;
+    let isPlaying  = true;
 
     function animate(now) {
       requestAnimationFrame(animate);
-
       const dt = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      // Auto-rotación cuando no arrastramos y está en play
-      if (isPlaying && !isDragging) {
-        angle += DEG_PER_SEC * dt;
+      if (!isDragging) {
+        switch (state) {
+          case 'normal':
+            if (isPlaying) angle += baseSpeed * dt;
+            break;
+
+          case 'wobble':
+            if (wPhase === 'recoil') {
+              wTimer += dt;
+              const t = Math.min(wTimer / 0.13, 1);
+              const e = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+              angle = wStartAngle + (wRecoilTarget - wStartAngle) * e;
+              if (t >= 1) {
+                wPhase = 'snap'; wTimer = 0;
+                const norm    = ((angle % 360) + 360) % 360;
+                const toFront = norm <= 180 ? -norm : (360 - norm);
+                wSnapStart  = angle;
+                wSnapTarget = angle + toFront;
+              }
+            } else if (wPhase === 'snap') {
+              wTimer += dt;
+              const t = Math.min(wTimer / 0.45, 1);
+              const e = 1 - Math.pow(1 - t, 3);
+              angle = wSnapStart + (wSnapTarget - wSnapStart) * e;
+              if (t >= 1) {
+                angle = wSnapTarget; wPhase = 'hold'; wTimer = 0;
+              }
+            } else if (wPhase === 'hold') {
+              wTimer += dt;
+              if (wTimer > 0.9) state = 'normal';
+            }
+            break;
+        }
       }
 
-      // Levitación vertical
-      const bobY = Math.sin(now / 1000 * BOB_FREQ * Math.PI * 2) * BOB_AMP;
+      const bobY  = Math.sin(now / 1000 * 0.25 * Math.PI * 2) * 4;
+      paintingEl.style.transform =
+        `translateY(${bobY.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
 
-      // Aplica transform
-      painting.style.transform = `translateY(${bobY.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
-
-      // Sombra: se achica cuando el cuadro está de canto, se ensancha cuando está de frente
-      const cosA   = Math.cos(angle * Math.PI / 180);
-      const faceOn = Math.abs(cosA); // 1 = de frente, 0 = de canto
-      shadow.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
+      const faceOn = Math.abs(Math.cos(angle * Math.PI / 180));
+      shadowEl.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
     }
 
     requestAnimationFrame(animate);
 
-    /* ─── CLICK: pausa / reanuda ─────────────────────────────────── */
-    painting.addEventListener('click', () => {
-      if (hasDragged) return; // ignora si fue un drag
-      isPlaying = !isPlaying;
-      painting.classList.toggle('is-paused', !isPlaying);
+    /* ─── CAMBIO DE COLOR (wobble + crossfade) ───────────────────── */
+    function updateColor(hex) {
+      document.documentElement.style.setProperty('--accent', hex);
+
+      // Crossfade imagen
+      const filename = ACCENT_IMG[hex.toLowerCase()];
+      if (filename) {
+        inactiveImg.src = '../assets/producto-claudio/' + filename;
+        inactiveImg.classList.add('painting-img--active');
+        activeImg.classList.remove('painting-img--active');
+        [activeImg, inactiveImg] = [inactiveImg, activeImg];
+      }
+
+      // Wobble
+      state       = 'wobble';
+      wPhase      = 'recoil';
+      wTimer      = 0;
+      wStartAngle    = angle;
+      wRecoilTarget  = angle - 28;
+    }
+
+    /* ─── SWATCHES ───────────────────────────────────────────────── */
+    document.querySelectorAll('.preview-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.preview-swatch').forEach(s => s.classList.remove('active'));
+        sw.classList.add('active');
+        updateColor(sw.dataset.color);
+      });
     });
 
-    /* ─── DRAG: rotación manual ──────────────────────────────────── */
-    function onDragStart(x) {
-      isDragging   = true;
-      hasDragged   = false;
-      dragStartX   = x;
-      dragStartAngle = angle;
-      painting.style.cursor = 'grabbing';
-    }
+    /* ─── CLICK: pausa / reanuda ─────────────────────────────────── */
+    paintingEl.addEventListener('click', () => {
+      if (hasDragged) return;
+      isPlaying = !isPlaying;
+      paintingEl.classList.toggle('is-paused', !isPlaying);
+    });
 
-    function onDragMove(x) {
+    /* ─── DRAG ───────────────────────────────────────────────────── */
+    paintingEl.addEventListener('mousedown', e => {
+      e.preventDefault();
+      isDragging = true; hasDragged = false;
+      dragStartX = e.clientX; dragStartAngle = angle;
+      paintingEl.style.cursor = 'grabbing';
+    });
+    document.addEventListener('mousemove', e => {
       if (!isDragging) return;
-      const delta = x - dragStartX;
+      const delta = e.clientX - dragStartX;
       if (Math.abs(delta) > 4) hasDragged = true;
-      angle = dragStartAngle + delta * 0.45; // sensibilidad
-    }
-
-    function onDragEnd() {
+      angle = dragStartAngle + delta * 0.45;
+    });
+    document.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
-      painting.style.cursor = 'grab';
-    }
-
-    // Mouse
-    painting.addEventListener('mousedown',  e => { e.preventDefault(); onDragStart(e.clientX); });
-    document.addEventListener('mousemove',  e => onDragMove(e.clientX));
-    document.addEventListener('mouseup',    () => onDragEnd());
-
-    // Touch
-    painting.addEventListener('touchstart', e => { e.preventDefault(); onDragStart(e.touches[0].clientX); }, { passive: false });
-    document.addEventListener('touchmove',  e => { if (isDragging) { e.preventDefault(); onDragMove(e.touches[0].clientX); } }, { passive: false });
-    document.addEventListener('touchend',   () => onDragEnd());
+      paintingEl.style.cursor = 'grab';
+    });
+    paintingEl.addEventListener('touchstart', e => {
+      e.preventDefault();
+      isDragging = true; hasDragged = false;
+      dragStartX = e.touches[0].clientX; dragStartAngle = angle;
+    }, { passive: false });
+    document.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const delta = e.touches[0].clientX - dragStartX;
+      if (Math.abs(delta) > 4) hasDragged = true;
+      angle = dragStartAngle + delta * 0.45;
+    }, { passive: false });
+    document.addEventListener('touchend', () => { isDragging = false; });
 
     /* ─── COUNTDOWN ──────────────────────────────────────────────── */
     const DROP_TARGET = new Date('2026-04-20T17:00:00');
@@ -559,7 +556,6 @@
       const p = n => String(n).padStart(2, '0');
       document.getElementById('timer-display').textContent = `${p(h)}:${p(m)}:${p(s)}`;
     }
-
     updateTimer();
     setInterval(updateTimer, 1000);
 
