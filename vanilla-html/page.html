@@ -338,6 +338,11 @@
   </section>
 
   <!-- ═══ DROP ═════════════════════════════════════════════════ -->
+  <div style="background:#fff; padding: 12px 40px; display:flex; gap:8px; border-top: 1px solid rgba(0,0,0,0.06);">
+    <button onclick="setDropState('countdown')" id="dbtn-countdown" style="font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border:1px solid rgba(0,0,0,0.2);background:transparent;color:rgba(0,0,0,0.4);cursor:pointer;">Cuenta atrás</button>
+    <button onclick="setDropState('disponible')" id="dbtn-disponible" style="font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border:1px solid #000;background:rgba(0,0,0,0.05);color:#000;cursor:pointer;">Disponible</button>
+    <button onclick="setDropState('agotado')"   id="dbtn-agotado"   style="font-family:'Inter',sans-serif;font-size:0.65rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;padding:6px 12px;border:1px solid rgba(0,0,0,0.2);background:transparent;color:rgba(0,0,0,0.4);cursor:pointer;">Agotado</button>
+  </div>
   <section class="drop" id="next" data-state="disponible">
     <div class="drop__inner">
 
@@ -559,6 +564,18 @@
     dropPainting.addEventListener('touchstart', e => { e.preventDefault(); dropDragging = true; dropHasDragged = false; dropStartX = e.touches[0].clientX; dropStartAngle = dropAngle; }, { passive: false });
     document.addEventListener('touchmove', e => { if (dropDragging) { e.preventDefault(); const d = e.touches[0].clientX - dropStartX; if (Math.abs(d) > 4) dropHasDragged = true; dropAngle = dropStartAngle + d * 0.45; } }, { passive: false });
     document.addEventListener('touchend', () => { dropDragging = false; });
+
+    /* ─── DROP: state switcher ─────────────────────────────────── */
+    function setDropState(state) {
+      document.getElementById('next').setAttribute('data-state', state);
+      ['countdown','disponible','agotado'].forEach(s => {
+        document.getElementById('drop-state-' + s).classList.toggle('is-active', s === state);
+        const btn = document.getElementById('dbtn-' + s);
+        btn.style.borderColor = s === state ? '#000' : 'rgba(0,0,0,0.2)';
+        btn.style.color       = s === state ? '#000' : 'rgba(0,0,0,0.4)';
+        btn.style.background  = s === state ? 'rgba(0,0,0,0.05)' : 'transparent';
+      });
+    }
 
     /* ─── DROP: countdown ───────────────────────────────────────── */
     const DROP_TARGET = new Date('2026-04-20T17:00:00');
