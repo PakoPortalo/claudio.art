@@ -14,7 +14,7 @@
       align-items: center;
       justify-content: center;
       gap: 80px;
-      overflow: hidden;
+      overflow-y: auto;
       padding: 60px 0;
     }
 
@@ -91,14 +91,16 @@
       background-size: cover; background-position: center;
     }
     /* Versión bloque */
-    #fan-wrapper-b {
+    #fan-wrapper-b,
+    #fan-wrapper-c {
       width: 1100px;
       height: 520px;
       perspective: 1100px;
       perspective-origin: 50% 58%;
     }
 
-    #fan-stage-b {
+    #fan-stage-b,
+    #fan-stage-c {
       position: relative;
       width: 100%;
       height: 100%;
@@ -212,6 +214,58 @@
     </div>
   </div>
 
+  <!-- ── Versión C: bloque + individual ── -->
+  <div id="fan-wrapper-c">
+    <div id="fan-stage-c">
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-naranja.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-rojo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-azul.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-amarillo.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+      <div class="fan-card">
+        <div class="fan-painting">
+          <div class="face face--front"><img src="../assets/producto-claudio/claudio-verde.jpg" alt=""></div>
+          <div class="face face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
+          <div class="face face--left"></div>
+          <div class="face face--right"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     const FAN = [
       { tx: -380, tz: -40, rz: -12 },
@@ -225,8 +279,9 @@
     const ZONE   = 110;   // px desde el centro de la carta donde actúa el tracking
     const LERP_K = 0.07;
 
-    const cards    = document.querySelectorAll('.fan-card');
-    const paintings = document.querySelectorAll('.fan-painting');
+    const stageA   = document.getElementById('fan-stage');
+    const cards    = stageA.querySelectorAll('.fan-card');
+    const paintings = stageA.querySelectorAll('.fan-painting');
     const currRY   = [0, 0, 0, 0, 0];
     let mouseX     = window.innerWidth / 2;
 
@@ -279,6 +334,45 @@
     }
 
     tickB();
+
+    // ── Versión C: bloque + individual ──
+    const stageC    = document.getElementById('fan-stage-c');
+    const cardsC    = stageC.querySelectorAll('.fan-card');
+    const paintingsC = stageC.querySelectorAll('.fan-painting');
+    const MAX_BLOCK = 4;    // rotación del bloque entero
+    const MAX_IND   = 2.5;  // rotación individual adicional por carta
+    const ZONE_C    = 110;
+    const LERP_C    = 0.06;
+    let   currBlock = 0;
+    const currInd   = [0, 0, 0, 0, 0];
+
+    cardsC.forEach((card, i) => {
+      const { tx, tz, rz } = FAN[i];
+      card.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateZ(${rz}deg)`;
+    });
+
+    function tickC() {
+      requestAnimationFrame(tickC);
+
+      // Bloque: rota el stage entero según posición del ratón en la ventana
+      const blockTarget = Math.max(-MAX_BLOCK, Math.min(MAX_BLOCK,
+        ((mouseX - window.innerWidth / 2) / (window.innerWidth / 2)) * MAX_BLOCK
+      ));
+      currBlock = lerp(currBlock, blockTarget, LERP_C);
+      stageC.style.transform = `rotateY(${currBlock.toFixed(2)}deg)`;
+
+      // Individual: cada carta añade su propia pequeña rotación
+      paintingsC.forEach((painting, i) => {
+        const rect        = cardsC[i].getBoundingClientRect();
+        const cardCenterX = rect.left + rect.width / 2;
+        const dx          = mouseX - cardCenterX;
+        const indTarget   = Math.max(-MAX_IND, Math.min(MAX_IND, (dx / ZONE_C) * MAX_IND));
+        currInd[i] = lerp(currInd[i], indTarget, LERP_C);
+        painting.style.transform = `rotateY(${currInd[i].toFixed(2)}deg)`;
+      });
+    }
+
+    tickC();
   </script>
 
 </body>
