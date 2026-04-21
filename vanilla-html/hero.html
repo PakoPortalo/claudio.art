@@ -90,18 +90,21 @@
       100% { height: 40px; opacity: 0; }
     }
 
-    /* Texto pequeño arriba-izquierda */
-    .hero__label {
+    /* Subtítulo bajo el título */
+    .hero__subtitle {
       position: absolute;
-      top: 170px;
-      left: 145px;
+      top: 67%;
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 3;
       color: #ffffff;
       font-family: 'Inter', sans-serif;
-      font-size: 0.75rem;
-      font-weight: 400;
-      line-height: 1.65;
-      opacity: 0.70;
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: lowercase;
+      white-space: nowrap;
+      opacity: 0.65;
       pointer-events: none;
     }
   </style>
@@ -120,11 +123,7 @@
 
     <canvas id="hero-canvas" class="hero__canvas"></canvas>
 
-    <p class="hero__label">
-      del contenedor a la calle<br>
-      de la calle a mis manos<br>
-      de mis manos a tu casa
-    </p>
+    <p class="hero__subtitle">encontrado, pintado, dejado en la calle</p>
 
     <div class="hero__scroll">
       <div class="hero__scroll__line"></div>

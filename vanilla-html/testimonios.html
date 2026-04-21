@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Testimonios</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; font-family: 'Inter', sans-serif;
+      background: #fff; overflow-x: hidden;
+    }
+
+    /* ─── TESTIMONIOS ────────────────────────────────────────── */
+    .testimonios {
+      padding: 100px 40px 110px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .testimonios__label {
+      font-family: 'Barlow Condensed', sans-serif; font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em;
+      color: #111; text-align: center; margin-bottom: 60px; line-height: 1;
+    }
+    .testimonios__grid {
+      width: 100%; max-width: 900px;
+      columns: 3; column-gap: 16px;
+    }
+    @media (max-width: 600px) { .testimonios__grid { columns: 2; } }
+    .testimonios__item {
+      break-inside: avoid; margin-bottom: 16px; border-radius: 12px;
+      overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .testimonios__grid:hover .testimonios__item {
+      opacity: 0.35; transform: scale(0.97);
+    }
+    .testimonios__grid:hover .testimonios__item:hover {
+      opacity: 1; transform: scale(1.03);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.16);
+    }
+    .testimonios__item img { width: 100%; height: auto; display: block; }
+  </style>
+</head>
+<body>
+
+  <section class="testimonios" id="testimonios">
+    <h2 class="testimonios__label">Lo que piensan nuestros seguidores</h2>
+    <div class="testimonios__grid">
+      <div class="testimonios__item"><img src="assets/resenas-01.JPG" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-02.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-03.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-04.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-05.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-06.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-07.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-08.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-09.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-10.jpg" alt="" loading="lazy"></div>
+    </div>
+  </section>
+
+</body>
+</html>
