@@ -44,6 +44,7 @@
     .hero__video {
       position: absolute; inset: 0; width: 100%; height: 100%;
       object-fit: cover; display: block; z-index: 0;
+      filter: grayscale(100%);
     }
     .hero__overlay {
       position: absolute; inset: 0; background: var(--accent);
@@ -52,19 +53,14 @@
     .hero__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 2; }
     .hero__scroll {
       position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
-      z-index: 4; cursor: pointer; display: flex; flex-direction: column;
-      align-items: center; gap: 6px; opacity: 0.6; transition: opacity 0.2s;
+      z-index: 4; cursor: pointer; opacity: 0.55; transition: opacity 0.2s;
+      animation: arrow-bounce 2s ease-in-out infinite;
     }
     .hero__scroll:hover { opacity: 1; }
-    .hero__scroll__line {
-      width: 1px; height: 0; background: #fff;
-      animation: scroll-grow 1.8s ease-in-out infinite;
-    }
-    .hero__scroll__dot { width: 4px; height: 4px; border-radius: 50%; background: #fff; }
-    @keyframes scroll-grow {
-      0%   { height: 0;    opacity: 0; }
-      30%  { opacity: 1; }
-      100% { height: 40px; opacity: 0; }
+    .hero__scroll svg { display: block; }
+    @keyframes arrow-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.55; }
+      50%       { transform: translateX(-50%) translateY(8px); opacity: 0.9; }
     }
     .hero__subtitle {
       position: absolute; top: 67%; left: 50%; transform: translateX(-50%);
@@ -330,6 +326,262 @@
       transition: background 3s ease, border-color 3s ease, opacity 0.2s;
     }
     .drop__waitlist button:hover { opacity: 0.8; }
+
+    /* ─── CAMISETA ───────────────────────────────────────────── */
+    .camisa {
+      position: relative; width: 100%; min-height: 90vh;
+      display: flex; align-items: flex-end; overflow: hidden;
+    }
+    .camisa__bg {
+      position: absolute; inset: 0; background: rgb(16,16,16);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .camisa__bg img { width: auto; height: 72%; object-fit: contain; display: block; }
+    .camisa__bg-placeholder {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 300;
+      letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.2);
+    }
+    .camisa::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+    }
+    .camisa__copy {
+      position: relative; z-index: 2;
+      padding: 60px 72px; width: 100%;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .camisa__left { display: flex; flex-direction: column; gap: 12px; }
+    .camisa__tag {
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+      transition: color 3s ease;
+    }
+    .camisa__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(3rem, 7vw, 6rem); line-height: 1; text-transform: uppercase; color: #fff;
+    }
+    .camisa__sub {
+      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 300;
+      letter-spacing: 0.15em; color: rgba(255,255,255,0.55); text-transform: lowercase;
+    }
+    .camisa__right { display: flex; flex-direction: column; align-items: flex-end; gap: 20px; }
+    .camisa__price {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 3rem; color: #fff; line-height: 1;
+    }
+    .camisa__btn {
+      background: var(--accent); color: #000; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 16px 44px;
+      transition: background 3s ease, opacity 0.2s;
+    }
+    .camisa__btn:hover { opacity: 0.8; }
+
+    /* ─── SOBRE ───────────────────────────────────────────────── */
+    .sobre {
+      background: rgb(14,14,14);
+      min-height: 100vh; padding: 100px 80px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 80px; overflow: hidden;
+    }
+    .sobre__cluster { position: relative; width: 580px; height: 540px; flex-shrink: 0; }
+    .shot {
+      position: absolute; border-radius: 10px; overflow: hidden;
+      background: #1c1c1c;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .shot::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
+      background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+    .shot img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .shot-label {
+      position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; z-index: 1;
+      font-family: 'Inter', sans-serif; font-size: 0.55rem; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.12);
+    }
+    .shot--dark { background: #161616; }
+    /* Posiciones A.0 */
+    .ca .s1 { width:200px; height:250px; left:140px; top:100px; transform:rotate(-4deg);  z-index:4; }
+    .ca .s2 { width:185px; height:231px; left:308px; top:158px; transform:rotate(6deg);   z-index:5; }
+    .ca .s3 { width:120px; height:260px; left:8px;   top:122px; transform:rotate(-8deg);  z-index:2; }
+    .ca .s4 { width:195px; height:244px; left:55px;  top:252px; transform:rotate(3deg);   z-index:3; }
+    .ca .s5 { width:118px; height:255px; left:432px; top:95px;  transform:rotate(7deg);   z-index:2; }
+    .ca .s6 { width:180px; height:225px; left:318px; top:292px; transform:rotate(-5deg);  z-index:6; }
+    .ca .s7 { width:165px; height:220px; left:190px; top:300px; transform:rotate(2deg);   z-index:3; }
+    .ca .s8 { width:112px; height:242px; left:455px; top:250px; transform:rotate(-9deg);  z-index:1; }
+    .ca .sreel {
+      width: 190px; height: 336px;
+      left: 195px; top: 102px;
+      transform: rotate(-3deg);
+      z-index: 10;
+      box-shadow: 0 20px 64px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.6);
+    }
+    .ca .s1:hover { transform:rotate(-4deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s2:hover { transform:rotate(6deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s3:hover { transform:rotate(-8deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s4:hover { transform:rotate(3deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s5:hover { transform:rotate(7deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s6:hover { transform:rotate(-5deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s7:hover { transform:rotate(2deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .s8:hover { transform:rotate(-9deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+    .ca .sreel:hover { transform:rotate(-3deg) scale(1.04); z-index:20; box-shadow:0 24px 72px rgba(0,0,0,0.9); }
+    /* Reel UI */
+    @keyframes spin-vinyl { to { transform: rotate(360deg); } }
+    .shot--reel { background: #000; }
+    .shot--reel::before { display: none; }
+    .shot--reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .reel-overlay { position: absolute; inset: 0; pointer-events: none; }
+    .reel-top-grad { position: absolute; top: 0; left: 0; right: 0; height: 30%; background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%); }
+    .reel-bot-grad { position: absolute; bottom: 0; left: 0; right: 0; height: 58%; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 50%, transparent 100%); }
+    .reel-progress { position: absolute; top: 5px; left: 6px; right: 6px; height: 2px; background: rgba(255,255,255,0.22); border-radius: 1px; z-index: 2; }
+    .reel-progress-fill { height: 100%; width: 32%; background: #fff; border-radius: 1px; }
+    .reel-actions { position: absolute; right: 5px; bottom: 54px; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+    .reel-action { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    .reel-action svg { width: 15px; height: 15px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+    .reel-action-count { font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); line-height: 1; }
+    .reel-vinyl-wrap { width: 19px; height: 19px; border-radius: 50%; background: radial-gradient(circle, #444 0%, #111 100%); border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; animation: spin-vinyl 4s linear infinite; }
+    .reel-vinyl-dot { width: 5px; height: 5px; border-radius: 50%; background: #000; border: 1px solid rgba(255,255,255,0.2); }
+    .reel-bottom { position: absolute; bottom: 6px; left: 6px; right: 26px; }
+    .reel-user { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+    .reel-avatar { width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0; background: var(--accent); border: 1.5px solid #fff; }
+    .reel-username { font-family: -apple-system, sans-serif; font-size: 7.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); white-space: nowrap; }
+    .reel-follow { margin-left: 2px; border: 1px solid rgba(255,255,255,0.85); background: transparent; font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; padding: 1.5px 4px; border-radius: 3px; cursor: pointer; white-space: nowrap; }
+    .reel-caption { font-family: -apple-system, sans-serif; font-size: 6.5px; font-weight: 400; color: rgba(255,255,255,0.92); line-height: 1.35; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.6); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
+    .reel-audio-row { display: flex; align-items: center; gap: 3px; overflow: hidden; }
+    .reel-audio-note { font-size: 7px; color: #fff; flex-shrink: 0; }
+    .reel-audio-text { font-family: -apple-system, sans-serif; font-size: 6px; font-weight: 400; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Info */
+    .sobre__info { display: flex; flex-direction: column; max-width: 360px; }
+    .sobre__tag {
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+      margin-bottom: 24px; transition: color 3s ease;
+    }
+    .sobre__divider { width: 40px; height: 1px; background: rgba(255,255,255,0.12); margin-bottom: 28px; }
+    .sobre__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.8rem, 4.5vw, 4.2rem); line-height: 1;
+      text-transform: uppercase; color: #fff; margin-bottom: 24px;
+    }
+    .sobre__body {
+      font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 300;
+      line-height: 1.9; color: rgba(255,255,255,0.45); margin-bottom: 40px;
+    }
+    .sobre__cta-label {
+      font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 400;
+      color: rgba(255,255,255,0.35); margin-bottom: 16px; text-align: justify;
+    }
+    .sobre__btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .sobre__btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      text-decoration: none;
+      background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--accent);
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 24px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .sobre__btn:hover { border-color: var(--accent); background: rgba(236,103,104,0.08); }
+    .sobre__btn svg { flex-shrink: 0; }
+
+    /* ─── NEWSLETTER ─────────────────────────────────────────── */
+    .newsletter {
+      background: var(--accent);
+      padding: 100px 72px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 40px; text-align: center;
+      transition: background 3s ease;
+    }
+    .newsletter__tag {
+      font-size: 0.65rem; font-weight: 500; letter-spacing: 0.25em;
+      text-transform: uppercase; color: rgba(0,0,0,0.5);
+    }
+    .newsletter__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(3rem, 6vw, 5.5rem); text-transform: uppercase;
+      color: #000; line-height: 0.95; max-width: 700px;
+    }
+    .newsletter__sub {
+      font-size: 0.85rem; font-weight: 300; color: rgba(0,0,0,0.6);
+      max-width: 460px; line-height: 1.7;
+    }
+    .newsletter__form {
+      display: flex; gap: 0; width: 100%; max-width: 440px;
+    }
+    .newsletter__input {
+      flex: 1; background: rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.25);
+      border-right: none; color: #000; font-family: 'Inter', sans-serif;
+      font-size: 0.8rem; padding: 16px 20px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter__input::placeholder { color: rgba(0,0,0,0.3); }
+    .newsletter__input:focus { border-color: rgba(0,0,0,0.6); }
+    .newsletter__btn {
+      background: #000; color: #fff; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; padding: 16px 28px;
+      transition: opacity 0.2s; white-space: nowrap;
+    }
+    .newsletter__btn:hover { opacity: 0.7; }
+    .newsletter__legal {
+      font-size: 0.65rem; color: rgba(0,0,0,0.35); letter-spacing: 0.05em;
+    }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .footer {
+      background: #000; padding: 72px 72px 40px;
+    }
+    .footer__top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 48px;
+    }
+    .footer__brand { display: flex; flex-direction: column; gap: 16px; max-width: 300px; }
+    .footer__logo {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 1.8rem; text-transform: uppercase; color: #fff; letter-spacing: 0.02em;
+    }
+    .footer__logo span { color: var(--accent); transition: color 3s ease; }
+    .footer__tagline {
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.65;
+    }
+    .footer__cols { display: flex; gap: 64px; }
+    .footer__col { display: flex; flex-direction: column; gap: 16px; }
+    .footer__col-title {
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    .footer__col a {
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.5);
+      text-decoration: none; transition: color 0.2s; display: block;
+    }
+    .footer__col a:hover { color: #fff; }
+    .footer__middle {
+      padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer__privacy-title {
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); margin-bottom: 12px;
+    }
+    .footer__privacy-text {
+      font-size: 0.7rem; font-weight: 300; color: rgba(255,255,255,0.25);
+      line-height: 1.7; max-width: 720px;
+    }
+    .footer__privacy-text a {
+      color: rgba(255,255,255,0.4); text-decoration: underline; transition: color 0.2s;
+    }
+    .footer__privacy-text a:hover { color: #fff; }
+    .footer__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 28px; gap: 24px; flex-wrap: wrap;
+    }
+    .footer__legal { font-size: 0.65rem; color: rgba(255,255,255,0.15); letter-spacing: 0.05em; }
+    .footer__socials { display: flex; gap: 20px; }
+    .footer__socials a {
+      font-size: 0.7rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s;
+    }
+    .footer__socials a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
@@ -353,13 +605,14 @@
 
   <!-- ═══ HERO ══════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
-    <video class="hero__video" src="../assets/underground-video.mp4" autoplay loop muted playsinline></video>
+    <video class="hero__video" src="assets/hero-claudio-angel-sara.mp4" autoplay loop muted playsinline></video>
     <div class="hero__overlay"></div>
     <canvas id="hero-canvas" class="hero__canvas"></canvas>
     <p class="hero__subtitle">encontrado, pintado, dejado en la calle</p>
     <div class="hero__scroll" onclick="document.getElementById('drop').scrollIntoView({behavior:'smooth'})">
-      <div class="hero__scroll__line"></div>
-      <div class="hero__scroll__dot"></div>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
     </div>
   </section>
 
@@ -503,6 +756,24 @@
     </div>
   </section>
 
+  <!-- ═══ CAMISETA ════════════════════════════════════════════ -->
+  <section class="camisa" id="camiseta">
+    <div class="camisa__bg">
+      <img src="assets/tshirt.jpg" alt="La camiseta claudio">
+    </div>
+    <div class="camisa__copy">
+      <div class="camisa__left">
+        <span class="camisa__tag">Siempre en stock</span>
+        <h2 class="camisa__title">La camiseta</h2>
+        <p class="camisa__sub">encontrado, pintado, dejado en la calle</p>
+      </div>
+      <div class="camisa__right">
+        <span class="camisa__price">€ XX</span>
+        <button class="camisa__btn">Comprar</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══ TESTIMONIOS ═════════════════════════════════════════ -->
   <section class="testimonios" id="testimonios">
     <h2 class="testimonios__label">Lo que piensan nuestros seguidores</h2>
@@ -519,6 +790,135 @@
       <div class="testimonios__item"><img src="assets/resenas-10.jpg" alt="" loading="lazy"></div>
     </div>
   </section>
+
+  <!-- ═══ SOBRE ════════════════════════════════════════════════ -->
+  <section class="sobre" id="sobre">
+
+    <div class="sobre__cluster ca">
+      <div class="shot s1"><span class="shot-label">post · claudio pintado</span></div>
+      <div class="shot s2 shot--dark"><span class="shot-label">post · claudio en la calle</span></div>
+      <div class="shot s3"><span class="shot-label">story · proceso</span></div>
+      <div class="shot s4"><span class="shot-label">post · madera encontrada</span></div>
+      <div class="shot s5 shot--dark"><span class="shot-label">story · reacción</span></div>
+      <div class="shot s6"><span class="shot-label">dm · dónde comprar</span></div>
+      <div class="shot s7"><span class="shot-label">perfil · @cl4u8io</span></div>
+      <div class="shot s8 shot--dark"><span class="shot-label">story · drop</span></div>
+      <div class="shot shot--reel sreel">
+        <video src="assets/sobre-reel.mp4" autoplay loop muted playsinline></video>
+        <div class="reel-overlay">
+          <div class="reel-top-grad"></div>
+          <div class="reel-bot-grad"></div>
+          <div class="reel-progress"><div class="reel-progress-fill"></div></div>
+          <div class="reel-actions">
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span class="reel-action-count">8.4K</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              <span class="reel-action-count">312</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>
+              <span class="reel-action-count">1.2K</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            </div>
+            <div class="reel-vinyl-wrap"><div class="reel-vinyl-dot"></div></div>
+          </div>
+          <div class="reel-bottom">
+            <div class="reel-user">
+              <div class="reel-avatar"></div>
+              <span class="reel-username">cl4u8io</span>
+              <button class="reel-follow">Seguir</button>
+            </div>
+            <p class="reel-caption">encontrado, pintado, dejado en la calle 🎨</p>
+            <div class="reel-audio-row">
+              <span class="reel-audio-note">♪</span>
+              <span class="reel-audio-text">Audio original · cl4u8io</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sobre__info">
+      <p class="sobre__tag">@cl4u8io · Instagram</p>
+      <div class="sobre__divider"></div>
+      <h2 class="sobre__title">Todo empieza<br>en la calle</h2>
+      <p class="sobre__body">
+        Recojo madera que Madrid tira.<br>
+        La pinto, la firmo, y la dejo<br>
+        donde la encontré.<br>
+        A veces alguien se la lleva.
+      </p>
+      <p class="sobre__cta-label">¿Quieres ver más?</p>
+      <div class="sobre__btns">
+        <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="sobre__btn" href="https://tiktok.com/@cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ NEWSLETTER ══════════════════════════════════════════ -->
+  <section class="newsletter" id="newsletter">
+    <span class="newsletter__tag">Próximo drop</span>
+    <h2 class="newsletter__title">No te<br>lo pierdas</h2>
+    <p class="newsletter__sub">Los claudios se van en horas. Si no estás en la lista, te enteras tarde.</p>
+    <form class="newsletter__form" onsubmit="return false">
+      <input class="newsletter__input" type="email" placeholder="tu@email.com" />
+      <button class="newsletter__btn">Entrar</button>
+    </form>
+    <span class="newsletter__legal">Sin spam. Baja cuando quieras.</span>
+  </section>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════ -->
+  <footer class="footer" id="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">SOYCLAUDIO<span>.</span>ES</div>
+        <p class="footer__tagline">Recogido de la calle, pintado, devuelto a la calle.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <span class="footer__col-title">Tienda</span>
+          <a href="#">Claudios</a>
+          <a href="#">Camiseta</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Más</span>
+          <a href="#">Sobre Claudio</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Redes</span>
+          <a href="#">Instagram</a>
+          <a href="#">@cl4u8io</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__middle">
+      <p class="footer__privacy-title">Privacidad y datos</p>
+      <p class="footer__privacy-text">
+        Al suscribirte a la lista de correo, aceptas que Claudio (Claudio Portalo Bueno) trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros ni se usan para publicidad. Puedes darte de baja en cualquier momento mediante el enlace incluido en cada correo o escribiéndonos a <a href="mailto:hola@soyclaudio.es">hola@soyclaudio.es</a>. Tratamiento conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).
+      </p>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__legal">© 2026 Claudio — Madrid &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Aviso legal</a></span>
+      <div class="footer__socials">
+        <a href="#">@cl4u8io</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+  </footer>
 
   <script type="importmap">
   { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }

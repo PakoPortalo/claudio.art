@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Footer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: #000; overflow-x: hidden; }
+
+    .footer {
+      background: #000; padding: 72px 72px 40px;
+    }
+    .footer__top {
+      display: flex; justify-content: space-between; align-items: flex-start;
+      padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 48px;
+    }
+    .footer__brand { display: flex; flex-direction: column; gap: 16px; max-width: 300px; }
+    .footer__logo {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: 1.8rem; text-transform: uppercase; color: #fff; letter-spacing: 0.02em;
+    }
+    .footer__logo span { color: var(--accent); }
+    .footer__tagline {
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.65;
+    }
+    .footer__cols { display: flex; gap: 64px; }
+    .footer__col { display: flex; flex-direction: column; gap: 16px; }
+    .footer__col-title {
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    .footer__col a {
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.5);
+      text-decoration: none; transition: color 0.2s; display: block;
+    }
+    .footer__col a:hover { color: #fff; }
+
+    .footer__middle {
+      padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer__privacy-title {
+      font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25); margin-bottom: 12px;
+    }
+    .footer__privacy-text {
+      font-size: 0.7rem; font-weight: 300; color: rgba(255,255,255,0.25);
+      line-height: 1.7; max-width: 720px;
+    }
+    .footer__privacy-text a {
+      color: rgba(255,255,255,0.4); text-decoration: underline; transition: color 0.2s;
+    }
+    .footer__privacy-text a:hover { color: #fff; }
+
+    .footer__bottom {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 28px; gap: 24px; flex-wrap: wrap;
+    }
+    .footer__legal { font-size: 0.65rem; color: rgba(255,255,255,0.15); letter-spacing: 0.05em; }
+    .footer__socials { display: flex; gap: 20px; }
+    .footer__socials a {
+      font-size: 0.7rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s;
+    }
+    .footer__socials a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <footer class="footer" id="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">SOYCLAUDIO<span>.</span>ES</div>
+        <p class="footer__tagline">Recogido de la calle, pintado, devuelto a la calle.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <span class="footer__col-title">Tienda</span>
+          <a href="#">Claudios</a>
+          <a href="#">Camiseta</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Más</span>
+          <a href="#">Sobre Claudio</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Redes</span>
+          <a href="#">Instagram</a>
+          <a href="#">@cl4u8io</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__middle">
+      <p class="footer__privacy-title">Privacidad y datos</p>
+      <p class="footer__privacy-text">
+        Al suscribirte a la lista de correo, aceptas que Claudio (Claudio Portalo Bueno) trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros ni se usan para publicidad. Puedes darte de baja en cualquier momento mediante el enlace incluido en cada correo o escribiéndonos a <a href="mailto:hola@soyclaudio.es">hola@soyclaudio.es</a>. Tratamiento conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).
+      </p>
+    </div>
+
+    <div class="footer__bottom">
+      <span class="footer__legal">© 2026 Claudio — Madrid &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Aviso legal</a></span>
+      <div class="footer__socials">
+        <a href="#">@cl4u8io</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
