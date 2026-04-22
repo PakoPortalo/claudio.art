@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Claudio — Módulo Drop</title>
+  <title>Claudio — Drop</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -38,24 +38,12 @@
     .drop {
       min-height: 100vh; background: #fff;
       display: flex; align-items: center; justify-content: center;
-      padding: 80px 40px;
+      padding: 80px 72px;
     }
     .drop__inner {
       display: grid; grid-template-columns: 1fr 1fr;
       gap: 100px; align-items: center;
       max-width: 1100px; width: 100%;
-    }
-
-    /* Countdown: rompe el grid y ocupa toda la pantalla centrado */
-    .drop[data-state="countdown"] .drop__inner {
-      grid-template-columns: 1fr;
-    }
-    .drop[data-state="countdown"] .drop__painting-outer {
-      display: none;
-    }
-    .drop[data-state="countdown"] .drop__info {
-      align-items: center;
-      text-align: center;
     }
 
     /* ─── PINTURA ────────────────────────────────────────────────── */
@@ -114,131 +102,38 @@
     .drop__state.is-active { display: block; }
 
     /* ─── CUENTA ATRÁS ──────────────────────────────────────────── */
-    .cd__marquee {
-      width: 100vw;
-      margin-left: calc(-50vw + 50%);
-      overflow: hidden;
-      margin-bottom: 0;
+    .cd__tag {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 28px; transition: color 3s ease; display: block;
     }
-    /* Dos frames idénticos de 100vw — anima de 0 a -50% (= -100vw) */
-    .cd__marquee-track {
-      display: flex;
-      width: 200%;
-      animation: cdMarquee 10s linear infinite;
-    }
-    .cd__marquee-frame {
-      width: 50%;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: baseline;
-    }
-    .cd__marquee-item {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: clamp(2.8rem, 6vw, 5.5rem);
-      letter-spacing: 0.02em; text-transform: uppercase;
-      color: #000; line-height: 1;
-    }
-    @keyframes cdMarquee {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-
-    /* Fan de la cuenta atrás */
-    .cd-fan-wrapper {
-      width: min(100%, 1000px);
-      height: 400px;
-      perspective: 1000px;
-      perspective-origin: 50% 55%;
-      margin: 16px 0 12px;
-    }
-    .cd-fan-stage {
-      position: relative; width: 100%; height: 100%;
-      transform-style: preserve-3d; will-change: transform;
-    }
-    .cd-fan-card {
-      position: absolute;
-      width: 220px; height: 308px;
-      left: 50%; top: 50%;
-      margin-left: -110px; margin-top: -154px;
-      transform-origin: 50% 115%;
-      transform-style: preserve-3d;
-    }
-    .cd-fan-painting {
-      width: 100%; height: 100%;
-      transform-style: preserve-3d;
-      transform-origin: 50% 50%;
-      will-change: transform;
-    }
-    .cd-face {
-      position: absolute;
-      width: 100%; height: 100%;
-      backface-visibility: hidden;
-    }
-    .cd-face--front { transform: translateZ(3px); overflow: hidden; background: #fff; }
-    .cd-face--front img { width: 100%; height: 100%; object-fit: contain; display: block; }
-    .cd-face--back { transform: rotateY(180deg) translateZ(3px); overflow: hidden; }
-    .cd-face--back img { width: 100%; height: 100%; object-fit: contain; display: block; }
-    .cd-face--left {
-      position: absolute; width: 6px; height: 100%; top: 0; left: 0;
-      transform-origin: left center; transform: rotateY(-90deg) translateX(-3px);
-      background-image: url('../assets/producto-claudio/back.jpg');
-      background-size: cover; background-position: center;
-    }
-    .cd-face--right {
-      position: absolute; width: 6px; height: 100%; top: 0; right: 0;
-      transform-origin: right center; transform: rotateY(90deg) translateX(3px);
-      background-image: url('../assets/producto-claudio/back.jpg');
-      background-size: cover; background-position: center;
-    }
-
-    /* Colores debajo de la fecha */
-    .cd__colors {
-      display: flex; gap: 8px; align-items: center;
-      justify-content: center; margin-top: 12px;
-    }
-    .cd__color-dot { width: 12px; height: 12px; border-radius: 50%; }
-
-    /* ¡Quedan: */
-    .cd__quedan {
-      font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 500;
-      letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(0,0,0,0.35); margin-bottom: 10px; margin-top: 20px;
-    }
-
-    /* Números grandes */
     .cd__timer {
       display: flex; align-items: flex-start; gap: 0;
-      margin-bottom: 12px; justify-content: center; width: 100%;
+      margin-bottom: 24px;
     }
     .cd__unit {
       display: flex; flex-direction: column; align-items: center;
-      min-width: 100px;
+      min-width: 80px;
     }
     .cd__num {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: clamp(3.5rem, 7vw, 6.5rem);
-      line-height: 1; letter-spacing: -0.02em; color: #000;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 0.9; letter-spacing: -0.02em; color: #000;
     }
     .cd__unit-label {
-      font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 400;
-      letter-spacing: 0.2em; text-transform: uppercase;
-      color: rgba(0,0,0,0.3); margin-top: 6px;
+      font-size: 0.55rem; font-weight: 400; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(0,0,0,0.25); margin-top: 8px;
     }
     .cd__sep {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: clamp(3.5rem, 7vw, 6.5rem);
-      line-height: 1; color: rgba(0,0,0,0.15);
-      padding: 0 4px; align-self: flex-start;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      line-height: 0.9; color: rgba(0,0,0,0.12);
+      padding: 0 2px; align-self: flex-start;
     }
-
     .cd__date {
-      font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300;
-      color: rgba(0,0,0,0.35); line-height: 1.6;
+      font-size: 0.78rem; font-weight: 300; color: rgba(0,0,0,0.4); line-height: 1.6;
     }
-    .cd__date strong {
-      font-weight: 500;
-      color: var(--accent); transition: color 3s ease;
-    }
+    .cd__date strong { font-weight: 500; color: #000; }
 
     /* ─── DISPONIBLE ────────────────────────────────────────────── */
     .drop__title {
@@ -304,7 +199,7 @@
       color: #000; cursor: pointer;
       transition: background 3s ease, border-color 3s ease, opacity 0.2s;
     }
-    .drop__waitlist button:hover { color: #000; border-color: #000; }
+    .drop__waitlist button:hover { opacity: 0.8; }
   </style>
 </head>
 <body>
@@ -329,7 +224,7 @@
   <section class="drop" id="drop" data-state="countdown">
     <div class="drop__inner">
 
-      <!-- Pintura 3D (oculta en countdown) -->
+      <!-- Pintura 3D -->
       <div class="drop__painting-outer">
         <div class="drop__painting-scene">
           <div class="drop__painting" id="painting">
@@ -352,78 +247,7 @@
 
         <!-- ── ESTADO: CUENTA ATRÁS ─────────────────────────────── -->
         <div class="drop__state is-active" id="state-countdown">
-
-          <div class="cd__marquee">
-            <div class="cd__marquee-track">
-              <div class="cd__marquee-frame">
-                <span class="cd__marquee-item">NUEVO DROP</span>
-                <span class="cd__marquee-item">NUEVO DROP</span>
-                <span class="cd__marquee-item">NUEVO DROP</span>
-              </div>
-              <div class="cd__marquee-frame">
-                <span class="cd__marquee-item">NUEVO DROP</span>
-                <span class="cd__marquee-item">NUEVO DROP</span>
-                <span class="cd__marquee-item">NUEVO DROP</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fan versión C: bloque + individual -->
-          <div class="cd-fan-wrapper">
-            <div class="cd-fan-stage" id="cd-fan-stage">
-              <div class="cd-fan-card">
-                <div class="cd-fan-painting">
-                  <div class="cd-face cd-face--front"><img src="../assets/producto-claudio/claudio-naranja.jpg" alt=""></div>
-                  <div class="cd-face cd-face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
-                  <div class="cd-face cd-face--left"></div>
-                  <div class="cd-face cd-face--right"></div>
-                </div>
-              </div>
-              <div class="cd-fan-card">
-                <div class="cd-fan-painting">
-                  <div class="cd-face cd-face--front"><img src="../assets/producto-claudio/claudio-rojo.jpg" alt=""></div>
-                  <div class="cd-face cd-face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
-                  <div class="cd-face cd-face--left"></div>
-                  <div class="cd-face cd-face--right"></div>
-                </div>
-              </div>
-              <div class="cd-fan-card">
-                <div class="cd-fan-painting">
-                  <div class="cd-face cd-face--front"><img src="../assets/producto-claudio/claudio-azul.jpg" alt=""></div>
-                  <div class="cd-face cd-face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
-                  <div class="cd-face cd-face--left"></div>
-                  <div class="cd-face cd-face--right"></div>
-                </div>
-              </div>
-              <div class="cd-fan-card">
-                <div class="cd-fan-painting">
-                  <div class="cd-face cd-face--front"><img src="../assets/producto-claudio/claudio-amarillo.jpg" alt=""></div>
-                  <div class="cd-face cd-face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
-                  <div class="cd-face cd-face--left"></div>
-                  <div class="cd-face cd-face--right"></div>
-                </div>
-              </div>
-              <div class="cd-fan-card">
-                <div class="cd-fan-painting">
-                  <div class="cd-face cd-face--front"><img src="../assets/producto-claudio/claudio-verde.jpg" alt=""></div>
-                  <div class="cd-face cd-face--back"><img src="../assets/producto-claudio/back-firmado.jpg" alt=""></div>
-                  <div class="cd-face cd-face--left"></div>
-                  <div class="cd-face cd-face--right"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="cd__colors">
-            <div class="cd__color-dot" style="background:#FF8C6C"></div>
-            <div class="cd__color-dot" style="background:#EC6768"></div>
-            <div class="cd__color-dot" style="background:#417DE1"></div>
-            <div class="cd__color-dot" style="background:#EED004"></div>
-            <div class="cd__color-dot" style="background:#228761"></div>
-          </div>
-
-          <p class="cd__quedan">Quedan:</p>
-
+          <span class="cd__tag">Próximo drop</span>
           <div class="cd__timer">
             <div class="cd__unit">
               <span class="cd__num" id="cd-days">00</span>
@@ -445,9 +269,7 @@
               <span class="cd__unit-label">seg</span>
             </div>
           </div>
-
-          <p class="cd__date"><strong id="drop-date-label">20 de abril a las 17:00</strong></p>
-
+          <p class="cd__date"><strong id="drop-date-label">20 de mayo a las 17:00</strong></p>
         </div>
 
         <!-- ── ESTADO: DISPONIBLE ───────────────────────────────── -->
@@ -509,7 +331,6 @@
     let inactiveImg  = document.getElementById('painting-img-b');
 
     let angle = 0, baseSpeed = 36, animState = 'normal', lastTime = performance.now();
-    let holdTimer = 0;
     let wPhase = '', wTimer = 0, wStartAngle = 0, wRecoilTarget = 0, wSnapStart = 0, wSnapTarget = 0;
     let isDragging = false, hasDragged = false, dragStartX = 0, dragStartAngle = 0, isPlaying = true;
 
@@ -616,11 +437,11 @@
     document.addEventListener('touchend', () => { isDragging = false; });
 
     /* ─── COUNTDOWN ──────────────────────────────────────────────── */
-    const DROP_TARGET = new Date('2026-04-20T17:00:00');
+    const DROP_TARGET = new Date('2026-05-20T17:00:00');
 
     function updateTimer() {
       const diff = DROP_TARGET - new Date();
-      const p = n => String(n).padStart(2, '0');
+      const p = n => String(Math.max(0, n)).padStart(2, '0');
       if (diff <= 0) {
         ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => {
           document.getElementById(id).textContent = '00';
@@ -643,53 +464,6 @@
     document.getElementById('drop-date-label').textContent =
       DROP_TARGET.toLocaleDateString('es-ES', opts) + ' a las ' +
       DROP_TARGET.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-
-    /* ─── COUNTDOWN FAN (versión C: bloque + individual) ─────────── */
-    const CD_FAN = [
-      { tx: -290, tz: -30, rz: -12 },
-      { tx: -155, tz: -15, rz:  -6 },
-      { tx:    0, tz:   0, rz:   0 },
-      { tx:  155, tz: -15, rz:   6 },
-      { tx:  290, tz: -30, rz:  12 },
-    ];
-
-    const cdFanStage  = document.getElementById('cd-fan-stage');
-    const cdFanCards  = cdFanStage.querySelectorAll('.cd-fan-card');
-    const cdFanPaints = cdFanStage.querySelectorAll('.cd-fan-painting');
-    const CD_MAX_BLOCK = 4;
-    const CD_MAX_IND   = 2.5;
-    const CD_ZONE      = 110;
-    const CD_LERP      = 0.06;
-    let   cdBlock      = 0;
-    const cdInd        = [0, 0, 0, 0, 0];
-    let   cdMouseX     = window.innerWidth / 2;
-
-    document.addEventListener('mousemove', e => { cdMouseX = e.clientX; });
-
-    cdFanCards.forEach((card, i) => {
-      const { tx, tz, rz } = CD_FAN[i];
-      card.style.transform = `translateX(${tx}px) translateZ(${tz}px) rotateZ(${rz}deg)`;
-    });
-
-    function tickCdFan() {
-      requestAnimationFrame(tickCdFan);
-      const blockTarget = Math.max(-CD_MAX_BLOCK, Math.min(CD_MAX_BLOCK,
-        ((cdMouseX - window.innerWidth / 2) / (window.innerWidth / 2)) * CD_MAX_BLOCK
-      ));
-      cdBlock += (blockTarget - cdBlock) * CD_LERP;
-      cdFanStage.style.transform = `rotateY(${cdBlock.toFixed(2)}deg)`;
-
-      cdFanPaints.forEach((painting, i) => {
-        const rect        = cdFanCards[i].getBoundingClientRect();
-        const cardCenterX = rect.left + rect.width / 2;
-        const dx          = cdMouseX - cardCenterX;
-        const indTarget   = Math.max(-CD_MAX_IND, Math.min(CD_MAX_IND, (dx / CD_ZONE) * CD_MAX_IND));
-        cdInd[i] += (indTarget - cdInd[i]) * CD_LERP;
-        painting.style.transform = `rotateY(${cdInd[i].toFixed(2)}deg)`;
-      });
-    }
-
-    tickCdFan();
   </script>
 
 </body>
