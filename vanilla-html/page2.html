@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Claudio — Navbar</title>
+  <title>Claudio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
@@ -473,7 +473,7 @@
     .footer__brand { display: flex; flex-direction: column; gap: 16px; max-width: 300px; }
     .footer__logo {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 1.8rem; text-transform: none; color: #fff; letter-spacing: 0.02em;
+      font-size: 1.8rem; text-transform: uppercase; color: #fff; letter-spacing: 0.02em;
     }
     .footer__logo span { color: var(--accent); transition: color 3s ease; }
     .footer__tagline {
@@ -519,6 +519,7 @@
 </head>
 <body>
 
+  <!-- ═══ NAVBAR ════════════════════════════════════════════════ -->
   <nav class="navbar">
     <a class="navbar__logo" href="#"><svg viewBox="0 0 4502 1209" style="height:28px;width:auto;display:block;fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"><g transform="matrix(1,0,0,1,-256.501441,-526.869346)"><path d="M3402,673C3412.865,673 3489.668,693.353 3485,600C3484.169,583.373 3425.415,530.585 3375,581C3335.571,620.429 3378.326,673 3402,673Z"/></g><g transform="matrix(1,0,0,1,-256.501441,-526.869346)"><path d="M1331.477,1443.858C1147.328,1135.137 1084.86,936.719 1062,891C1052.322,871.643 1123.911,769.285 1103,602C1097.126,555.01 1043.519,527.935 1019,531C980.665,535.792 820.583,479.916 861,682C884.23,798.152 931.529,855.941 917,885C901.829,915.341 802.932,1057.135 698,1267C684.002,1294.997 535.171,1550.415 470,1583C442.862,1596.569 438.785,1599.785 417,1578C400.829,1561.829 365.897,1562.618 386,1442C387.349,1433.904 420.296,1384.852 444,1373C506.528,1341.736 547.21,1370.839 542,1350C538.605,1336.42 556.614,1316.735 514,1312C512.615,1311.846 392.184,1313.908 388,1316C307.139,1356.43 275.535,1362.256 261,1464C241.838,1598.133 295.835,1599.835 332,1636C337.442,1641.442 534.797,1689.203 619,1605C644.28,1579.72 635.593,1573.407 661,1548C692.073,1516.927 678.086,1506.914 709,1476C759.275,1425.725 899.495,1143.505 907,1136C907.429,1135.571 958.066,1051.934 959,1051C975.767,1034.233 977.361,1001.722 992,1031C1071.473,1189.945 1066.418,1191.836 1146,1351C1178.539,1416.079 1184.62,1412.239 1217,1477C1251.371,1545.742 1262.33,1538.66 1297,1608C1314,1642 1334.903,1662.903 1339,1667C1339.85,1667.85 1404.782,1672.891 1419,1680C1430.218,1685.609 1608.943,1668.529 1638,1654C1679.477,1633.261 1687.345,1640.311 1713,1589C1716.892,1581.216 1721.343,1582.343 1745,1606C1796.5,1657.5 1801.81,1652.19 1806,1648C1811.04,1642.96 1818.431,1652.569 1827,1644C1831.169,1639.831 1833.066,1650.412 1900.62,1640.772C1924.312,1597.056 1922.103,1596.861 1946.18,1552.652C1964.837,1577.34 2007.164,1695.204 2108,1684C2148.486,1679.502 2174.693,1708.307 2234,1649C2242,1641 2275.654,1573.693 2279,1567C2280.976,1563.049 2285.419,1560.419 2324,1599C2361.228,1636.228 2513.176,1696.824 2531,1679C2532.677,1677.323 2533.003,1685.182 2579,1681C2586.245,1680.341 2585.975,1673.488 2599,1680C2635.94,1698.47 2796.157,1756.843 2872,1681C2934.224,1618.776 2931.375,1481.986 2931,1464C2930.673,1448.283 2928.761,1356.541 2933.138,1267.501C2962.596,1329.746 3037.929,1556.99 3121.55,1698.05C3168.444,1684.363 3231.112,1727.888 3285,1674C3302.643,1656.357 3301.75,1656.278 3430.677,1509.244C3515.965,1708.285 3542.368,1692.123 3605,1713C3679.37,1737.79 3795.611,1673.254 3816.414,1663.828C3832.916,1679.618 4013.523,1802.477 4131,1685C4157.615,1658.385 4157.884,1654.79 4184.165,1608.032C4320.66,1604.819 4326.651,1598.674 4504,1510C4529.956,1497.022 4629.399,1422.601 4691,1361C4710.193,1341.807 4712.496,1345.504 4746,1312C4774.775,1283.225 4742.96,1269.96 4741,1268C4736.316,1263.316 4727.764,1266.707 4730,1260C4731.438,1255.686 4693.112,1237.335 4691,1231C4681.175,1201.524 4484.397,1463.533 4200.552,1516.639C4173.404,1471.205 4171.293,1473.293 4134,1436C4115.775,1417.775 4040.774,1386.899 4021,1386C3961.661,1383.303 3946.85,1346.383 3882,1368C3804.423,1393.859 3743.862,1508.587 3770,1587C3774.196,1599.588 3762.038,1582.981 3750,1589C3739.215,1594.393 3708.46,1609.77 3612.388,1650.499C3594.364,1627.939 3535.932,1521.593 3518,1414C3514.321,1391.927 3523.78,1381.63 3496,1377C3470.268,1372.711 3422.85,1356.15 3412,1367C3383.942,1395.058 3389.134,1398.866 3361,1427C3355.13,1432.87 3264.495,1539.505 3243,1561C3217.783,1586.217 3219.607,1587.163 3194.966,1612.146C3150.12,1521.073 3018.796,1214.982 2991,1076C2975.982,1000.908 2957.908,1003.898 2934,717C2923.569,591.826 2916.267,583.733 2909,591C2908.517,591.483 2909.842,587.263 2901,588C2879.63,589.781 2853.913,582.087 2846,590C2839.363,596.637 2836.63,582.37 2830,589C2827.852,591.148 2812.206,581.114 2811,598C2808.998,626.025 2821.131,625.665 2823,949C2824.861,1270.958 2821.363,1354.149 2819.883,1389.347C2690.266,1348.761 2688.655,1366.445 2677,1367C2626.104,1369.424 2624.82,1365.09 2579,1388C2556.333,1399.333 2536.57,1438.86 2534,1444C2489.116,1533.768 2535.276,1610.11 2542.667,1622.333C2291.339,1511.749 2334.995,1367.751 2302,1376C2294.84,1377.79 2294.906,1374.547 2288,1378C2281.345,1381.327 2266.665,1372.168 2249,1381C2243.497,1383.751 2242.383,1376.617 2238,1381C2231.163,1387.837 2199.862,1370.037 2204,1399C2208.964,1433.746 2163.375,1564.625 2142,1586C2139.902,1588.098 2141.914,1589.466 2118.085,1614.357C2036.005,1517.549 2045.539,1473.618 2022,1403C2016.827,1387.48 2020.587,1383.117 2005,1380C1997.733,1378.547 1997.895,1380.724 1991,1379C1982.954,1376.988 1981.752,1381.752 1976,1376C1966.27,1366.27 1961.143,1380.143 1951,1370C1949.327,1368.327 1946.054,1381.108 1942,1373C1936.857,1362.713 1928.231,1377.462 1923,1367C1914.309,1349.618 1877.084,1453.046 1818.907,1531.634C1705.646,1434.564 1704.075,1435.224 1700,1423C1699.056,1420.167 1665.391,1371.464 1631,1360C1610.688,1353.229 1480.418,1335.291 1413,1369C1362.168,1394.416 1368.257,1401.319 1331.477,1443.858ZM984,673C978.319,673 979.81,565.534 986,646C986.191,648.478 988.333,676.333 988,677C986.165,680.671 988.215,673 984,673ZM1441.425,1618.308C1427.223,1534.103 1423.527,1495.473 1492,1427C1526,1393 1554.985,1407.492 1560,1410C1563.743,1411.871 1655.045,1501.955 1578,1579C1551.076,1605.924 1468.229,1614.7 1441.425,1618.308ZM2721,1653C2721,1648.098 2708.131,1668.131 2666,1626C2609,1569 2627.765,1512.706 2631,1503C2663.156,1406.533 2777.577,1385.308 2812,1523C2832.264,1604.056 2721,1664.763 2721,1653ZM4078.321,1582.447C4045.434,1616.252 4033.128,1649.234 3947,1660C3889.878,1667.14 3833.286,1548.714 3903,1479C3926.537,1455.463 3931.483,1453.578 3934.569,1452.402C3935.051,1458.667 3939.36,1514.68 3962,1526C3962.794,1526.397 3970.139,1525.139 3976,1531C3980.989,1535.989 4046.84,1570.729 4078.321,1582.447ZM4098.525,1517.574C4060.166,1508.103 4024.83,1503.339 4043,1467C4052.667,1447.667 4076.925,1471.925 4079,1474C4085.459,1480.459 4090.661,1483.557 4098.525,1517.574Z" style="stroke:rgb(235,235,235);stroke-width:1px;"/></g></svg></a>
     <ul class="navbar__links">
@@ -535,13 +536,525 @@
     </div>
   </nav>
 
+  <!-- ═══ HERO ══════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <video class="hero__video" src="assets/hero-claudio-angel-sara.mp4" autoplay loop muted playsinline></video>
+    <div class="hero__overlay"></div>
+    <canvas id="hero-canvas" class="hero__canvas"></canvas>
+    <p class="hero__subtitle">encontrado, pintado, dejado en la calle</p>
+    <div class="hero__scroll" onclick="document.getElementById('drop').scrollIntoView({behavior:'smooth'})">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══ DROP ══════════════════════════════════════════════════ -->
+  <section class="drop" id="drop" data-state="disponible">
+    <div class="drop__inner">
+
+      <!-- Pintura 3D (oculta en countdown) -->
+      <div class="drop__painting-outer">
+        <div class="drop__painting-scene">
+          <div class="drop__painting" id="painting">
+            <div class="painting__face painting__face--front">
+              <img id="painting-img-a" class="painting-img painting-img--active" src="../assets/producto-claudio/claudio-rojo.jpg" alt="Claudio">
+              <img id="painting-img-b" class="painting-img" src="" alt="Claudio">
+            </div>
+            <div class="painting__face painting__face--back">
+              <img src="../assets/producto-claudio/back-firmado.jpg" alt="">
+            </div>
+            <div class="painting__face painting__face--left"></div>
+            <div class="painting__face painting__face--right"></div>
+          </div>
+        </div>
+        <div class="drop__shadow" id="painting-shadow"></div>
+      </div>
+
+      <!-- Info -->
+      <div class="drop__info">
+
+        <!-- ── ESTADO: CUENTA ATRÁS ───────────────────────────── -->
+        <div class="drop__state" id="state-countdown">
+          <span class="cd__tag">Próximo drop</span>
+          <div class="cd__timer">
+            <div class="cd__unit"><span class="cd__num" id="cd-days">00</span><span class="cd__unit-label">días</span></div>
+            <span class="cd__sep">:</span>
+            <div class="cd__unit"><span class="cd__num" id="cd-hours">00</span><span class="cd__unit-label">horas</span></div>
+            <span class="cd__sep">:</span>
+            <div class="cd__unit"><span class="cd__num" id="cd-mins">00</span><span class="cd__unit-label">min</span></div>
+            <span class="cd__sep">:</span>
+            <div class="cd__unit"><span class="cd__num" id="cd-secs">00</span><span class="cd__unit-label">seg</span></div>
+          </div>
+          <p class="cd__date"><strong id="drop-date-label">20 de mayo a las 17:00</strong></p>
+        </div>
+
+        <!-- ── ESTADO: DISPONIBLE ─────────────────────────────── -->
+        <div class="drop__state is-active" id="state-disponible">
+          <p class="drop__edition">NUEVO DROP · 15 UNIDADES</p>
+          <div class="drop__divider"></div>
+          <h2 class="drop__title">
+            Quedan <span class="accent" id="stock-count">7</span> claudios<br>disponibles
+          </h2>
+          <p class="drop__body">
+            No esperes en hacerte con el tuyo.<br>
+            Cada pieza es única, pintada a mano.
+          </p>
+          <p class="drop__price">€ 150</p>
+          <button class="drop__btn">¡Quiero el mío!</button>
+        </div>
+
+        <!-- ── ESTADO: AGOTADO ────────────────────────────────── -->
+        <div class="drop__state" id="state-agotado">
+          <h2 class="drop__agotado-title">Claudios<br>agotados :(</h2>
+          <p class="drop__agotado-wow">¡Habéis acabado el último drop a una velocidad nunca vista!</p>
+          <p class="drop__agotado-cta">¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie :)</p>
+          <div class="drop__waitlist">
+            <input type="email" placeholder="tu@email.com" />
+            <button>Apúntame</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Botones de estado dentro del módulo -->
+    <div class="drop__state-btns">
+      <button class="drop__state-btn" onclick="setState('countdown')">Cuenta atrás</button>
+      <button class="drop__state-btn active" onclick="setState('disponible')">Disponible</button>
+      <button class="drop__state-btn" onclick="setState('agotado')">Agotado</button>
+    </div>
+  </section>
+
+  <!-- ═══ CAMISETA ════════════════════════════════════════════ -->
+  <section class="camisa" id="camiseta">
+    <div class="camisa__bg">
+      <img src="assets/tshirt.jpg" alt="La camiseta claudio">
+    </div>
+    <div class="camisa__copy">
+      <div class="camisa__left">
+        <span class="camisa__tag">Siempre en stock</span>
+        <h2 class="camisa__title">La camiseta</h2>
+        <p class="camisa__sub">encontrado, pintado, dejado en la calle</p>
+      </div>
+      <div class="camisa__right">
+        <span class="camisa__price">€ XX</span>
+        <button class="camisa__btn">Comprar</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TESTIMONIOS ═════════════════════════════════════════ -->
+  <section class="testimonios" id="testimonios">
+    <h2 class="testimonios__label">Lo que piensan nuestros seguidores</h2>
+    <div class="testimonios__grid">
+      <div class="testimonios__item"><img src="assets/resenas-01.JPG" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-02.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-03.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-04.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-05.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-06.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-07.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-08.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-09.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/resenas-10.jpg" alt="" loading="lazy"></div>
+    </div>
+  </section>
+
+  <!-- ═══ SOBRE ════════════════════════════════════════════════ -->
+  <section class="sobre" id="sobre">
+
+    <div class="sobre__cluster ca">
+      <div class="shot s1"><img src="assets/sobre-05.jpg" alt=""><span class="shot-label">post · claudio pintado</span></div>
+      <div class="shot s2 shot--dark"><video src="assets/sobre-video-s2.mp4" autoplay loop muted playsinline></video><span class="shot-label">post · claudio en la calle</span></div>
+      <div class="shot s3"><video src="assets/sobre-video-s3.mp4" autoplay loop muted playsinline></video><span class="shot-label">story · proceso</span></div>
+      <div class="shot s4"><img src="assets/sobre-04.jpg" alt=""><span class="shot-label">post · madera encontrada</span></div>
+      <div class="shot s5 shot--dark"><img src="assets/sobre-01.jpg" alt=""><span class="shot-label">story · reacción</span></div>
+      <div class="shot s6"><img src="assets/sobre-02.jpg" alt=""><span class="shot-label">dm · dónde comprar</span></div>
+      <div class="shot s7"><video src="assets/sobre-video-s7.mp4" autoplay loop muted playsinline></video><span class="shot-label">perfil · @cl4u8io</span></div>
+      <div class="shot s8 shot--dark"><video src="assets/sobre-video-s8.mp4" autoplay loop muted playsinline></video><span class="shot-label">story · drop</span></div>
+      <div class="shot shot--reel sreel">
+        <video src="assets/sobre-reel.mp4" autoplay loop muted playsinline></video>
+        <div class="reel-overlay">
+          <div class="reel-top-grad"></div>
+          <div class="reel-bot-grad"></div>
+          <div class="reel-progress"><div class="reel-progress-fill"></div></div>
+          <div class="reel-actions">
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+              <span class="reel-action-count">8.4K</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              <span class="reel-action-count">312</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>
+              <span class="reel-action-count">1.2K</span>
+            </div>
+            <div class="reel-action">
+              <svg viewBox="0 0 24 24" fill="#fff"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            </div>
+            <div class="reel-vinyl-wrap"><div class="reel-vinyl-dot"></div></div>
+          </div>
+          <div class="reel-bottom">
+            <div class="reel-user">
+              <div class="reel-avatar"></div>
+              <span class="reel-username">cl4u8io</span>
+              <button class="reel-follow">Seguir</button>
+            </div>
+            <p class="reel-caption">encontrado, pintado, dejado en la calle 🎨</p>
+            <div class="reel-audio-row">
+              <span class="reel-audio-note">♪</span>
+              <span class="reel-audio-text">Audio original · cl4u8io</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sobre__info">
+      <p class="sobre__tag">@cl4u8io · Instagram</p>
+      <div class="sobre__divider"></div>
+      <h2 class="sobre__title">Todo empieza<br>en la calle</h2>
+      <p class="sobre__body">
+        Recojo madera que Madrid tira.<br>
+        La pinto, la firmo, y la dejo<br>
+        donde la encontré.<br>
+        A veces alguien se la lleva.
+      </p>
+      <p class="sobre__cta-label">¿Quieres ver más?</p>
+      <div class="sobre__btns">
+        <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="sobre__btn" href="https://tiktok.com/@cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ NEWSLETTER ══════════════════════════════════════════ -->
+  <section class="newsletter" id="newsletter">
+    <span class="newsletter__tag">Próximo drop</span>
+    <h2 class="newsletter__title">No te<br>lo pierdas</h2>
+    <p class="newsletter__sub">Los claudios se van en horas. Si no estás en la lista, te enteras tarde.</p>
+    <form class="newsletter__form" onsubmit="return false">
+      <input class="newsletter__input" type="email" placeholder="tu@email.com" />
+      <button class="newsletter__btn">Entrar</button>
+    </form>
+    <span class="newsletter__legal">Sin spam. Baja cuando quieras.</span>
+  </section>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════ -->
+  <footer class="footer" id="footer">
+    <div class="footer__top">
+      <div class="footer__brand">
+        <div class="footer__logo">SOYCLAUDIO<span>.</span>ES</div>
+        <p class="footer__tagline">Recogido de la calle, pintado, devuelto a la calle.</p>
+      </div>
+      <div class="footer__cols">
+        <div class="footer__col">
+          <span class="footer__col-title">Tienda</span>
+          <a href="#">Claudios</a>
+          <a href="#">Camiseta</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Más</span>
+          <a href="#">Sobre Claudio</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer__col">
+          <span class="footer__col-title">Redes</span>
+          <a href="#">Instagram</a>
+          <a href="#">@cl4u8io</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__middle">
+      <p class="footer__privacy-title">Privacidad y datos</p>
+      <p class="footer__privacy-text">
+        Al suscribirte a la lista de correo, aceptas que Claudio (Claudio Portalo Bueno) trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros ni se usan para publicidad. Puedes darte de baja en cualquier momento mediante el enlace incluido en cada correo o escribiéndonos a <a href="mailto:hola@soyclaudio.es">hola@soyclaudio.es</a>. Tratamiento conforme al Reglamento (UE) 2016/679 (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).
+      </p>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__legal">© 2026 Claudio — Madrid &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Política de privacidad</a> &nbsp;·&nbsp; <a href="#" style="color:inherit;text-decoration:underline;">Aviso legal</a></span>
+      <div class="footer__socials">
+        <a href="#">@cl4u8io</a>
+        <a href="#">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+
   <script>
-    document.querySelectorAll('.swatch').forEach(swatch => {
-      swatch.addEventListener('click', () => {
-        document.documentElement.style.setProperty('--accent', swatch.dataset.color);
+    /* ─── MAPA ACENTO → IMAGEN ──────────────────────────────────── */
+    const ACCENT_IMG = {
+      '#ff8c6c': 'claudio-naranja.jpg',
+      '#ec6768': 'claudio-rojo.jpg',
+      '#417de1': 'claudio-azul.jpg',
+      '#eed004': 'claudio-amarillo.jpg',
+      '#228761': 'claudio-verde.jpg',
+    };
+
+    /* ─── CAMBIO DE COLOR ───────────────────────────────────────── */
+    function updateColor(hex) {
+      document.documentElement.style.setProperty('--accent', hex);
+      const filename = ACCENT_IMG[hex.toLowerCase()];
+      if (filename) {
+        inactiveImg.src = '../assets/producto-claudio/' + filename;
+        inactiveImg.classList.add('painting-img--active');
+        activeImg.classList.remove('painting-img--active');
+        [activeImg, inactiveImg] = [inactiveImg, activeImg];
+      }
+      animState = 'wobble'; wPhase = 'recoil'; wTimer = 0;
+      wStartAngle = angle; wRecoilTarget = angle - 28;
+    }
+
+    /* ─── NAVBAR SWATCHES ───────────────────────────────────────── */
+    document.querySelectorAll('.swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
         document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-        swatch.classList.add('active');
+        sw.classList.add('active');
+        updateColor(sw.dataset.color);
       });
+    });
+
+    /* ─── STATE SWITCHER ────────────────────────────────────────── */
+    function setState(s) {
+      document.getElementById('drop').setAttribute('data-state', s);
+      document.querySelectorAll('.drop__state').forEach(el => el.classList.remove('is-active'));
+      document.getElementById('state-' + s).classList.add('is-active');
+      document.querySelectorAll('.drop__state-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', ['countdown','disponible','agotado'][i] === s);
+      });
+    }
+
+    /* ─── PAINTING ──────────────────────────────────────────────── */
+    const paintingEl = document.getElementById('painting');
+    const shadowEl   = document.getElementById('painting-shadow');
+    let activeImg    = document.getElementById('painting-img-a');
+    let inactiveImg  = document.getElementById('painting-img-b');
+
+    let angle = 0, baseSpeed = 36, animState = 'normal', lastTime = performance.now();
+    let wPhase = '', wTimer = 0, wStartAngle = 0, wRecoilTarget = 0, wSnapStart = 0, wSnapTarget = 0;
+    let isDragging = false, hasDragged = false, dragStartX = 0, dragStartAngle = 0, isPlaying = true;
+
+    function animate(now) {
+      requestAnimationFrame(animate);
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
+      if (!isDragging) {
+        switch (animState) {
+          case 'normal':
+            if (isPlaying) angle += baseSpeed * dt;
+            break;
+          case 'wobble':
+            if (wPhase === 'recoil') {
+              wTimer += dt;
+              const t = Math.min(wTimer / 0.13, 1);
+              const e = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+              angle = wStartAngle + (wRecoilTarget - wStartAngle) * e;
+              if (t >= 1) {
+                wPhase = 'snap'; wTimer = 0;
+                const norm = ((angle % 360) + 360) % 360;
+                const toFront = norm <= 180 ? -norm : (360 - norm);
+                wSnapStart = angle; wSnapTarget = angle + toFront;
+              }
+            } else if (wPhase === 'snap') {
+              wTimer += dt;
+              const t = Math.min(wTimer / 0.45, 1);
+              const e = 1 - Math.pow(1 - t, 3);
+              angle = wSnapStart + (wSnapTarget - wSnapStart) * e;
+              if (t >= 1) { angle = wSnapTarget; wPhase = 'hold'; wTimer = 0; }
+            } else if (wPhase === 'hold') {
+              wTimer += dt;
+              if (wTimer > 0.9) animState = 'normal';
+            }
+            break;
+        }
+      }
+      const bobY = Math.sin(now / 1000 * 0.25 * Math.PI * 2) * 4;
+      paintingEl.style.transform = `translateY(${bobY.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
+      const faceOn = Math.abs(Math.cos(angle * Math.PI / 180));
+      shadowEl.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
+    }
+    requestAnimationFrame(animate);
+
+    paintingEl.addEventListener('click', () => {
+      if (hasDragged) return;
+      isPlaying = !isPlaying;
+      paintingEl.classList.toggle('is-paused', !isPlaying);
+    });
+    paintingEl.addEventListener('mousedown', e => {
+      e.preventDefault(); isDragging = true; hasDragged = false;
+      dragStartX = e.clientX; dragStartAngle = angle; paintingEl.style.cursor = 'grabbing';
+    });
+    document.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const delta = e.clientX - dragStartX;
+      if (Math.abs(delta) > 4) hasDragged = true;
+      angle = dragStartAngle + delta * 0.45;
+    });
+    document.addEventListener('mouseup', () => { if (!isDragging) return; isDragging = false; paintingEl.style.cursor = 'grab'; });
+    paintingEl.addEventListener('touchstart', e => {
+      e.preventDefault(); isDragging = true; hasDragged = false;
+      dragStartX = e.touches[0].clientX; dragStartAngle = angle;
+    }, { passive: false });
+    document.addEventListener('touchmove', e => {
+      if (!isDragging) return;
+      e.preventDefault();
+      const delta = e.touches[0].clientX - dragStartX;
+      if (Math.abs(delta) > 4) hasDragged = true;
+      angle = dragStartAngle + delta * 0.45;
+    }, { passive: false });
+    document.addEventListener('touchend', () => { isDragging = false; });
+
+
+    /* ─── COUNTDOWN ─────────────────────────────────────────────── */
+    const DROP_TARGET = new Date('2026-04-20T17:00:00');
+    function updateTimer() {
+      const diff = DROP_TARGET - new Date();
+      const p = n => String(n).padStart(2, '0');
+      if (diff <= 0) {
+        ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '00');
+        return;
+      }
+      document.getElementById('cd-days').textContent  = p(Math.floor(diff / 86400000));
+      document.getElementById('cd-hours').textContent = p(Math.floor(diff % 86400000 / 3600000));
+      document.getElementById('cd-mins').textContent  = p(Math.floor(diff % 3600000 / 60000));
+      document.getElementById('cd-secs').textContent  = p(Math.floor(diff % 60000 / 1000));
+    }
+    updateTimer();
+    setInterval(updateTimer, 1000);
+    const opts = { day: 'numeric', month: 'long' };
+    document.getElementById('drop-date-label').textContent =
+      DROP_TARGET.toLocaleDateString('es-ES', opts) + ' a las ' +
+      DROP_TARGET.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+  </script>
+
+
+  <script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    const VS = `
+      varying vec2 vUv;
+      #ifdef USE_OFFSETS
+        varying vec2 vL, vR, vT, vB;
+        uniform vec2 texelSize;
+      #endif
+      void main() {
+        vUv = uv;
+        #ifdef USE_OFFSETS
+          vL = uv - vec2(texelSize.x, 0.0);
+          vR = uv + vec2(texelSize.x, 0.0);
+          vT = uv + vec2(0.0, texelSize.y);
+          vB = uv - vec2(0.0, texelSize.y);
+        #endif
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+    const FS_CLEAR=`precision highp float; varying vec2 vUv; uniform sampler2D uTexture; uniform float uClearValue; void main(){gl_FragColor=uClearValue*texture2D(uTexture,vUv);}`;
+    const FS_CURL=`precision highp float; varying vec2 vL,vR,vT,vB; uniform sampler2D uVelocity; void main(){float L=texture2D(uVelocity,vL).y,R=texture2D(uVelocity,vR).y,T=texture2D(uVelocity,vT).x,B=texture2D(uVelocity,vB).x; gl_FragColor=vec4(R-L-T+B,0,0,1);}`;
+    const FS_VORTICITY=`precision highp float; varying vec2 vUv,vL,vR,vT,vB; uniform sampler2D uVelocity,uCurl; uniform float uCurlValue,dt; void main(){float L=texture2D(uCurl,vL).x,R=texture2D(uCurl,vR).x,T=texture2D(uCurl,vT).x,B=texture2D(uCurl,vB).x,C=texture2D(uCurl,vUv).x; vec2 f=vec2(abs(T)-abs(B),abs(R)-abs(L))*0.5; f/=length(f)+1.;f*=uCurlValue*C;f.y*=-1.; gl_FragColor=vec4(texture2D(uVelocity,vUv).xy+f*dt,0,1);}`;
+    const FS_DIVERGENCE=`precision highp float; varying vec2 vUv,vL,vR,vT,vB; uniform sampler2D uVelocity; void main(){float L=texture2D(uVelocity,vL).x,R=texture2D(uVelocity,vR).x,T=texture2D(uVelocity,vT).y,B=texture2D(uVelocity,vB).y; vec2 C=texture2D(uVelocity,vUv).xy; if(vL.x<0.)L=-C.x;if(vR.x>1.)R=-C.x;if(vT.y>1.)T=-C.y;if(vB.y<0.)B=-C.y; gl_FragColor=vec4(.5*(R-L+T-B),0,0,1);}`;
+    const FS_PRESSURE=`precision highp float; varying vec2 vUv,vL,vR,vT,vB; uniform sampler2D uPressure,uDivergence; void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x; gl_FragColor=vec4((L+R+B+T-texture2D(uDivergence,vUv).x)*.25,0,0,1);}`;
+    const FS_GRADIENT=`precision highp float; varying vec2 vUv,vL,vR,vT,vB; uniform sampler2D uPressure,uVelocity; void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x; vec2 v=texture2D(uVelocity,vUv).xy;v-=vec2(R-L,T-B); gl_FragColor=vec4(v,0,1);}`;
+    const FS_SPLAT=`precision highp float; varying vec2 vUv; uniform sampler2D uTarget; uniform float aspectRatio,uRadius; uniform vec3 uColor; uniform vec2 uPointer; void main(){vec2 p=vUv-uPointer;p.x*=aspectRatio; vec2 velDir=length(uColor.xy)>0.0001?normalize(uColor.xy):vec2(1,0); float along=dot(p,velDir),perp=length(p-along*velDir),d=along*along/uRadius+perp*perp/uRadius; gl_FragColor=vec4(texture2D(uTarget,vUv).xyz+exp(-d)*uColor,1);}`;
+    const FS_ADVECTION=`precision highp float; varying vec2 vUv; uniform sampler2D uVelocity,uSource; uniform vec2 texelSize; uniform float dt,uDissipation; void main(){vec2 c=vUv-dt*texture2D(uVelocity,vUv).xy*texelSize; gl_FragColor=uDissipation*texture2D(uSource,c);gl_FragColor.a=1.;}`;
+    const FS_DISPLAY=`precision highp float; varying vec2 vUv; uniform sampler2D tVelocity,tText; uniform float uDistort; void main(){vec2 vel=texture2D(tVelocity,vUv).xy,distUv=clamp(vUv-vel*uDistort,0.,1.); vec4 text=texture2D(tText,distUv); gl_FragColor=vec4(text.rgb,text.a);}`;
+
+    class FluidText {
+      constructor(canvasEl, logoImg, cfg={}) {
+        this.canvas=canvasEl; this._logoImg=logoImg;
+        this.cfg={SIM_RES:128,PRESSURE_ITE:25,CURL:0.8,PRESSURE:0.8,VELOCITY_DISS:0.97,SPLAT_RADIUS:0.0015,SPLAT_FORCE:1200,DISTORT:0.010,FONT_SCALE:0.44,LINE_HEIGHT:1.3,MARGIN_X:0.08,...cfg};
+        this._ptr={x:-1,y:-1};this._momentum={x:0,y:0};this._lastPos={x:.5,y:.5};this._hasPos=false;this._movedThisFrame=false;this._dpr=Math.min(devicePixelRatio,2);
+        this._init();this._bindEvents();
+      }
+      _init(){
+        const{canvas,cfg}=this,S=cfg.SIM_RES;
+        this.renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});
+        this.renderer.setPixelRatio(this._dpr);this.renderer.setSize(canvas.clientWidth,canvas.clientHeight);this.renderer.setClearColor(0,0);
+        this.camera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);this.scene=new THREE.Scene();this.quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2));this.scene.add(this.quad);
+        const pp=(w,h)=>{const o={minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,type:THREE.HalfFloatType,format:THREE.RGBAFormat,depthBuffer:false};const a=new THREE.WebGLRenderTarget(w,h,o),b=new THREE.WebGLRenderTarget(w,h,o);return{read:a,write:b,swap(){const t=this.read;this.read=this.write;this.write=t;}};};
+        const rt=(w,h)=>new THREE.WebGLRenderTarget(w,h,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,type:THREE.HalfFloatType,format:THREE.RGBAFormat,depthBuffer:false});
+        this.rtVel=pp(S,S);this.rtPres=pp(S,S);this.rtDiv=rt(S,S);this.rtCurl=rt(S,S);
+        const mk=(fs,def={})=>new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:fs,uniforms:{},defines:def,depthTest:false,depthWrite:false});
+        const ts=new THREE.Vector2(1/S,1/S);
+        this.mClear=mk(FS_CLEAR);this.mClear.uniforms={uTexture:{value:null},uClearValue:{value:cfg.PRESSURE}};
+        this.mCurl=mk(FS_CURL,{USE_OFFSETS:''});this.mCurl.uniforms={uVelocity:{value:null},texelSize:{value:ts.clone()}};
+        this.mVort=mk(FS_VORTICITY,{USE_OFFSETS:''});this.mVort.uniforms={uVelocity:{value:null},uCurl:{value:null},uCurlValue:{value:cfg.CURL},dt:{value:1/60},texelSize:{value:ts.clone()}};
+        this.mDiv=mk(FS_DIVERGENCE,{USE_OFFSETS:''});this.mDiv.uniforms={uVelocity:{value:null},texelSize:{value:ts.clone()}};
+        this.mPres=mk(FS_PRESSURE,{USE_OFFSETS:''});this.mPres.uniforms={uPressure:{value:null},uDivergence:{value:null},texelSize:{value:ts.clone()}};
+        this.mGrad=mk(FS_GRADIENT,{USE_OFFSETS:''});this.mGrad.uniforms={uPressure:{value:null},uVelocity:{value:null},texelSize:{value:ts.clone()}};
+        this.mSplat=mk(FS_SPLAT);this.mSplat.uniforms={uTarget:{value:null},aspectRatio:{value:canvas.clientWidth/canvas.clientHeight},uColor:{value:new THREE.Vector3()},uPointer:{value:new THREE.Vector2()},uRadius:{value:cfg.SPLAT_RADIUS}};
+        this.mAdv=mk(FS_ADVECTION);this.mAdv.uniforms={uVelocity:{value:null},uSource:{value:null},texelSize:{value:ts.clone()},dt:{value:1/60},uDissipation:{value:cfg.VELOCITY_DISS}};
+        this.mDisplay=mk(FS_DISPLAY);this.mDisplay.uniforms={tVelocity:{value:null},tText:{value:this._buildTex()},uDistort:{value:cfg.DISTORT}};
+      }
+      _buildTex(){
+        const{canvas,_dpr,_logoImg}=this,w=Math.ceil(canvas.clientWidth*_dpr),h=Math.ceil(canvas.clientHeight*_dpr);
+        const c=document.createElement('canvas');c.width=w;c.height=h;
+        const ctx=c.getContext('2d');ctx.clearRect(0,0,w,h);
+        const margin=w*0.1,maxW=w-margin*2,maxH=h*0.45;
+        const ratio=_logoImg.naturalWidth/_logoImg.naturalHeight;
+        let lw=maxW,lh=lw/ratio;if(lh>maxH){lh=maxH;lw=lh*ratio;}
+        const lx=(w-lw)/2,ly=(h-lh)/2-h*0.1;
+        ctx.filter='invert(1)';ctx.drawImage(_logoImg,lx,ly,lw,lh);ctx.filter='none';
+        const tex=new THREE.CanvasTexture(c);tex.needsUpdate=true;return tex;
+      }
+      _r(mat,target){this.quad.material=mat;this.renderer.setRenderTarget(target??null);this.renderer.render(this.scene,this.camera);}
+      _simulate(dt){
+        const{mVort,mAdv,mCurl,mVort:mv,mDiv,mPres,mGrad,mClear,rtVel,rtPres,rtDiv,rtCurl,cfg}=this,S=cfg.SIM_RES;
+        mVort.uniforms.dt.value=dt;mAdv.uniforms.dt.value=dt;
+        mCurl.uniforms.uVelocity.value=rtVel.read.texture;this._r(mCurl,rtCurl);
+        mv.uniforms.uVelocity.value=rtVel.read.texture;mv.uniforms.uCurl.value=rtCurl.texture;this._r(mv,rtVel.write);rtVel.swap();
+        mDiv.uniforms.uVelocity.value=rtVel.read.texture;this._r(mDiv,rtDiv);
+        mClear.uniforms.uTexture.value=rtPres.read.texture;this._r(mClear,rtPres.write);rtPres.swap();
+        for(let i=0;i<cfg.PRESSURE_ITE;i++){mPres.uniforms.uPressure.value=rtPres.read.texture;mPres.uniforms.uDivergence.value=rtDiv.texture;this._r(mPres,rtPres.write);rtPres.swap();}
+        mGrad.uniforms.uPressure.value=rtPres.read.texture;mGrad.uniforms.uVelocity.value=rtVel.read.texture;this._r(mGrad,rtVel.write);rtVel.swap();
+        mAdv.uniforms.uVelocity.value=rtVel.read.texture;mAdv.uniforms.uSource.value=rtVel.read.texture;mAdv.uniforms.texelSize.value.set(1/S,1/S);mAdv.uniforms.uDissipation.value=cfg.VELOCITY_DISS;this._r(mAdv,rtVel.write);rtVel.swap();
+      }
+      _splat(x,y,dx,dy){const{mSplat,rtVel,cfg,canvas}=this;mSplat.uniforms.aspectRatio.value=canvas.clientWidth/canvas.clientHeight;mSplat.uniforms.uPointer.value.set(x,y);mSplat.uniforms.uRadius.value=cfg.SPLAT_RADIUS;mSplat.uniforms.uTarget.value=rtVel.read.texture;mSplat.uniforms.uColor.value.set(dx,dy,0);this._r(mSplat,rtVel.write);rtVel.swap();}
+      _bindEvents(){
+        const move=(cx,cy)=>{
+          const rect=this.canvas.getBoundingClientRect(),nx=(cx-rect.left)/rect.width,ny=1-(cy-rect.top)/rect.height,p=this._ptr;
+          if(p.x>=0){const rdx=(nx-p.x)*this.cfg.SPLAT_FORCE,rdy=(ny-p.y)*this.cfg.SPLAT_FORCE,b=0.18;this._momentum.x=this._momentum.x*(1-b)+rdx*b;this._momentum.y=this._momentum.y*(1-b)+rdy*b;if(Math.abs(rdx)+Math.abs(rdy)>0.5)this._splat(nx,ny,this._momentum.x,this._momentum.y);}
+          p.x=nx;p.y=ny;this._lastPos.x=nx;this._lastPos.y=ny;this._hasPos=true;this._movedThisFrame=true;
+        };
+        this.canvas.addEventListener('mousemove',e=>move(e.clientX,e.clientY));
+        this.canvas.addEventListener('touchmove',e=>{e.preventDefault();move(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+        this.canvas.addEventListener('mouseleave',()=>{this._ptr.x=-1;this._ptr.y=-1;});
+      }
+      resize(){const{canvas,renderer,mSplat,mDisplay,_dpr}=this;renderer.setSize(canvas.clientWidth,canvas.clientHeight);mSplat.uniforms.aspectRatio.value=canvas.clientWidth/canvas.clientHeight;const old=mDisplay.uniforms.tText.value;mDisplay.uniforms.tText.value=this._buildTex();old.dispose();}
+      tick(dt){
+        this._simulate(dt);
+        if(!this._movedThisFrame&&this._hasPos){const mag=Math.sqrt(this._momentum.x**2+this._momentum.y**2);if(mag>40){this._splat(this._lastPos.x,this._lastPos.y,this._momentum.x*0.4,this._momentum.y*0.4);this._momentum.x*=0.92;this._momentum.y*=0.92;}}
+        this._movedThisFrame=false;this.mDisplay.uniforms.tVelocity.value=this.rtVel.read.texture;this._r(this.mDisplay,null);
+      }
+    }
+
+    fetch('assets/claudio-logo.svg').then(r=>r.text()).then(svgText=>{
+      const fixed=svgText.replace('width="100%" height="100%"','width="4502" height="1209"');
+      const blob=new Blob([fixed],{type:'image/svg+xml'});
+      const url=URL.createObjectURL(blob);
+      const logoImg=new Image();
+      logoImg.onload=()=>{
+        URL.revokeObjectURL(url);
+        const fluid=new FluidText(document.getElementById('hero-canvas'),logoImg,{FONT_SCALE:0.44});
+        window.addEventListener('resize',()=>fluid.resize());
+        let last=performance.now();
+        (function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,1/30);last=now;fluid.tick(dt);})(performance.now());
+      };
+      logoImg.src=url;
     });
   </script>
 </body>
