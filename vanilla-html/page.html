@@ -35,6 +35,48 @@
     .swatch:hover  { transform: scale(1.2); }
     .swatch.active { border-color: #000; }
 
+    /* hamburguesa */
+    .navbar__burger {
+      display: none; flex-direction: column; justify-content: center; gap: 5px;
+      width: 32px; height: 32px; background: none; border: none; cursor: pointer;
+      padding: 0; justify-self: end;
+    }
+    .navbar__burger span {
+      display: block; width: 22px; height: 2px; background: #000;
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .navbar__burger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .navbar__burger.is-open span:nth-child(2) { opacity: 0; }
+    .navbar__burger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* menú móvil overlay */
+    .navbar__mobile-menu {
+      display: none; position: fixed; top: 52px; left: 0; right: 0; bottom: 0;
+      background: var(--accent); transition: background 3s ease;
+      flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px; z-index: 99;
+    }
+    .navbar__mobile-menu.is-open { display: flex; }
+    .navbar__mobile-links {
+      list-style: none; display: flex; flex-direction: column;
+      align-items: center; gap: 16px;
+    }
+    .navbar__mobile-links a {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(3rem, 14vw, 5rem); color: #000; text-decoration: none;
+      text-transform: uppercase; letter-spacing: 0.02em; line-height: 1;
+      opacity: 0.85; display: block;
+    }
+    .navbar__mobile-links a:active { opacity: 1; }
+
+    @media (max-width: 768px) {
+      .navbar { padding: 0 20px; grid-template-columns: 1fr auto; }
+      .navbar__logo { display: none; }
+      .navbar__links { display: none; }
+      .navbar__swatches { display: none; }
+      .navbar__burger { display: flex; }
+    }
+
     /* ─── HERO ────────────────────────────────────────────────── */
     .hero { position: relative; width: 100%; height: 85vh; overflow: hidden; background: #000; margin-top: 52px; }
     .hero__video {
@@ -534,7 +576,17 @@
       <div class="swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
       <div class="swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
     </div>
+    <button class="navbar__burger" id="navbar-burger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
   </nav>
+
+  <div class="navbar__mobile-menu" id="navbar-mobile-menu">
+    <ul class="navbar__mobile-links">
+      <li><a href="#drop" onclick="closeMobileMenu()">Drop</a></li>
+      <li><a href="#sobre" onclick="closeMobileMenu()">¿Quién soy?</a></li>
+    </ul>
+  </div>
 
   <!-- ═══ HERO ══════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
@@ -825,8 +877,8 @@
     const FS_DISPLAY=`precision highp float; varying vec2 vUv; uniform sampler2D tVelocity,tText; uniform float uDistort; void main(){vec2 vel=texture2D(tVelocity,vUv).xy,distUv=clamp(vUv-vel*uDistort,0.,1.); vec4 text=texture2D(tText,distUv); gl_FragColor=vec4(text.rgb,text.a);}`;
 
     class FluidText {
-      constructor(canvasEl, lines, cfg={}) {
-        this.canvas=canvasEl; this.lines=Array.isArray(lines)?lines:[lines];
+      constructor(canvasEl, logoImg, cfg={}) {
+        this.canvas=canvasEl; this._logoImg=logoImg;
         this.cfg={SIM_RES:128,PRESSURE_ITE:25,CURL:0.8,PRESSURE:0.8,VELOCITY_DISS:0.97,SPLAT_RADIUS:0.0015,SPLAT_FORCE:1200,DISTORT:0.010,FONT_SCALE:0.44,LINE_HEIGHT:1.3,MARGIN_X:0.08,...cfg};
         this._ptr={x:-1,y:-1};this._momentum={x:0,y:0};this._lastPos={x:.5,y:.5};this._hasPos=false;this._movedThisFrame=false;this._dpr=Math.min(devicePixelRatio,2);
         this._init();this._bindEvents();
@@ -852,13 +904,14 @@
         this.mDisplay=mk(FS_DISPLAY);this.mDisplay.uniforms={tVelocity:{value:null},tText:{value:this._buildTex()},uDistort:{value:cfg.DISTORT}};
       }
       _buildTex(){
-        const{canvas,lines,cfg,_dpr}=this,w=Math.ceil(canvas.clientWidth*_dpr),h=Math.ceil(canvas.clientHeight*_dpr);
+        const{canvas,_dpr,_logoImg}=this,w=Math.ceil(canvas.clientWidth*_dpr),h=Math.ceil(canvas.clientHeight*_dpr);
         const c=document.createElement('canvas');c.width=w;c.height=h;
         const ctx=c.getContext('2d');ctx.clearRect(0,0,w,h);
-        const fontSize=Math.floor(h*cfg.FONT_SCALE);
-        ctx.font=`900 ${fontSize}px 'Arial Black',Arial,sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';
-        const lineH=fontSize*cfg.LINE_HEIGHT,totalH=lineH*lines.length,startY=(h-totalH)/2+lineH/2,maxW=w*(1-2*cfg.MARGIN_X);
-        lines.forEach((l,i)=>ctx.fillText(l,w/2,startY+i*lineH,maxW));
+        const margin=w*0.1,maxW=w-margin*2,maxH=h*0.45;
+        const ratio=_logoImg.naturalWidth/_logoImg.naturalHeight;
+        let lw=maxW,lh=lw/ratio;if(lh>maxH){lh=maxH;lw=lh*ratio;}
+        const lx=(w-lw)/2,ly=(h-lh)/2-h*0.1;
+        ctx.filter='invert(1)';ctx.drawImage(_logoImg,lx,ly,lw,lh);ctx.filter='none';
         const tex=new THREE.CanvasTexture(c);tex.needsUpdate=true;return tex;
       }
       _r(mat,target){this.quad.material=mat;this.renderer.setRenderTarget(target??null);this.renderer.render(this.scene,this.camera);}
@@ -892,10 +945,20 @@
       }
     }
 
-    const fluid = new FluidText(document.getElementById('hero-canvas'), ['claudio'], { FONT_SCALE: 0.44 });
-    window.addEventListener('resize', () => fluid.resize());
-    let last = performance.now();
-    (function loop(now){ requestAnimationFrame(loop); const dt=Math.min((now-last)/1000,1/30); last=now; fluid.tick(dt); })(performance.now());
+    fetch('assets/claudio-logo.svg').then(r=>r.text()).then(svgText=>{
+      const fixed=svgText.replace('width="100%" height="100%"','width="4502" height="1209"');
+      const blob=new Blob([fixed],{type:'image/svg+xml'});
+      const url=URL.createObjectURL(blob);
+      const logoImg=new Image();
+      logoImg.onload=()=>{
+        URL.revokeObjectURL(url);
+        const fluid=new FluidText(document.getElementById('hero-canvas'),logoImg,{FONT_SCALE:0.44});
+        window.addEventListener('resize',()=>fluid.resize());
+        let last=performance.now();
+        (function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,1/30);last=now;fluid.tick(dt);})(performance.now());
+      };
+      logoImg.src=url;
+    });
   </script>
 
   <script>
@@ -925,11 +988,29 @@
     /* ─── NAVBAR SWATCHES ───────────────────────────────────────── */
     document.querySelectorAll('.swatch').forEach(sw => {
       sw.addEventListener('click', () => {
-        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
-        sw.classList.add('active');
-        updateColor(sw.dataset.color);
+        const color = sw.dataset.color;
+        document.querySelectorAll('.swatch').forEach(s => {
+          s.classList.toggle('active', s.dataset.color === color);
+        });
+        updateColor(color);
       });
     });
+
+    /* ─── HAMBURGUESA ───────────────────────────────────────────── */
+    (function(){
+      const burger = document.getElementById('navbar-burger');
+      const menu   = document.getElementById('navbar-mobile-menu');
+      burger.addEventListener('click', () => {
+        const open = burger.classList.toggle('is-open');
+        menu.classList.toggle('is-open', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+    })();
+    function closeMobileMenu() {
+      document.getElementById('navbar-burger').classList.remove('is-open');
+      document.getElementById('navbar-mobile-menu').classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
 
     /* ─── STATE SWITCHER ────────────────────────────────────────── */
     function setState(s) {
