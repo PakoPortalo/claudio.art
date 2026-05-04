@@ -136,7 +136,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 2rem; color: rgba(0,0,0,0.25); z-index: 10; pointer-events: none;
     }
-    .drop[data-state="agotado"] .drop__painting-outer { filter: saturate(0) brightness(0.7); }
+    .drop[data-state="agotado"] .drop__painting-outer { opacity: 0.70; }
     .painting__face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; }
     .painting__face--front { transform: translateZ(3px); overflow: hidden; background: #fff; }
     .painting-img {
@@ -548,7 +548,7 @@
               <img id="painting-img-b" class="painting-img" src="" alt="Claudio">
             </div>
             <div class="painting__face painting__face--back">
-              <img src="../assets/producto-claudio/back-firmado.jpg" alt="">
+              <img src="../assets/producto-claudio/back.jpg" alt="">
             </div>
             <div class="painting__face painting__face--left"></div>
             <div class="painting__face painting__face--right"></div>
@@ -642,7 +642,16 @@
 
     let angle = 0, baseSpeed = 36, animState = 'normal', lastTime = performance.now();
     let wPhase = '', wTimer = 0, wStartAngle = 0, wRecoilTarget = 0, wSnapStart = 0, wSnapTarget = 0;
+    let rSnapStart = 0, rSnapTarget = 0, rTimer = 0;
     let isDragging = false, hasDragged = false, dragStartX = 0, dragStartAngle = 0, isPlaying = true;
+    let dropVisible = true;
+
+    function snapToFront() {
+      const norm = ((angle % 360) + 360) % 360;
+      const toFront = norm <= 180 ? -norm : (360 - norm);
+      rSnapStart = angle; rSnapTarget = angle + toFront; rTimer = 0;
+      animState = 'rest';
+    }
 
     function animate(now) {
       requestAnimationFrame(animate);
@@ -677,6 +686,13 @@
               if (wTimer > 0.9) animState = 'normal';
             }
             break;
+          case 'rest':
+            rTimer += dt;
+            const rt = Math.min(rTimer / 0.6, 1);
+            const re = 1 - Math.pow(1 - rt, 3);
+            angle = rSnapStart + (rSnapTarget - rSnapStart) * re;
+            if (rt >= 1) { angle = rSnapTarget; animState = 'idle'; }
+            break;
         }
       }
 
@@ -686,6 +702,16 @@
       shadowEl.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
     }
     requestAnimationFrame(animate);
+
+    new IntersectionObserver(entries => {
+      const visible = entries[0].isIntersecting;
+      if (visible && !dropVisible) {
+        angle = Math.round(angle / 360) * 360;
+        animState = 'normal'; isPlaying = true;
+        paintingEl.classList.remove('is-paused');
+      } else if (!visible && dropVisible) { snapToFront(); }
+      dropVisible = visible;
+    }, { threshold: 0.05 }).observe(document.getElementById('drop'));
 
     /* ─── CAMBIO DE COLOR ────────────────────────────────────────── */
     function updateColor(hex) {

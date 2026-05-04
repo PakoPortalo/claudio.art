@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Camiseta (v2 · countdown)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: #000; overflow-x: hidden; }
+
+    .camisa {
+      position: relative; width: 100%; min-height: 90vh;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .camisa__bg {
+      position: absolute; inset: 0; background: rgb(10,10,10);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .camisa__bg img {
+      width: auto; height: 82%; object-fit: contain; display: block;
+      opacity: 0.18;
+    }
+    .camisa::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.7) 100%);
+    }
+    .camisa__copy {
+      position: relative; z-index: 2;
+      display: flex; flex-direction: column; align-items: center; gap: 20px;
+      padding: 60px 40px; text-align: center;
+    }
+    .camisa__tag {
+      font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 500;
+      letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent);
+    }
+    .camisa__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2rem, 5vw, 3.5rem); line-height: 1;
+      text-transform: uppercase; color: rgba(255,255,255,0.35);
+      letter-spacing: 0.08em;
+    }
+    .cd {
+      display: flex; align-items: flex-start; gap: 4px; margin: 8px 0;
+    }
+    .cd__unit { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
+    .cd__num {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(4rem, 10vw, 7rem); line-height: 0.9;
+      color: #fff; letter-spacing: -0.02em;
+    }
+    .cd__label {
+      font-size: 0.5rem; font-weight: 400; letter-spacing: 0.22em;
+      text-transform: uppercase; color: rgba(255,255,255,0.2); margin-top: 10px;
+    }
+    .cd__sep {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(4rem, 10vw, 7rem); line-height: 0.9;
+      color: rgba(255,255,255,0.1); padding: 0 2px;
+    }
+    .camisa__sub {
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 300;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.3);
+    }
+    .camisa__divider {
+      width: 32px; height: 1px; background: rgba(255,255,255,0.12);
+    }
+    .camisa__form { display: flex; margin-top: 8px; }
+    .camisa__input {
+      background: transparent; border: 1px solid rgba(255,255,255,0.15); border-right: none;
+      padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300;
+      color: #fff; outline: none; width: 220px;
+    }
+    .camisa__input::placeholder { color: rgba(255,255,255,0.18); }
+    .camisa__input:focus { border-color: rgba(255,255,255,0.4); }
+    .camisa__btn {
+      background: var(--accent); color: #000; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 20px;
+    }
+    .camisa__btn:hover { opacity: 0.85; }
+
+    @media (max-width: 600px) {
+      .cd__unit { min-width: 70px; }
+      .camisa__form { width: 100%; }
+      .camisa__input { flex: 1; width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="camisa" id="camiseta">
+    <div class="camisa__bg">
+      <img src="assets/tshirt1.jpg" alt="">
+    </div>
+    <div class="camisa__copy">
+      <span class="camisa__tag">Próximamente</span>
+      <h2 class="camisa__title">La camiseta Claudio</h2>
+      <div class="cd">
+        <div class="cd__unit">
+          <span class="cd__num" id="cd-days">12</span>
+          <span class="cd__label">Días</span>
+        </div>
+        <span class="cd__sep">:</span>
+        <div class="cd__unit">
+          <span class="cd__num" id="cd-hours">08</span>
+          <span class="cd__label">Horas</span>
+        </div>
+        <span class="cd__sep">:</span>
+        <div class="cd__unit">
+          <span class="cd__num" id="cd-mins">34</span>
+          <span class="cd__label">Minutos</span>
+        </div>
+        <span class="cd__sep">:</span>
+        <div class="cd__unit">
+          <span class="cd__num" id="cd-secs">51</span>
+          <span class="cd__label">Segundos</span>
+        </div>
+      </div>
+      <div class="camisa__divider"></div>
+      <p class="camisa__sub">sé el primero en enterarte</p>
+      <div class="camisa__form">
+        <input class="camisa__input" type="email" placeholder="tu@email.com">
+        <button class="camisa__btn">Apuntarme</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const TARGET = new Date(Date.now() + 12 * 24 * 3600 * 1000 + 8 * 3600 * 1000 + 34 * 60 * 1000 + 51 * 1000);
+    function tick() {
+      const diff = Math.max(0, TARGET - Date.now());
+      const p = n => String(Math.floor(n)).padStart(2, '0');
+      document.getElementById('cd-days').textContent  = p(diff / 86400000);
+      document.getElementById('cd-hours').textContent = p((diff % 86400000) / 3600000);
+      document.getElementById('cd-mins').textContent  = p((diff % 3600000) / 60000);
+      document.getElementById('cd-secs').textContent  = p((diff % 60000) / 1000);
+    }
+    tick(); setInterval(tick, 1000);
+  </script>
+
+</body>
+</html>

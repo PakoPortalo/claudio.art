@@ -6,7 +6,7 @@
   <title>Claudio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root { --accent: #EC6768; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -83,10 +83,10 @@
       .navbar__mobile-menu.is-open li:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.24s; }
       .navbar__mobile-menu.is-open li:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.31s; }
       .navbar__mobile-links a {
-        display: block; width: 100%; padding: 20px 28px;
-        font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-        font-size: clamp(2rem, 10vw, 3.5rem); color: #000; text-decoration: none;
-        text-transform: none; letter-spacing: 0.02em; line-height: 1; opacity: 0.85;
+        display: block; width: 100%; padding: 14px 28px;
+        font-family: 'Inter', sans-serif; font-weight: 400;
+        font-size: 0.85rem; color: #000; text-decoration: none;
+        text-transform: uppercase; letter-spacing: 0.18em; line-height: 1; opacity: 0.75;
       }
       .navbar__mobile-links a:active { opacity: 1; background: rgba(0,0,0,0.05); }
     }
@@ -102,7 +102,18 @@
       position: absolute; inset: 0; background: var(--accent);
       mix-blend-mode: multiply; transition: background 1s ease; z-index: 1;
     }
+    .hero__poster {
+      display: none; position: absolute; inset: 0; z-index: 0;
+      background: url('assets/hero-poster.jpg') center/cover no-repeat;
+      filter: grayscale(100%);
+    }
     .hero__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 2; }
+    .hero__logo-static {
+      display: none; position: absolute; z-index: 2;
+      left: 50%; top: 40%; transform: translate(-50%, -50%);
+      width: 80%; max-width: 400px; height: auto;
+      filter: invert(1); opacity: 0.9; pointer-events: none;
+    }
     .hero__scroll {
       position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
       z-index: 4; cursor: pointer; opacity: 0.55; transition: opacity 0.2s;
@@ -118,12 +129,20 @@
       position: absolute; top: 67%; left: 50%; transform: translateX(-50%);
       z-index: 3; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.8rem;
       font-weight: 300; letter-spacing: 0.22em; text-transform: lowercase;
-      white-space: nowrap; opacity: 0.65; pointer-events: none;
+      white-space: normal; text-align: center; opacity: 0.65; pointer-events: none;
+    }
+    @media (max-width: 768px) {
+      .hero__video { display: none; }
+      .hero__poster { display: block; }
+      .hero__canvas { display: none; }
+      .hero__logo-static { display: block; }
+      .hero__subtitle { font-size: 0.6rem; letter-spacing: 0.04em; white-space: normal; text-align: center; width: 90vw; }
     }
 
     /* ─── TESTIMONIOS ────────────────────────────────────────── */
     .testimonios {
-      background: #fff; padding: 100px 40px 110px;
+      background: #fff;
+      padding: 100px 40px 110px;
       display: flex; flex-direction: column; align-items: center;
     }
     .testimonios__label {
@@ -192,7 +211,7 @@
       display: flex; align-items: center; justify-content: center;
       font-size: 2rem; color: rgba(0,0,0,0.25); z-index: 10; pointer-events: none;
     }
-    .drop[data-state="agotado"] .drop__painting-outer { filter: saturate(0) brightness(0.7); }
+    .drop[data-state="agotado"] .drop__painting-outer { opacity: 0.70; }
     .painting__face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; }
     .painting__face--front { transform: translateZ(3px); overflow: hidden; background: #fff; }
     .painting-img {
@@ -205,13 +224,13 @@
     .painting__face--left {
       position: absolute; width: 6px; height: 100%; top: 0; left: 0;
       transform-origin: left center; transform: rotateY(-90deg) translateX(-3px);
-      background-image: url('../assets/producto-claudio/back.jpg');
+      background-image: url('assets/back.jpg');
       background-size: cover; background-position: center;
     }
     .painting__face--right {
       position: absolute; width: 6px; height: 100%; top: 0; right: 0;
       transform-origin: right center; transform: rotateY(90deg) translateX(3px);
-      background-image: url('../assets/producto-claudio/back.jpg');
+      background-image: url('assets/back.jpg');
       background-size: cover; background-position: center;
     }
     .drop__shadow {
@@ -316,6 +335,22 @@
     }
     .drop__waitlist button:hover { opacity: 0.8; }
 
+    @media (max-width: 768px) {
+      .drop { padding: 60px 24px 80px; }
+      .drop__inner { grid-template-columns: 1fr; gap: 48px; justify-items: center; }
+      .drop__painting-outer { zoom: 0.65; }
+      .drop__info { align-items: center; text-align: center; width: 100%; }
+      .drop__divider { margin-left: auto; margin-right: auto; }
+      .drop__body { max-width: 100%; }
+      .drop__agotado-wow, .drop__agotado-cta { max-width: 100%; }
+      .drop__waitlist { max-width: 100%; }
+      .drop__btn { align-self: stretch; text-align: center; }
+      .cd__timer { justify-content: center; }
+    }
+    @media (max-width: 480px) {
+      .drop__painting-outer { zoom: 0.55; }
+    }
+
     /* ─── CAMISETA ───────────────────────────────────────────── */
     .camisa {
       position: relative; width: 100%; min-height: 90vh;
@@ -365,6 +400,20 @@
       transition: background 3s ease, opacity 0.2s;
     }
     .camisa__btn:hover { opacity: 0.8; }
+
+    @media (max-width: 768px) {
+      .camisa { flex-direction: column; min-height: unset; }
+      .camisa__bg { position: relative; inset: unset; width: 100%; height: 55vw; min-height: 260px; }
+      .camisa__bg img { width: 100%; height: 100%; object-fit: contain; object-position: center center; }
+      .camisa::after { display: none; }
+      .camisa__copy {
+        position: relative; background: rgb(16,16,16);
+        flex-direction: column; align-items: center; gap: 20px;
+        padding: 36px 28px; text-align: center;
+      }
+      .camisa__left { align-items: center; }
+      .camisa__right { align-items: center; }
+    }
 
     /* ─── SOBRE ───────────────────────────────────────────────── */
     .sobre {
@@ -473,6 +522,43 @@
     }
     .sobre__btn:hover { border-color: var(--accent); background: rgba(236,103,104,0.08); }
     .sobre__btn svg { flex-shrink: 0; }
+
+    .sobre__video-cover { display: none; }
+    .sobre__text-below  { display: none; }
+
+    @media (max-width: 768px) {
+      .sobre { padding: 0; flex-direction: column; gap: 0; min-height: unset; overflow: visible; }
+      .sobre__cluster { display: none; }
+      .sobre__info { display: none; }
+      .sobre__video-cover {
+        display: flex; position: relative;
+        width: 100vw; margin-left: calc(-50vw + 50%);
+        height: 70vh; min-height: 480px;
+        overflow: hidden; align-items: flex-end;
+      }
+      .sobre__video-cover video {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+        object-fit: cover; display: block;
+      }
+      .sobre__video-cover::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+        z-index: 1;
+      }
+      .sobre__video-text {
+        position: relative; z-index: 2;
+        padding: 0 28px 36px; width: 100%;
+      }
+      .sobre__video-text .sobre__tag { color: var(--accent); margin-bottom: 12px; display: block; }
+      .sobre__video-text .sobre__title { font-size: clamp(2.4rem, 9vw, 3.2rem); color: #fff; margin-bottom: 0; }
+      .sobre__text-below { display: block; padding: 36px 28px 72px; text-align: center; }
+      .sobre__text-below p {
+        font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 300;
+        line-height: 1.9; color: rgba(255,255,255,0.4); margin-bottom: 28px;
+      }
+      .sobre__text-below .sobre__btns { justify-content: center; gap: 12px; }
+      .sobre__text-below .sobre__btn { border-color: rgba(255,255,255,0.25); padding: 12px 20px; font-size: 0.7rem; }
+    }
 
     /* ─── NEWSLETTER ─────────────────────────────────────────── */
     .newsletter {
@@ -606,10 +692,12 @@
 
   <!-- ═══ HERO ══════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
-    <video class="hero__video" src="assets/hero-claudio-angel-sara.mp4" autoplay loop muted playsinline></video>
+    <video class="hero__video" muted playsinline preload="none" id="hero-video"></video>
+    <div class="hero__poster"></div>
     <div class="hero__overlay"></div>
     <canvas id="hero-canvas" class="hero__canvas"></canvas>
-    <p class="hero__subtitle">encontrado, pintado, dejado en la calle</p>
+    <img class="hero__logo-static" src="assets/claudio-logo.svg" alt="">
+    <p class="hero__subtitle">yo tan sólo soy un inquilino en este mundo de plástico,<br>un chatarrero limpiando el espacio</p>
     <div class="hero__scroll" onclick="document.getElementById('drop').scrollIntoView({behavior:'smooth'})">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="6 9 12 15 18 9"/>
@@ -626,11 +714,11 @@
         <div class="drop__painting-scene">
           <div class="drop__painting" id="painting">
             <div class="painting__face painting__face--front">
-              <img id="painting-img-a" class="painting-img painting-img--active" src="../assets/producto-claudio/claudio-rojo.jpg" alt="Claudio">
+              <img id="painting-img-a" class="painting-img painting-img--active" src="assets/claudio-rojo.jpg" alt="Claudio">
               <img id="painting-img-b" class="painting-img" src="" alt="Claudio">
             </div>
             <div class="painting__face painting__face--back">
-              <img src="../assets/producto-claudio/back-firmado.jpg" alt="">
+              <img src="assets/back.jpg" alt="">
             </div>
             <div class="painting__face painting__face--left"></div>
             <div class="painting__face painting__face--right"></div>
@@ -716,18 +804,20 @@
   <section class="testimonios" id="testimonios">
     <h2 class="testimonios__label">Lo que piensan nuestros seguidores</h2>
     <div class="testimonios__grid">
-      <div class="testimonios__item"><img src="assets/resenas-01.JPG" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-02.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-03.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-04.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-05.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-06.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-07.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-08.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-09.jpg" alt="" loading="lazy"></div>
-      <div class="testimonios__item"><img src="assets/resenas-10.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios1.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios2.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios3.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios4.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios5.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios6.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios7.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios8.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios9.jpg" alt="" loading="lazy"></div>
+      <div class="testimonios__item"><img src="assets/testimonios10.jpg" alt="" loading="lazy"></div>
     </div>
+
   </section>
+
 
   <!-- ═══ SOBRE ════════════════════════════════════════════════ -->
   <section class="sobre" id="sobre">
@@ -778,6 +868,28 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="sobre__video-cover">
+      <video src="assets/sobre-reel.mp4" autoplay loop muted playsinline></video>
+      <div class="sobre__video-text">
+        <span class="sobre__tag">@cl4u8io · Instagram</span>
+        <h2 class="sobre__title">Todo empieza<br>en la calle</h2>
+      </div>
+    </div>
+
+    <div class="sobre__text-below">
+      <p>Recojo madera que Madrid tira. La pinto, la firmo, y la dejo donde la encontré. A veces alguien se la lleva.</p>
+      <div class="sobre__btns">
+        <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="sobre__btn" href="https://tiktok.com/@cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
       </div>
     </div>
 
@@ -923,7 +1035,7 @@
         const{canvas,_dpr,_logoImg}=this,w=Math.ceil(canvas.clientWidth*_dpr),h=Math.ceil(canvas.clientHeight*_dpr);
         const c=document.createElement('canvas');c.width=w;c.height=h;
         const ctx=c.getContext('2d');ctx.clearRect(0,0,w,h);
-        const margin=w*0.1,maxW=w-margin*2,maxH=h*0.45;
+        const margin=w*0.12,maxW=w-margin*2,maxH=h*0.4;
         const ratio=_logoImg.naturalWidth/_logoImg.naturalHeight;
         let lw=maxW,lh=lw/ratio;if(lh>maxH){lh=maxH;lw=lh*ratio;}
         const lx=(w-lw)/2,ly=(h-lh)/2-h*0.1;
@@ -961,6 +1073,11 @@
       }
     }
 
+    function setSubtitleBelowLogo(logoBottomPx, heroH) {
+      const subtitle = document.querySelector('.hero__subtitle');
+      subtitle.style.top = (logoBottomPx + 20) + 'px';
+    }
+
     fetch('assets/claudio-logo.svg').then(r=>r.text()).then(svgText=>{
       const fixed=svgText.replace('width="100%" height="100%"','width="4502" height="1209"');
       const blob=new Blob([fixed],{type:'image/svg+xml'});
@@ -968,10 +1085,38 @@
       const logoImg=new Image();
       logoImg.onload=()=>{
         URL.revokeObjectURL(url);
-        const fluid=new FluidText(document.getElementById('hero-canvas'),logoImg,{FONT_SCALE:0.44});
-        window.addEventListener('resize',()=>fluid.resize());
-        let last=performance.now();
-        (function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,1/30);last=now;fluid.tick(dt);})(performance.now());
+        const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+        if (!isMobile) {
+          const canvas = document.getElementById('hero-canvas');
+          function calcDesktopSubtitle() {
+            const dpr = window.devicePixelRatio || 1;
+            const w = Math.ceil(canvas.clientWidth * dpr);
+            const h = Math.ceil(canvas.clientHeight * dpr);
+            const maxW = w * 0.8, maxH = h * 0.45;
+            const ratio = logoImg.naturalWidth / logoImg.naturalHeight;
+            let lw = maxW, lh = lw / ratio;
+            if (lh > maxH) { lh = maxH; }
+            const ly = (h - lh) / 2 - h * 0.1;
+            setSubtitleBelowLogo((ly + lh) / h * canvas.clientHeight, canvas.clientHeight);
+          }
+          const fluid = new FluidText(canvas, logoImg, {FONT_SCALE:0.44});
+          window.addEventListener('resize', () => { fluid.resize(); calcDesktopSubtitle(); });
+          let last = performance.now();
+          (function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,1/30);last=now;fluid.tick(dt);})(performance.now());
+          calcDesktopSubtitle();
+        } else {
+          function calcMobileSubtitle() {
+            const hero = document.querySelector('.hero');
+            const heroH = hero.clientHeight;
+            const heroW = hero.clientWidth;
+            const imgW = Math.min(heroW * 0.8, 400);
+            const lh = imgW / (4502 / 1209);
+            setSubtitleBelowLogo(heroH * 0.4 + lh / 2, heroH);
+          }
+          calcMobileSubtitle();
+          window.addEventListener('resize', calcMobileSubtitle);
+        }
       };
       logoImg.src=url;
     });
@@ -992,7 +1137,7 @@
       document.documentElement.style.setProperty('--accent', hex);
       const filename = ACCENT_IMG[hex.toLowerCase()];
       if (filename) {
-        inactiveImg.src = '../assets/producto-claudio/' + filename;
+        inactiveImg.src = 'assets/' + filename;
         inactiveImg.classList.add('painting-img--active');
         activeImg.classList.remove('painting-img--active');
         [activeImg, inactiveImg] = [inactiveImg, activeImg];
@@ -1011,6 +1156,16 @@
         updateColor(color);
       });
     });
+
+    /* ─── VIDEO — solo desktop ─────────────────────────────────── */
+    (function(){
+      if (window.matchMedia('(max-width: 768px)').matches) return;
+      const v = document.getElementById('hero-video');
+      if (!v) return;
+      v.src = 'assets/hero-web.mp4';
+      v.load();
+      v.play().catch(() => {});
+    })();
 
     /* ─── HAMBURGUESA ───────────────────────────────────────────── */
     (function(){
@@ -1036,10 +1191,6 @@
       document.querySelectorAll('.drop__state-btn').forEach((btn, i) => {
         btn.classList.toggle('active', ['countdown','disponible','agotado'][i] === s);
       });
-      const backImg = document.querySelector('.painting__face--back img');
-      if (backImg) backImg.src = s === 'agotado'
-        ? '../assets/producto-claudio/back.jpg'
-        : '../assets/producto-claudio/back-firmado.jpg';
     }
 
     /* ─── PAINTING ──────────────────────────────────────────────── */
@@ -1050,7 +1201,16 @@
 
     let angle = 0, baseSpeed = 36, animState = 'normal', lastTime = performance.now();
     let wPhase = '', wTimer = 0, wStartAngle = 0, wRecoilTarget = 0, wSnapStart = 0, wSnapTarget = 0;
+    let rSnapStart = 0, rSnapTarget = 0, rTimer = 0;
     let isDragging = false, hasDragged = false, dragStartX = 0, dragStartAngle = 0, isPlaying = true;
+    let dropVisible = true;
+
+    function snapToFront() {
+      const norm = ((angle % 360) + 360) % 360;
+      const toFront = norm <= 180 ? -norm : (360 - norm);
+      rSnapStart = angle; rSnapTarget = angle + toFront; rTimer = 0;
+      animState = 'rest';
+    }
 
     function animate(now) {
       requestAnimationFrame(animate);
@@ -1084,6 +1244,13 @@
               if (wTimer > 0.9) animState = 'normal';
             }
             break;
+          case 'rest':
+            rTimer += dt;
+            const rt = Math.min(rTimer / 0.6, 1);
+            const re = 1 - Math.pow(1 - rt, 3);
+            angle = rSnapStart + (rSnapTarget - rSnapStart) * re;
+            if (rt >= 1) { angle = rSnapTarget; animState = 'idle'; }
+            break;
         }
       }
       const bobY = Math.sin(now / 1000 * 0.25 * Math.PI * 2) * 4;
@@ -1092,6 +1259,19 @@
       shadowEl.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
     }
     requestAnimationFrame(animate);
+
+    new IntersectionObserver(entries => {
+      const visible = entries[0].isIntersecting;
+      if (visible && !dropVisible) {
+        angle = Math.round(angle / 360) * 360;
+        animState = 'normal';
+        isPlaying = true;
+        paintingEl.classList.remove('is-paused');
+      } else if (!visible && dropVisible) {
+        snapToFront();
+      }
+      dropVisible = visible;
+    }, { threshold: 0.05 }).observe(document.getElementById('drop'));
 
     paintingEl.addEventListener('click', () => {
       if (hasDragged) return;
@@ -1145,6 +1325,7 @@
       DROP_TARGET.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
 
   </script>
+
 
 </body>
 </html>

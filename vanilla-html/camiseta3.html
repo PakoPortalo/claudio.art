@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudio — Camiseta (v3 · sello)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: #000; overflow-x: hidden; }
+
+    .camisa {
+      position: relative; width: 100%; min-height: 90vh;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .camisa__bg {
+      position: absolute; inset: 0; background: rgb(14,14,14);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .camisa__bg img {
+      width: auto; height: 88%; object-fit: contain; display: block;
+      filter: grayscale(20%); opacity: 0.5;
+    }
+    .camisa__stamp {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      perspective: 900px;
+    }
+    .camisa__stamp-inner {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.08s linear;
+    }
+    .camisa__stamp-text {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(5rem, 16vw, 14rem); line-height: 1;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.07);
+      transform: rotate(-22deg);
+      white-space: nowrap;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+      display: block;
+    }
+    .camisa::after {
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.6) 100%);
+    }
+    .camisa__copy {
+      position: relative; z-index: 3;
+      display: flex; flex-direction: column; align-items: center; gap: 18px;
+      padding: 60px 40px; text-align: center; margin-top: auto;
+      width: 100%;
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 48px 40px 56px;
+    }
+    .camisa__tag {
+      font-family: 'Inter', sans-serif; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent);
+    }
+    .camisa__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1;
+      text-transform: uppercase; color: #fff;
+      letter-spacing: 0.06em;
+    }
+    .camisa__sub {
+      font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 300;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.28);
+    }
+    .camisa__form { display: flex; margin-top: 6px; }
+    .camisa__input {
+      background: transparent; border: 1px solid rgba(255,255,255,0.18); border-right: none;
+      padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300;
+      color: #fff; outline: none; width: 220px;
+    }
+    .camisa__input::placeholder { color: rgba(255,255,255,0.18); }
+    .camisa__input:focus { border-color: rgba(255,255,255,0.4); }
+    .camisa__btn {
+      background: var(--accent); color: #000; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 20px;
+    }
+    .camisa__btn:hover { opacity: 0.85; }
+
+    @media (max-width: 600px) {
+      .camisa__stamp-text { font-size: clamp(4rem, 22vw, 8rem); }
+      .camisa__form { width: 100%; }
+      .camisa__input { flex: 1; width: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="camisa" id="camiseta">
+    <div class="camisa__bg">
+      <img src="assets/tshirt1.jpg" alt="">
+    </div>
+    <div class="camisa__stamp" id="stamp">
+      <div class="camisa__stamp-inner" id="stamp-inner">
+        <span class="camisa__stamp-text">Próximamente</span>
+      </div>
+    </div>
+    <div class="camisa__copy">
+      <span class="camisa__tag">Edición limitada</span>
+      <h2 class="camisa__title">La camiseta Claudio</h2>
+      <p class="camisa__sub">sé el primero en saberlo</p>
+      <div class="camisa__form">
+        <input class="camisa__input" type="email" placeholder="tu@email.com">
+        <button class="camisa__btn">Apuntarme</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const inner = document.getElementById('stamp-inner');
+      const section = document.getElementById('camiseta');
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      const MAX_ROT = 7;
+      const MAX_MOVE = 14;
+      let targetTX = 0, targetTY = 0, curTX = 0, curTY = 0;
+
+      section.addEventListener('mousemove', e => {
+        const r = section.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width  - 0.5;
+        const ny = (e.clientY - r.top)  / r.height - 0.5;
+        targetY  =  nx * MAX_ROT;
+        targetX  = -ny * MAX_ROT;
+        targetTX =  nx * MAX_MOVE;
+        targetTY =  ny * MAX_MOVE;
+      });
+
+      section.addEventListener('mouseleave', () => {
+        targetX = 0; targetY = 0; targetTX = 0; targetTY = 0;
+      });
+
+      (function loop() {
+        curX  += (targetX  - curX)  * 0.06;
+        curY  += (targetY  - curY)  * 0.06;
+        curTX += (targetTX - curTX) * 0.06;
+        curTY += (targetTY - curTY) * 0.06;
+        inner.style.transform =
+          `translate(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px) ` +
+          `rotateX(${curX.toFixed(2)}deg) rotateY(${curY.toFixed(2)}deg)`;
+        requestAnimationFrame(loop);
+      })();
+    }
+  </script>
+</body>
+</html>

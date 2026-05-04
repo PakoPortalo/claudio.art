@@ -310,6 +310,20 @@
     }
     .camisa__btn:hover { opacity: 0.8; }
 
+    @media (max-width: 768px) {
+      .camisa { flex-direction: column; min-height: unset; }
+      .camisa__bg { position: relative; inset: unset; width: 100%; height: 55vw; min-height: 260px; }
+      .camisa__bg img { width: 100%; height: 100%; object-fit: contain; object-position: center center; }
+      .camisa::after { display: none; }
+      .camisa__copy {
+        position: relative; background: rgb(16,16,16);
+        flex-direction: column; align-items: center; gap: 20px;
+        padding: 36px 28px; text-align: center;
+      }
+      .camisa__left { align-items: center; }
+      .camisa__right { align-items: center; }
+    }
+
     /* ─── SOBRE ───────────────────────────────────────────────── */
     .sobre {
       background: rgb(14,14,14);
