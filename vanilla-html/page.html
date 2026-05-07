@@ -354,65 +354,82 @@
     /* ─── CAMISETA ───────────────────────────────────────────── */
     .camisa {
       position: relative; width: 100%; min-height: 90vh;
-      display: flex; align-items: flex-end; overflow: hidden;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
     }
     .camisa__bg {
-      position: absolute; inset: 0; background: rgb(16,16,16);
+      position: absolute; inset: 0; background: rgb(14,14,14);
       display: flex; align-items: center; justify-content: center;
     }
-    .camisa__bg img { width: auto; height: 72%; object-fit: contain; display: block; }
-    .camisa__bg-placeholder {
-      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 300;
-      letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.2);
+    .camisa__bg img {
+      width: auto; height: 88%; object-fit: contain; display: block;
+      filter: grayscale(20%); opacity: 0.5;
+    }
+    .camisa__stamp {
+      position: absolute; inset: 0; z-index: 1;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none;
+      perspective: 900px;
+    }
+    .camisa__stamp-inner {
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.08s linear;
+    }
+    .camisa__stamp-text {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(5rem, 16vw, 14rem); line-height: 1;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.07);
+      transform: rotate(-22deg);
+      white-space: nowrap;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+      display: block;
     }
     .camisa::after {
-      content: ''; position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+      content: ''; position: absolute; inset: 0; z-index: 2;
+      background:
+        radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%),
+        linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.6) 100%);
     }
     .camisa__copy {
-      position: relative; z-index: 2;
-      padding: 60px 72px; width: 100%;
-      display: flex; align-items: flex-end; justify-content: space-between;
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+      display: flex; flex-direction: column; align-items: center; gap: 18px;
+      padding: 48px 40px 56px; text-align: center; width: 100%;
     }
-    .camisa__left { display: flex; flex-direction: column; gap: 12px; }
     .camisa__tag {
-      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
-      letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+      font-family: 'Inter', sans-serif; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent);
       transition: color 3s ease;
     }
     .camisa__title {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: clamp(3rem, 7vw, 6rem); line-height: 1; text-transform: uppercase; color: #fff;
+      font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1;
+      text-transform: uppercase; color: #fff; letter-spacing: 0.06em;
     }
     .camisa__sub {
-      font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 300;
-      letter-spacing: 0.15em; color: rgba(255,255,255,0.55); text-transform: lowercase;
+      font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 300;
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.28);
     }
-    .camisa__right { display: flex; flex-direction: column; align-items: flex-end; gap: 20px; }
-    .camisa__price {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 3rem; color: #fff; line-height: 1;
+    .camisa__form { display: flex; margin-top: 6px; }
+    .camisa__input {
+      background: transparent; border: 1px solid rgba(255,255,255,0.18); border-right: none;
+      padding: 12px 18px; font-family: 'Inter', sans-serif; font-size: 0.78rem; font-weight: 300;
+      color: #fff; outline: none; width: 220px;
     }
+    .camisa__input::placeholder { color: rgba(255,255,255,0.18); }
+    .camisa__input:focus { border-color: rgba(255,255,255,0.4); }
     .camisa__btn {
       background: var(--accent); color: #000; border: none; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
-      letter-spacing: 0.18em; text-transform: uppercase; padding: 16px 44px;
+      font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 20px;
       transition: background 3s ease, opacity 0.2s;
     }
-    .camisa__btn:hover { opacity: 0.8; }
+    .camisa__btn:hover { opacity: 0.85; }
 
-    @media (max-width: 768px) {
-      .camisa { flex-direction: column; min-height: unset; }
-      .camisa__bg { position: relative; inset: unset; width: 100%; height: 55vw; min-height: 260px; }
-      .camisa__bg img { width: 100%; height: 100%; object-fit: contain; object-position: center center; }
-      .camisa::after { display: none; }
-      .camisa__copy {
-        position: relative; background: rgb(16,16,16);
-        flex-direction: column; align-items: center; gap: 20px;
-        padding: 36px 28px; text-align: center;
-      }
-      .camisa__left { align-items: center; }
-      .camisa__right { align-items: center; }
+    @media (max-width: 600px) {
+      .camisa__stamp-text { font-size: clamp(4rem, 22vw, 8rem); }
+      .camisa__form { width: 100%; }
+      .camisa__input { flex: 1; width: auto; }
     }
 
     /* ─── SOBRE ───────────────────────────────────────────────── */
@@ -785,17 +802,20 @@
   <!-- ═══ CAMISETA ════════════════════════════════════════════ -->
   <section class="camisa" id="camiseta">
     <div class="camisa__bg">
-      <img src="assets/tshirt.jpg" alt="La camiseta claudio">
+      <img src="assets/tshirt1.jpg" alt="">
+    </div>
+    <div class="camisa__stamp" id="camisa-stamp">
+      <div class="camisa__stamp-inner" id="camisa-stamp-inner">
+        <span class="camisa__stamp-text">Próximamente</span>
+      </div>
     </div>
     <div class="camisa__copy">
-      <div class="camisa__left">
-        <span class="camisa__tag">Siempre en stock</span>
-        <h2 class="camisa__title">La camiseta</h2>
-        <p class="camisa__sub">encontrado, pintado, dejado en la calle</p>
-      </div>
-      <div class="camisa__right">
-        <span class="camisa__price">€ XX</span>
-        <button class="camisa__btn">Comprar</button>
+      <span class="camisa__tag">Edición limitada</span>
+      <h2 class="camisa__title">La camiseta Claudio</h2>
+      <p class="camisa__sub">sé el primero en saberlo</p>
+      <div class="camisa__form">
+        <input class="camisa__input" type="email" placeholder="tu@email.com">
+        <button class="camisa__btn">Apuntarme</button>
       </div>
     </div>
   </section>
@@ -1323,6 +1343,41 @@
     document.getElementById('drop-date-label').textContent =
       DROP_TARGET.toLocaleDateString('es-ES', opts) + ' a las ' +
       DROP_TARGET.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+
+    /* ─── CAMISETA STAMP PARALLAX ───────────────────────────────── */
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const inner = document.getElementById('camisa-stamp-inner');
+      const section = document.getElementById('camiseta');
+      let targetX = 0, targetY = 0, curX = 0, curY = 0;
+      const MAX_ROT = 7;
+      const MAX_MOVE = 14;
+      let targetTX = 0, targetTY = 0, curTX = 0, curTY = 0;
+
+      section.addEventListener('mousemove', e => {
+        const r = section.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width  - 0.5;
+        const ny = (e.clientY - r.top)  / r.height - 0.5;
+        targetY  =  nx * MAX_ROT;
+        targetX  = -ny * MAX_ROT;
+        targetTX =  nx * MAX_MOVE;
+        targetTY =  ny * MAX_MOVE;
+      });
+
+      section.addEventListener('mouseleave', () => {
+        targetX = 0; targetY = 0; targetTX = 0; targetTY = 0;
+      });
+
+      (function loop() {
+        curX  += (targetX  - curX)  * 0.06;
+        curY  += (targetY  - curY)  * 0.06;
+        curTX += (targetTX - curTX) * 0.06;
+        curTY += (targetTY - curTY) * 0.06;
+        inner.style.transform =
+          `translate(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px) ` +
+          `rotateX(${curX.toFixed(2)}deg) rotateY(${curY.toFixed(2)}deg)`;
+        requestAnimationFrame(loop);
+      })();
+    }
 
   </script>
 
