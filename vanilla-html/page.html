@@ -132,8 +132,6 @@
       white-space: normal; text-align: center; opacity: 0.65; pointer-events: none;
     }
     @media (max-width: 768px) {
-      .hero__video { display: none; }
-      .hero__poster { display: block; }
       .hero__canvas { display: none; }
       .hero__logo-static { display: block; }
       .hero__subtitle { font-size: 0.6rem; letter-spacing: 0.04em; white-space: normal; text-align: center; width: 90vw; }
@@ -674,6 +672,14 @@
       font-size: 0.7rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s;
     }
     .footer__socials a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .footer { padding: 48px 24px 32px; }
+      .footer__top { flex-direction: column; gap: 36px; padding-bottom: 36px; }
+      .footer__brand { max-width: 100%; }
+      .footer__cols { gap: 32px; flex-wrap: wrap; }
+      .footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
   </style>
 </head>
 <body>
@@ -1177,9 +1183,8 @@
       });
     });
 
-    /* ─── VIDEO — solo desktop ─────────────────────────────────── */
+    /* ─── VIDEO ─────────────────────────────────────────────────── */
     (function(){
-      if (window.matchMedia('(max-width: 768px)').matches) return;
       const v = document.getElementById('hero-video');
       if (!v) return;
       v.src = 'assets/hero-web.mp4';
