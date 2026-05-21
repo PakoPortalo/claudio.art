@@ -104,9 +104,11 @@
     }
     .hero__poster {
       display: none; position: absolute; inset: 0; z-index: 0;
-      background: url('assets/hero-poster.jpg') center/cover no-repeat;
+      background: url('assets/screenshot-hero.png') center/cover no-repeat;
       filter: grayscale(100%);
     }
+    .hero.is-fallback .hero__poster { display: block; }
+    .hero.is-fallback .hero__video  { display: none; }
     .hero__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 2; }
     .hero__logo-static {
       display: none; position: absolute; z-index: 2;
@@ -234,6 +236,18 @@
     .drop__shadow {
       width: 272px; height: 60px; background: rgba(0,0,0,0.2);
       border-radius: 50%; filter: blur(12px); margin-top: 24px; pointer-events: none;
+    }
+    .drop__swatches {
+      display: flex; gap: 12px; align-items: center; justify-content: center;
+      margin-top: 20px;
+    }
+    .drop__swatches .swatch { width: 18px; height: 18px; }
+    @keyframes swatch-pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.18); }
+    }
+    @media (max-width: 768px) {
+      .drop__swatches .swatch.active { animation: swatch-pulse 1.6s ease-in-out infinite; }
     }
 
     /* ─── INFO ────────────────────────────────────────────────── */
@@ -406,7 +420,7 @@
     }
     .camisa__sub {
       font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 300;
-      letter-spacing: 0.1em; color: rgba(255,255,255,0.28);
+      letter-spacing: 0.1em; color: rgba(255,255,255,0.65);
     }
     .camisa__form { display: flex; margin-top: 6px; }
     .camisa__input {
@@ -520,7 +534,12 @@
     }
     .sobre__body {
       font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 300;
-      line-height: 1.9; color: rgba(255,255,255,0.45); margin-bottom: 40px;
+      line-height: 1.9; color: rgba(255,255,255,0.72); margin-bottom: 40px;
+    }
+    .sobre__est {
+      display: block; margin-top: -10px;
+      font-size: inherit; letter-spacing: normal;
+      color: inherit;
     }
     .sobre__cta-label {
       font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 400;
@@ -569,7 +588,7 @@
       .sobre__text-below { display: block; padding: 36px 28px 72px; text-align: center; }
       .sobre__text-below p {
         font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 300;
-        line-height: 1.9; color: rgba(255,255,255,0.4); margin-bottom: 28px;
+        line-height: 1.9; color: rgba(255,255,255,0.72); margin-bottom: 28px;
       }
       .sobre__text-below .sobre__btns { justify-content: center; gap: 12px; }
       .sobre__text-below .sobre__btn { border-color: rgba(255,255,255,0.25); padding: 12px 20px; font-size: 0.7rem; }
@@ -630,20 +649,21 @@
     .footer__brand { display: flex; flex-direction: column; gap: 16px; max-width: 300px; }
     .footer__logo {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
-      font-size: 1.8rem; text-transform: none; color: #fff; letter-spacing: 0.02em;
+      font-size: 2.8rem; text-transform: none; color: #fff; letter-spacing: 0.02em;
+      line-height: 1;
     }
     .footer__logo span { color: var(--accent); transition: color 3s ease; }
     .footer__tagline {
-      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.65;
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.7); line-height: 1.65;
     }
     .footer__cols { display: flex; gap: 64px; }
     .footer__col { display: flex; flex-direction: column; gap: 16px; }
     .footer__col-title {
       font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.55);
     }
     .footer__col a {
-      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.5);
+      font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.72);
       text-decoration: none; transition: color 0.2s; display: block;
     }
     .footer__col a:hover { color: #fff; }
@@ -652,24 +672,24 @@
     }
     .footer__privacy-title {
       font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
-      color: rgba(255,255,255,0.25); margin-bottom: 12px;
+      color: rgba(255,255,255,0.55); margin-bottom: 12px;
     }
     .footer__privacy-text {
-      font-size: 0.7rem; font-weight: 300; color: rgba(255,255,255,0.25);
+      font-size: 0.7rem; font-weight: 300; color: rgba(255,255,255,0.6);
       line-height: 1.7; max-width: 720px;
     }
     .footer__privacy-text a {
-      color: rgba(255,255,255,0.4); text-decoration: underline; transition: color 0.2s;
+      color: rgba(255,255,255,0.75); text-decoration: underline; transition: color 0.2s;
     }
     .footer__privacy-text a:hover { color: #fff; }
     .footer__bottom {
       display: flex; justify-content: space-between; align-items: center;
       padding-top: 28px; gap: 24px; flex-wrap: wrap;
     }
-    .footer__legal { font-size: 0.65rem; color: rgba(255,255,255,0.15); letter-spacing: 0.05em; }
+    .footer__legal { font-size: 0.65rem; color: rgba(255,255,255,0.55); letter-spacing: 0.05em; }
     .footer__socials { display: flex; gap: 20px; }
     .footer__socials a {
-      font-size: 0.7rem; color: rgba(255,255,255,0.25); text-decoration: none; transition: color 0.2s;
+      font-size: 0.7rem; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.2s;
     }
     .footer__socials a:hover { color: var(--accent); }
 
@@ -748,6 +768,13 @@
           </div>
         </div>
         <div class="drop__shadow" id="painting-shadow"></div>
+        <div class="drop__swatches">
+          <div class="swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
+          <div class="swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
+          <div class="swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
+          <div class="swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
+          <div class="swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
+        </div>
       </div>
 
       <!-- Info -->
@@ -770,10 +797,10 @@
 
         <!-- ── ESTADO: DISPONIBLE ─────────────────────────────── -->
         <div class="drop__state is-active" id="state-disponible">
-          <p class="drop__edition">NUEVO DROP · 15 UNIDADES</p>
+          <p class="drop__edition">NUEVO DROP</p>
           <div class="drop__divider"></div>
           <h2 class="drop__title">
-            Quedan <span class="accent" id="stock-count">7</span> claudios<br>disponibles
+            No te quedes<br>sin tu <span class="accent">Claudio</span>
           </h2>
           <p class="drop__body">
             No esperes en hacerte con el tuyo.<br>
@@ -785,9 +812,9 @@
 
         <!-- ── ESTADO: AGOTADO ────────────────────────────────── -->
         <div class="drop__state" id="state-agotado">
-          <h2 class="drop__agotado-title">Claudios<br>agotados :(</h2>
+          <h2 class="drop__agotado-title">Claudios<br>agotados</h2>
           <p class="drop__agotado-wow">¡Habéis acabado el último drop a una velocidad nunca vista!</p>
-          <p class="drop__agotado-cta">¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie :)</p>
+          <p class="drop__agotado-cta">¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie.</p>
           <div class="drop__waitlist">
             <input type="email" placeholder="tu@email.com" />
             <button>Apúntame</button>
@@ -807,9 +834,7 @@
 
   <!-- ═══ CAMISETA ════════════════════════════════════════════ -->
   <section class="camisa" id="camiseta">
-    <div class="camisa__bg">
-      <img src="assets/tshirt1.jpg" alt="">
-    </div>
+    <div class="camisa__bg"></div>
     <div class="camisa__stamp" id="camisa-stamp">
       <div class="camisa__stamp-inner" id="camisa-stamp-inner">
         <span class="camisa__stamp-text">Próximamente</span>
@@ -817,7 +842,7 @@
     </div>
     <div class="camisa__copy">
       <span class="camisa__tag">Edición limitada</span>
-      <h2 class="camisa__title">La camiseta Claudio</h2>
+      <h2 class="camisa__title">Novedades — Próximamente</h2>
       <p class="camisa__sub">sé el primero en saberlo</p>
       <div class="camisa__form">
         <input class="camisa__input" type="email" placeholder="tu@email.com">
@@ -828,7 +853,7 @@
 
   <!-- ═══ TESTIMONIOS ═════════════════════════════════════════ -->
   <section class="testimonios" id="testimonios">
-    <h2 class="testimonios__label">Lo que piensan nuestros seguidores</h2>
+    <h2 class="testimonios__label">Lo que piensa la gente</h2>
     <div class="testimonios__grid">
       <div class="testimonios__item"><img src="assets/testimonios1.jpg" alt="" loading="lazy"></div>
       <div class="testimonios__item"><img src="assets/testimonios2.jpg" alt="" loading="lazy"></div>
@@ -906,7 +931,7 @@
     </div>
 
     <div class="sobre__text-below">
-      <p>Recojo madera que Madrid tira. La pinto, la firmo, y la dejo donde la encontré. A veces alguien se la lleva.</p>
+      <p>• encontrado • pintado • dejado en la calle •<span class="sobre__est">est. 2023 — by claudio portalo</span></p>
       <div class="sobre__btns">
         <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -924,12 +949,8 @@
       <div class="sobre__divider"></div>
       <h2 class="sobre__title">Todo empieza<br>en la calle</h2>
       <p class="sobre__body">
-        Recojo madera que Madrid tira.<br>
-        La pinto, la firmo, y la dejo<br>
-        donde la encontré.<br>
-        A veces alguien se la lleva.
+        • encontrado • pintado • dejado en la calle •
       </p>
-      <p class="sobre__cta-label">¿Quieres ver más?</p>
       <div class="sobre__btns">
         <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -948,12 +969,12 @@
   <section class="newsletter" id="newsletter">
     <span class="newsletter__tag">Próximo drop</span>
     <h2 class="newsletter__title">No te<br>lo pierdas</h2>
-    <p class="newsletter__sub">Los claudios se van en horas. Si no estás en la lista, te enteras tarde.</p>
+    <p class="newsletter__sub">Los claudios duran minutos. Si no estás en lista, te enteras tarde.</p>
     <form class="newsletter__form" onsubmit="return false">
       <input class="newsletter__input" type="email" placeholder="tu@email.com" />
       <button class="newsletter__btn">Entrar</button>
     </form>
-    <span class="newsletter__legal">Sin spam. Baja cuando quieras.</span>
+    <span class="newsletter__legal">Sin spam. Date de baja cuando quieras.</span>
   </section>
 
   <!-- ═══ FOOTER ════════════════════════════════════════════ -->
@@ -961,7 +982,7 @@
     <div class="footer__top">
       <div class="footer__brand">
         <div class="footer__logo">soyclaudio<span>.</span>es</div>
-        <p class="footer__tagline">Recogido de la calle, pintado, devuelto a la calle.</p>
+        <p class="footer__tagline">encontrado • pintado • dejado en la calle</p>
       </div>
       <div class="footer__cols">
         <div class="footer__col">
@@ -1187,9 +1208,12 @@
     (function(){
       const v = document.getElementById('hero-video');
       if (!v) return;
+      const showFallback = () => document.getElementById('hero').classList.add('is-fallback');
+      v.addEventListener('error', showFallback);
+      v.addEventListener('stalled', showFallback);
       v.src = 'assets/hero-web.mp4';
       v.load();
-      v.play().catch(() => {});
+      v.play().catch(showFallback);
     })();
 
     /* ─── HAMBURGUESA ───────────────────────────────────────────── */

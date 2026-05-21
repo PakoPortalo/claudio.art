@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonios — v7: iPhone DMs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: #fff; overflow-x: hidden; }
+
+    .label-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: var(--accent); color: #000; text-align: center;
+      padding: 7px 0; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+    }
+
+    .testimonios {
+      background: #fff;
+      padding: 100px 40px 110px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    .testimonios__header { text-align: center; margin-bottom: 64px; }
+
+    .testimonios__tag {
+      display: block; font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 16px;
+    }
+
+    .testimonios__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      text-transform: uppercase; color: #111; line-height: 1;
+    }
+
+    /* ─── CAROUSEL ────────────────────────────────────────────── */
+    .carousel {
+      width: 100%;
+      max-width: 1160px;
+      display: flex; flex-direction: column; align-items: center; gap: 32px;
+    }
+
+    .carousel__row {
+      width: 100%;
+      display: flex; align-items: center; gap: 20px;
+    }
+
+    .carousel__track-wrap {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Desktop: 3 phones centrados, sin carrusel */
+    .carousel__track {
+      display: flex;
+      gap: 24px;
+      width: max-content;
+      margin: 0 auto;
+    }
+
+    .slide {
+      flex: 0 0 295px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Clones y slides solo-móvil: ocultos en desktop */
+    .slide.clone        { display: none; }
+    .slide--mobile-only { display: none; }
+
+    /* ─── FLECHAS — solo en móvil ────────────────────────────── */
+    .carousel__btn {
+      display: none;
+      flex-shrink: 0; width: 32px; height: 48px;
+      border: none; background: transparent;
+      color: rgba(0,0,0,0.22); cursor: pointer;
+      align-items: center; justify-content: center;
+      transition: color 0.2s; padding: 0;
+    }
+    .carousel__btn:hover { color: rgba(0,0,0,0.75); }
+
+    /* ─── DOTS — solo en móvil ───────────────────────────────── */
+    .carousel__dots { display: none; gap: 8px; }
+    .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: rgba(0,0,0,0.15); cursor: pointer;
+      transition: background 0.25s, transform 0.25s;
+    }
+    .dot.active { background: var(--accent); transform: scale(1.4); }
+
+    /* ─── iPHONE FRAME ───────────────────────────────────────── */
+    .iphone {
+      position: relative;
+      width: 295px;
+      flex-shrink: 0;
+      background: #1c1c1e;
+      border-radius: 44px;
+      padding: 7px;
+    }
+    .iphone__mute  { position: absolute; left: -3px; top: 88px;  width: 3px; height: 22px; background: #1c1c1e; border-radius: 2px 0 0 2px; }
+    .iphone__vol-up{ position: absolute; left: -3px; top: 128px; width: 3px; height: 48px; background: #1c1c1e; border-radius: 2px 0 0 2px; }
+    .iphone__vol-dn{ position: absolute; left: -3px; top: 188px; width: 3px; height: 48px; background: #1c1c1e; border-radius: 2px 0 0 2px; }
+    .iphone__power { position: absolute; right:-3px; top: 152px; width: 3px; height: 68px; background: #1c1c1e; border-radius: 0 2px 2px 0; }
+
+    .iphone__screen {
+      background: #fff;
+      border-radius: 38px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      position: relative;
+      height: 560px;
+    }
+
+    .iphone__island {
+      position: absolute; top: 14px; left: 50%;
+      transform: translateX(-50%);
+      width: 92px; height: 30px;
+      background: #000; border-radius: 20px; z-index: 30;
+    }
+
+    .iphone__sb {
+      flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 17px 22px 6px; position: relative; z-index: 10;
+    }
+    .iphone__time { font-size: 0.8rem; font-weight: 700; color: #000; letter-spacing: -0.02em; }
+    .iphone__sb-icons { display: flex; align-items: center; gap: 5px; color: #000; }
+
+    .iphone__home {
+      flex-shrink: 0; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .iphone__home::after {
+      content: ''; width: 118px; height: 5px;
+      background: #000; border-radius: 3px; opacity: 0.17;
+    }
+
+    /* ─── INSTAGRAM DM ───────────────────────────────────────── */
+    .dm {
+      flex: 1; min-height: 0;
+      display: flex; flex-direction: column;
+      overflow: hidden; background: #fff;
+    }
+
+    .dm__header {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px;
+      border-bottom: 1px solid #efefef;
+    }
+    .dm__back { color: #000; font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
+    .dm__avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem; font-weight: 600; color: #fff; flex-shrink: 0;
+    }
+    .dm__userinfo { flex: 1; min-width: 0; }
+    .dm__username {
+      font-size: 0.8rem; font-weight: 600; color: #000; line-height: 1.2;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .dm__status { font-size: 0.64rem; color: #737373; margin-top: 1px; }
+    .dm__icons { display: flex; gap: 12px; color: #000; flex-shrink: 0; }
+
+    .dm__msgs {
+      flex: 1; min-height: 0;
+      overflow: hidden;
+      padding: 14px 10px 12px;
+      display: flex; flex-direction: column; gap: 5px;
+      justify-content: flex-end;
+      background: #fafafa;
+    }
+
+    .dm__time {
+      text-align: center; font-size: 0.58rem; color: #737373;
+      letter-spacing: 0.04em; margin-bottom: 4px; flex-shrink: 0;
+    }
+
+    .dm__row { display: flex; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+    .dm__row--received { justify-content: flex-start; }
+    .dm__row--sent     { justify-content: flex-end; }
+
+    .dm__row__av {
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.5rem; font-weight: 600; color: #fff;
+    }
+
+    .dm__bubble {
+      max-width: 75%;
+      padding: 8px 12px; border-radius: 18px;
+      font-size: 0.78rem; line-height: 1.45; word-break: break-word;
+    }
+    .dm__row--received .dm__bubble { background: #efefef; color: #000; border-bottom-left-radius: 5px; }
+    .dm__row--sent .dm__bubble { background: linear-gradient(135deg,#6559ca,#8538b2); color: #fff; border-bottom-right-radius: 5px; }
+
+    .dm__seen { text-align: right; font-size: 0.58rem; color: #737373; margin-top: 1px; padding-right: 3px; flex-shrink: 0; }
+
+    .dm__input-bar {
+      flex-shrink: 0;
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px 10px;
+      border-top: 1px solid #efefef; background: #fff;
+    }
+    .dm__input-fake { flex: 1; background: #efefef; border-radius: 20px; padding: 8px 14px; font-size: 0.76rem; color: #737373; }
+    .dm__input-icons { display: flex; gap: 8px; color: #737373; }
+
+    /* ─── MÓVIL ≤900px: carrusel infinito ────────────────────── */
+    @media (max-width: 900px) {
+      .testimonios { padding: 72px 0 80px; }
+      .testimonios__header { padding: 0 24px; margin-bottom: 48px; }
+      .carousel { max-width: 100%; gap: 24px; }
+      .carousel__row { gap: 12px; padding: 0 16px; }
+
+      .carousel__track { gap: 0; justify-content: flex-start; width: auto; margin: 0; }
+      .slide { flex: 0 0 100%; padding: 0 10px; }
+
+      .slide.clone        { display: flex; }
+      .slide--mobile-only { display: flex; }
+
+      .carousel__btn  { display: flex; }
+      .carousel__dots { display: flex; }
+    }
+
+    @media (max-width: 480px) {
+      .carousel__btn { display: none; }
+      .carousel__row { padding: 0; }
+      .slide { padding: 0 20px; }
+      .iphone { width: min(295px, 82vw); }
+    }
+  </style>
+</head>
+<body>
+  <div class="label-bar">v7 — iPhone DMs · tríptico desktop / carrusel móvil</div>
+
+  <section class="testimonios" style="margin-top: 32px;">
+
+    <div class="testimonios__header">
+      <span class="testimonios__tag">@cl4u8io · Instagram</span>
+      <h2 class="testimonios__title">Vuestros DM's</h2>
+    </div>
+
+    <div class="carousel">
+      <div class="carousel__row">
+        <button class="carousel__btn" id="prev"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 1 1 9 9 17"/></svg></button>
+
+        <div class="carousel__track-wrap">
+          <div class="carousel__track" id="track">
+
+            <!-- ═══ iPhone 1 — Jorge (desktop + mobile) ══════════════════ -->
+            <div class="slide">
+              <div class="iphone">
+                <div class="iphone__mute"></div><div class="iphone__vol-up"></div><div class="iphone__vol-dn"></div><div class="iphone__power"></div>
+                <div class="iphone__screen">
+                  <div class="iphone__island"></div>
+                  <div class="iphone__sb">
+                    <span class="iphone__time">13:57</span>
+                    <div class="iphone__sb-icons">
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="9" width="3.5" height="3" rx="0.8"/><rect x="4.8" y="6" width="3.5" height="6" rx="0.8"/><rect x="9.6" y="3" width="3.5" height="9" rx="0.8"/><rect x="14.4" y="0" width="3.5" height="12" rx="0.8"/></svg>
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M5.1 8.4a4.1 4.1 0 0 1 5.8 0" stroke-width="1.3"/><path d="M2.4 5.7a8.2 8.2 0 0 1 11.2 0" stroke-width="1.3"/><path d="M0 3a12 12 0 0 1 16 0" stroke-width="1.3"/></svg>
+                      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.35"/><path d="M23 4.5v4a2 2 0 0 0 0-4z" opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2"/></svg>
+                    </div>
+                  </div>
+                  <div class="dm">
+                    <div class="dm__header">
+                      <div class="dm__back">&#8592;</div>
+                      <div class="dm__avatar" style="background:linear-gradient(135deg,#405de6,#5851db)">J</div>
+                      <div class="dm__userinfo">
+                        <div class="dm__username">jorge.mrd</div>
+                        <div class="dm__status">Activo hace 2 h</div>
+                      </div>
+                      <div class="dm__icons">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                      </div>
+                    </div>
+                    <div class="dm__msgs">
+                      <div class="dm__time">HOY · 23:47</div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="background:linear-gradient(135deg,#405de6,#5851db)">J</div>
+                        <div class="dm__bubble">Hace dos años caminando por Madrid de noche conseguí una tabla de madera que tenía pintado un Claudio, estaba medio borracho y como parecía que la habían botado me la llevé a casa sin más. Ahora veo esta cuenta y el mindfuck que estoy viviendo es alucinante</div>
+                      </div>
+                      <div class="dm__seen">Visto</div>
+                    </div>
+                    <div class="dm__input-bar">
+                      <div class="dm__input-fake">Mensaje...</div>
+                      <div class="dm__input-icons"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                    </div>
+                  </div>
+                  <div class="iphone__home"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ iPhone 2 — Sara (desktop + mobile) ═══════════════════ -->
+            <div class="slide">
+              <div class="iphone">
+                <div class="iphone__mute"></div><div class="iphone__vol-up"></div><div class="iphone__vol-dn"></div><div class="iphone__power"></div>
+                <div class="iphone__screen">
+                  <div class="iphone__island"></div>
+                  <div class="iphone__sb">
+                    <span class="iphone__time">10:20</span>
+                    <div class="iphone__sb-icons">
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="9" width="3.5" height="3" rx="0.8"/><rect x="4.8" y="6" width="3.5" height="6" rx="0.8"/><rect x="9.6" y="3" width="3.5" height="9" rx="0.8"/><rect x="14.4" y="0" width="3.5" height="12" rx="0.8"/></svg>
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M5.1 8.4a4.1 4.1 0 0 1 5.8 0" stroke-width="1.3"/><path d="M2.4 5.7a8.2 8.2 0 0 1 11.2 0" stroke-width="1.3"/><path d="M0 3a12 12 0 0 1 16 0" stroke-width="1.3"/></svg>
+                      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.35"/><path d="M23 4.5v4a2 2 0 0 0 0-4z" opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2"/></svg>
+                    </div>
+                  </div>
+                  <div class="dm">
+                    <div class="dm__header">
+                      <div class="dm__back">&#8592;</div>
+                      <div class="dm__avatar" style="background:linear-gradient(135deg,#8a3ab9,#bc2a8d)">S</div>
+                      <div class="dm__userinfo">
+                        <div class="dm__username">sara.f__</div>
+                        <div class="dm__status">Activo hace 1 h</div>
+                      </div>
+                      <div class="dm__icons">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                      </div>
+                    </div>
+                    <div class="dm__msgs">
+                      <div class="dm__time">HOY · 21:08</div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="background:linear-gradient(135deg,#8a3ab9,#bc2a8d)">S</div>
+                        <div class="dm__bubble">Hola, Claudio, esta noche he pasado por la calle Fuencarral y he visto tu cuadro. Me ha llamado mucho la atención; he estado a punto de pillarlo. Pero por vergüenza no lo he hecho (ahora me arrepiento). Pensando que era de alguien y no sabía bien bien de qué iba el tema.</div>
+                      </div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="visibility:hidden">S</div>
+                        <div class="dm__bubble">Tengo que decir que gracias a eso he descubierto tu IG y me gusta mucho lo que haces. Felicidades!</div>
+                      </div>
+                      <div class="dm__seen">Visto</div>
+                    </div>
+                    <div class="dm__input-bar">
+                      <div class="dm__input-fake">Mensaje...</div>
+                      <div class="dm__input-icons"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                    </div>
+                  </div>
+                  <div class="iphone__home"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ iPhone 3 — María (desktop + mobile) ══════════════════ -->
+            <div class="slide">
+              <div class="iphone">
+                <div class="iphone__mute"></div><div class="iphone__vol-up"></div><div class="iphone__vol-dn"></div><div class="iphone__power"></div>
+                <div class="iphone__screen">
+                  <div class="iphone__island"></div>
+                  <div class="iphone__sb">
+                    <span class="iphone__time">9:41</span>
+                    <div class="iphone__sb-icons">
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="9" width="3.5" height="3" rx="0.8"/><rect x="4.8" y="6" width="3.5" height="6" rx="0.8"/><rect x="9.6" y="3" width="3.5" height="9" rx="0.8"/><rect x="14.4" y="0" width="3.5" height="12" rx="0.8"/></svg>
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M5.1 8.4a4.1 4.1 0 0 1 5.8 0" stroke-width="1.3"/><path d="M2.4 5.7a8.2 8.2 0 0 1 11.2 0" stroke-width="1.3"/><path d="M0 3a12 12 0 0 1 16 0" stroke-width="1.3"/></svg>
+                      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.35"/><path d="M23 4.5v4a2 2 0 0 0 0-4z" opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2"/></svg>
+                    </div>
+                  </div>
+                  <div class="dm">
+                    <div class="dm__header">
+                      <div class="dm__back">&#8592;</div>
+                      <div class="dm__avatar" style="background:linear-gradient(135deg,#c13584,#e95950)">M</div>
+                      <div class="dm__userinfo">
+                        <div class="dm__username">maria.pg__</div>
+                        <div class="dm__status">Activo ahora</div>
+                      </div>
+                      <div class="dm__icons">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                      </div>
+                    </div>
+                    <div class="dm__msgs">
+                      <div class="dm__time">AYER · 16:22</div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="background:linear-gradient(135deg,#c13584,#e95950)">M</div>
+                        <div class="dm__bubble">Mil gracias Claudio. Esto es una inversión ✨</div>
+                      </div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="visibility:hidden">M</div>
+                        <div class="dm__bubble">Creo en tu arte y ojalá te vaya fantástico.</div>
+                      </div>
+                      <div class="dm__seen">Visto ❤️</div>
+                    </div>
+                    <div class="dm__input-bar">
+                      <div class="dm__input-fake">Mensaje...</div>
+                      <div class="dm__input-icons"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                    </div>
+                  </div>
+                  <div class="iphone__home"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ iPhone 4 — Jesús (solo mobile) ═══════════════════════ -->
+            <div class="slide slide--mobile-only">
+              <div class="iphone">
+                <div class="iphone__mute"></div><div class="iphone__vol-up"></div><div class="iphone__vol-dn"></div><div class="iphone__power"></div>
+                <div class="iphone__screen">
+                  <div class="iphone__island"></div>
+                  <div class="iphone__sb">
+                    <span class="iphone__time">16:20</span>
+                    <div class="iphone__sb-icons">
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="9" width="3.5" height="3" rx="0.8"/><rect x="4.8" y="6" width="3.5" height="6" rx="0.8"/><rect x="9.6" y="3" width="3.5" height="9" rx="0.8"/><rect x="14.4" y="0" width="3.5" height="12" rx="0.8"/></svg>
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M5.1 8.4a4.1 4.1 0 0 1 5.8 0" stroke-width="1.3"/><path d="M2.4 5.7a8.2 8.2 0 0 1 11.2 0" stroke-width="1.3"/><path d="M0 3a12 12 0 0 1 16 0" stroke-width="1.3"/></svg>
+                      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.35"/><path d="M23 4.5v4a2 2 0 0 0 0-4z" opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2"/></svg>
+                    </div>
+                  </div>
+                  <div class="dm">
+                    <div class="dm__header">
+                      <div class="dm__back">&#8592;</div>
+                      <div class="dm__avatar" style="background:linear-gradient(135deg,#f09433,#e6683c)">J</div>
+                      <div class="dm__userinfo">
+                        <div class="dm__username">jesus.albl</div>
+                        <div class="dm__status">Activo hace 30 min</div>
+                      </div>
+                      <div class="dm__icons">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                      </div>
+                    </div>
+                    <div class="dm__msgs">
+                      <div class="dm__time">HOY · 14:12</div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="background:linear-gradient(135deg,#f09433,#e6683c)">J</div>
+                        <div class="dm__bubble">Es droga este proyecto</div>
+                      </div>
+                      <div class="dm__seen">Visto 🔥</div>
+                    </div>
+                    <div class="dm__input-bar">
+                      <div class="dm__input-fake">Mensaje...</div>
+                      <div class="dm__input-icons"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                    </div>
+                  </div>
+                  <div class="iphone__home"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ═══ iPhone 5 — Lucía (solo mobile) ══════════════════════ -->
+            <div class="slide slide--mobile-only">
+              <div class="iphone">
+                <div class="iphone__mute"></div><div class="iphone__vol-up"></div><div class="iphone__vol-dn"></div><div class="iphone__power"></div>
+                <div class="iphone__screen">
+                  <div class="iphone__island"></div>
+                  <div class="iphone__sb">
+                    <span class="iphone__time">13:12</span>
+                    <div class="iphone__sb-icons">
+                      <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="9" width="3.5" height="3" rx="0.8"/><rect x="4.8" y="6" width="3.5" height="6" rx="0.8"/><rect x="9.6" y="3" width="3.5" height="9" rx="0.8"/><rect x="14.4" y="0" width="3.5" height="12" rx="0.8"/></svg>
+                      <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="11" r="1" fill="currentColor" stroke="none"/><path d="M5.1 8.4a4.1 4.1 0 0 1 5.8 0" stroke-width="1.3"/><path d="M2.4 5.7a8.2 8.2 0 0 1 11.2 0" stroke-width="1.3"/><path d="M0 3a12 12 0 0 1 16 0" stroke-width="1.3"/></svg>
+                      <svg width="26" height="13" viewBox="0 0 26 13" fill="currentColor"><rect x="0.5" y="0.5" width="22" height="12" rx="3.5" stroke="currentColor" stroke-width="1" fill="none" opacity="0.35"/><path d="M23 4.5v4a2 2 0 0 0 0-4z" opacity="0.4"/><rect x="2" y="2" width="17" height="9" rx="2"/></svg>
+                    </div>
+                  </div>
+                  <div class="dm">
+                    <div class="dm__header">
+                      <div class="dm__back">&#8592;</div>
+                      <div class="dm__avatar" style="background:linear-gradient(135deg,#2fc7a1,#3da9c5)">L</div>
+                      <div class="dm__userinfo">
+                        <div class="dm__username">lucia.mg__</div>
+                        <div class="dm__status">Activo ayer</div>
+                      </div>
+                      <div class="dm__icons">
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.63 3.45 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.06 6.06l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                      </div>
+                    </div>
+                    <div class="dm__msgs">
+                      <div class="dm__time">AYER · 11:48</div>
+                      <div class="dm__row dm__row--received">
+                        <div class="dm__row__av" style="background:linear-gradient(135deg,#2fc7a1,#3da9c5)">L</div>
+                        <div class="dm__bubble">Mi novio está muy emocionado por haber comprado un Claudio, no sé qué le hiciste pero él está súper contento! 😍</div>
+                      </div>
+                      <div class="dm__seen">Visto ❤️</div>
+                    </div>
+                    <div class="dm__input-bar">
+                      <div class="dm__input-fake">Mensaje...</div>
+                      <div class="dm__input-icons"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
+                    </div>
+                  </div>
+                  <div class="iphone__home"></div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /track -->
+        </div><!-- /track-wrap -->
+
+        <button class="carousel__btn" id="next"><svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1 9 9 1 17"/></svg></button>
+      </div>
+
+      <div class="carousel__dots" id="dots">
+        <div class="dot active" data-i="0"></div>
+        <div class="dot" data-i="1"></div>
+        <div class="dot" data-i="2"></div>
+        <div class="dot" data-i="3"></div>
+        <div class="dot" data-i="4"></div>
+      </div>
+    </div>
+
+  </section>
+
+  <script>
+    const track   = document.getElementById('track');
+    const dotsEl  = document.querySelectorAll('.dot');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
+    /* ── Clones para loop infinito en móvil ─────────────────────
+       Solo los slides visibles en móvil crean el loop.
+       Track final: [lastClone(0), real0..real4, firstClone(n+1)]  */
+    const realSlides = [...track.querySelectorAll('.slide')];
+    const n = realSlides.length; // 5
+
+    const firstClone = realSlides[0].cloneNode(true);
+    const lastClone  = realSlides[n - 1].cloneNode(true);
+    firstClone.classList.add('clone');
+    lastClone.classList.add('clone');
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, track.firstChild);
+
+    let mobilePos = 1; // posición en el track 0..(n+1)
+
+    function isMobile() { return window.innerWidth <= 900; }
+    function realIdx(p) { return ((p - 1) % n + n) % n; }
+    function syncDots(ri) { dotsEl.forEach((d, i) => d.classList.toggle('active', i === ri)); }
+
+    /* ── MÓVIL: loop infinito ────────────────────────────────── */
+    function mobAnimate(p) {
+      mobilePos = p;
+      track.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
+      track.style.transform  = `translateX(-${mobilePos * 100}%)`;
+      syncDots(realIdx(mobilePos));
+    }
+    function mobSnap(p) {
+      mobilePos = p;
+      track.style.transition = 'none';
+      track.style.transform  = `translateX(-${mobilePos * 100}%)`;
+      syncDots(realIdx(mobilePos));
+    }
+
+    /* Tras la transición: si estamos en un clon, saltar al real */
+    track.addEventListener('transitionend', () => {
+      if (!isMobile()) return;
+      if (mobilePos === 0)     mobSnap(n);
+      if (mobilePos === n + 1) mobSnap(1);
+    });
+
+    /* ── DESKTOP: sin carrusel, reset transform ──────────────── */
+    function deskReset() {
+      track.style.transition = 'none';
+      track.style.transform  = 'none';
+    }
+
+    /* ── Botones ─────────────────────────────────────────────── */
+    prevBtn.addEventListener('click', () => { if (isMobile()) mobAnimate(mobilePos - 1); });
+    nextBtn.addEventListener('click', () => { if (isMobile()) mobAnimate(mobilePos + 1); });
+
+    /* ── Dots ────────────────────────────────────────────────── */
+    dotsEl.forEach((d, i) => d.addEventListener('click', () => {
+      if (isMobile()) mobAnimate(i + 1);
+    }));
+
+    /* ── Swipe ───────────────────────────────────────────────── */
+    let startX = 0;
+    track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', e => {
+      if (!isMobile()) return;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 44) mobAnimate(dx < 0 ? mobilePos + 1 : mobilePos - 1);
+    });
+
+    /* ── Resize ──────────────────────────────────────────────── */
+    window.addEventListener('resize', () => {
+      if (isMobile()) mobSnap(mobilePos);
+      else deskReset();
+    });
+
+    /* ── Init ────────────────────────────────────────────────── */
+    if (isMobile()) mobSnap(1);
+    else deskReset();
+  </script>
+</body>
+</html>

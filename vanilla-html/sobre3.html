@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre — v3: Texto → reel → botones</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: rgb(14,14,14); overflow-x: hidden; }
+
+    .label-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: var(--accent); color: #000; text-align: center;
+      padding: 7px 0; font-family: 'Inter', sans-serif; font-size: 0.65rem;
+      font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
+    }
+
+    /* ─── SOBRE ─────────────────────────────────────────────── */
+    .sobre {
+      background: rgb(14,14,14); min-height: 100vh; padding: 100px 80px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 80px; overflow: hidden;
+    }
+    .sobre__cluster { position: relative; width: 580px; height: 540px; flex-shrink: 0; }
+    .shot {
+      position: absolute; border-radius: 10px; overflow: hidden; background: #1c1c1c;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .shot::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
+      background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+    .shot img, .shot video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .shot-label {
+      position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; z-index: 1;
+      font-family: 'Inter', sans-serif; font-size: 0.55rem; font-weight: 300;
+      letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.12);
+    }
+    .shot--dark { background: #161616; }
+    .ca .s1 { width:200px; height:250px; left:140px; top:100px; transform:rotate(-4deg);  z-index:4; }
+    .ca .s2 { width:185px; height:231px; left:308px; top:158px; transform:rotate(6deg);   z-index:5; }
+    .ca .s3 { width:120px; height:260px; left:8px;   top:122px; transform:rotate(-8deg);  z-index:2; }
+    .ca .s4 { width:195px; height:244px; left:55px;  top:252px; transform:rotate(3deg);   z-index:3; }
+    .ca .s5 { width:118px; height:255px; left:432px; top:95px;  transform:rotate(7deg);   z-index:2; }
+    .ca .s6 { width:180px; height:225px; left:318px; top:292px; transform:rotate(-5deg);  z-index:6; }
+    .ca .s7 { width:165px; height:220px; left:190px; top:300px; transform:rotate(2deg);   z-index:3; }
+    .ca .s8 { width:112px; height:242px; left:455px; top:250px; transform:rotate(-9deg);  z-index:1; }
+    .ca .sreel {
+      width: 190px; height: 336px; left: 195px; top: 102px;
+      transform: rotate(-3deg); z-index: 10;
+      box-shadow: 0 20px 64px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.6);
+    }
+    @keyframes spin-vinyl { to { transform: rotate(360deg); } }
+    .shot--reel { background: #000; }
+    .shot--reel::before { display: none; }
+    .shot--reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+    .reel-overlay { position: absolute; inset: 0; pointer-events: none; }
+    .reel-top-grad { position: absolute; top: 0; left: 0; right: 0; height: 30%; background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%); }
+    .reel-bot-grad { position: absolute; bottom: 0; left: 0; right: 0; height: 58%; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 50%, transparent 100%); }
+    .reel-progress { position: absolute; top: 5px; left: 6px; right: 6px; height: 2px; background: rgba(255,255,255,0.22); border-radius: 1px; z-index: 2; }
+    .reel-progress-fill { height: 100%; width: 32%; background: #fff; border-radius: 1px; }
+    .reel-actions { position: absolute; right: 5px; bottom: 54px; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+    .reel-action { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+    .reel-action svg { width: 15px; height: 15px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+    .reel-action-count { font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; line-height: 1; }
+    .reel-vinyl-wrap { width: 19px; height: 19px; border-radius: 50%; background: radial-gradient(circle, #444 0%, #111 100%); border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; animation: spin-vinyl 4s linear infinite; }
+    .reel-vinyl-dot { width: 5px; height: 5px; border-radius: 50%; background: #000; border: 1px solid rgba(255,255,255,0.2); }
+    .reel-bottom { position: absolute; bottom: 6px; left: 6px; right: 26px; }
+    .reel-user { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+    .reel-avatar { width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0; background: var(--accent); border: 1.5px solid #fff; }
+    .reel-username { font-family: -apple-system, sans-serif; font-size: 7.5px; font-weight: 700; color: #fff; white-space: nowrap; }
+    .reel-follow { margin-left: 2px; border: 1px solid rgba(255,255,255,0.85); background: transparent; font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; padding: 1.5px 4px; border-radius: 3px; cursor: pointer; }
+    .reel-caption { font-family: -apple-system, sans-serif; font-size: 6.5px; color: rgba(255,255,255,0.92); line-height: 1.35; margin-bottom: 4px; }
+    .reel-audio-row { display: flex; align-items: center; gap: 3px; }
+    .reel-audio-note { font-size: 7px; color: #fff; }
+    .reel-audio-text { font-family: -apple-system, sans-serif; font-size: 6px; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Info */
+    .sobre__info { display: flex; flex-direction: column; max-width: 360px; }
+    .sobre__tag { font-family: 'Inter', sans-serif; font-size: 0.65rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 24px; }
+    .sobre__divider { width: 40px; height: 1px; background: rgba(255,255,255,0.12); margin-bottom: 28px; }
+    .sobre__title { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(2.8rem, 4.5vw, 4.2rem); line-height: 1; text-transform: uppercase; color: #fff; margin-bottom: 24px; }
+    .sobre__body { font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 300; line-height: 1.9; color: rgba(255,255,255,0.45); margin-bottom: 40px; }
+    .sobre__cta-label { font-family: 'Inter', sans-serif; font-size: 1.1rem; font-weight: 400; color: rgba(255,255,255,0.35); margin-bottom: 16px; }
+    .sobre__btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .sobre__btn {
+      display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+      background: transparent; border: 1px solid rgba(255,255,255,0.18); color: var(--accent);
+      font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 24px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .sobre__btn:hover { border-color: var(--accent); background: rgba(236,103,104,0.08); }
+    .sobre__btn svg { flex-shrink: 0; }
+
+    /* ─── VARIANTE 3: texto → reel → botones ──────────────────── */
+    .sobre__reel-mobile { display: none; }
+    .sobre__btns-mobile  { display: none; }
+
+    @media (max-width: 768px) {
+      .sobre { flex-direction: column; padding: 56px 28px 64px; gap: 0; align-items: center; min-height: unset; }
+      .sobre__cluster { display: none; }
+
+      /* texto (sin cta ni btns) */
+      .sobre__info { max-width: 100%; width: 100%; align-items: center; text-align: center; margin-bottom: 40px; }
+      .sobre__info .sobre__cta-label { display: none; }
+      .sobre__info .sobre__btns      { display: none; }
+      .sobre__divider { margin: 0 auto 28px; }
+      .sobre__body { margin-bottom: 0; }
+
+      /* reel pequeño centrado */
+      .sobre__reel-mobile {
+        display: block; position: relative;
+        width: 160px; height: 284px;
+        border-radius: 12px; overflow: hidden;
+        box-shadow: 0 16px 48px rgba(0,0,0,0.8);
+        margin-bottom: 36px;
+      }
+
+      /* botones separados al final */
+      .sobre__btns-mobile {
+        display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%;
+      }
+      .sobre__btns-mobile .sobre__cta-label { font-family: 'Inter', sans-serif; font-size: 0.9rem; font-weight: 400; color: rgba(255,255,255,0.35); margin-bottom: 4px; }
+      .sobre__btns-mobile .sobre__btns { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="label-bar">v3 — texto → reel → botones</div>
+
+  <section class="sobre" id="sobre" style="margin-top: 32px;">
+
+    <div class="sobre__cluster ca">
+      <div class="shot s1"><img src="assets/sobre-05.jpg" alt=""><span class="shot-label">post · claudio pintado</span></div>
+      <div class="shot s2 shot--dark"><video src="assets/sobre-video-s2.mp4" autoplay loop muted playsinline></video><span class="shot-label">post · claudio en la calle</span></div>
+      <div class="shot s3"><video src="assets/sobre-video-s3.mp4" autoplay loop muted playsinline></video><span class="shot-label">story · proceso</span></div>
+      <div class="shot s4"><img src="assets/sobre-04.jpg" alt=""><span class="shot-label">post · madera encontrada</span></div>
+      <div class="shot s5 shot--dark"><img src="assets/sobre-01.jpg" alt=""><span class="shot-label">story · reacción</span></div>
+      <div class="shot s6"><img src="assets/sobre-02.jpg" alt=""><span class="shot-label">dm · dónde comprar</span></div>
+      <div class="shot s7"><video src="assets/sobre-video-s7.mp4" autoplay loop muted playsinline></video><span class="shot-label">perfil · @cl4u8io</span></div>
+      <div class="shot s8 shot--dark"><video src="assets/sobre-video-s8.mp4" autoplay loop muted playsinline></video><span class="shot-label">story · drop</span></div>
+      <div class="shot shot--reel sreel">
+        <video src="assets/sobre-reel.mp4" autoplay loop muted playsinline></video>
+      </div>
+    </div>
+
+    <div class="sobre__info">
+      <p class="sobre__tag">@cl4u8io · Instagram</p>
+      <div class="sobre__divider"></div>
+      <h2 class="sobre__title">Todo empieza<br>en la calle</h2>
+      <p class="sobre__body">Recojo madera que Madrid tira.<br>La pinto, la firmo, y la dejo<br>donde la encontré.<br>A veces alguien se la lleva.</p>
+      <p class="sobre__cta-label">¿Quieres ver más?</p>
+      <div class="sobre__btns">
+        <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="sobre__btn" href="https://tiktok.com/@cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      </div>
+    </div>
+
+    <!-- mobile: reel pequeño entre texto y botones -->
+    <div class="sobre__reel-mobile shot--reel">
+      <video src="assets/sobre-reel.mp4" autoplay loop muted playsinline></video>
+      <div class="reel-overlay">
+        <div class="reel-top-grad"></div><div class="reel-bot-grad"></div>
+        <div class="reel-progress"><div class="reel-progress-fill"></div></div>
+        <div class="reel-actions">
+          <div class="reel-action"><svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span class="reel-action-count">8.4K</span></div>
+          <div class="reel-action"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="reel-action-count">312</span></div>
+          <div class="reel-vinyl-wrap"><div class="reel-vinyl-dot"></div></div>
+        </div>
+        <div class="reel-bottom">
+          <div class="reel-user"><div class="reel-avatar"></div><span class="reel-username">cl4u8io</span><button class="reel-follow">Seguir</button></div>
+          <p class="reel-caption">encontrado, pintado, dejado en la calle 🎨</p>
+          <div class="reel-audio-row"><span class="reel-audio-note">♪</span><span class="reel-audio-text">Audio original · cl4u8io</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- mobile: botones al final -->
+    <div class="sobre__btns-mobile">
+      <p class="sobre__cta-label">¿Quieres ver más?</p>
+      <div class="sobre__btns">
+        <a class="sobre__btn" href="https://instagram.com/cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+        <a class="sobre__btn" href="https://tiktok.com/@cl4u8io" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      </div>
+    </div>
+
+  </section>
+</body>
+</html>

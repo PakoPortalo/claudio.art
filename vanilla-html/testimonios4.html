@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testimonios — v4: Split editorial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --accent: #EC6768; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; font-family: 'Inter', sans-serif; background: rgb(14,14,14); overflow-x: hidden; }
+
+    .label-bar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: var(--accent); color: #000; text-align: center;
+      padding: 7px 0; font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.2em; text-transform: uppercase;
+    }
+
+    /* ─── WRAPPER ───────────────────────────────────────────────── */
+    .testimonios {
+      background: rgb(14,14,14);
+      display: flex;
+      align-items: stretch;
+      min-height: 80vh;
+    }
+
+    /* ─── LEFT: encabezado fijo ─────────────────────────────────── */
+    .testimonios__left {
+      position: sticky;
+      top: 0;
+      flex-shrink: 0;
+      width: 320px;
+      padding: 100px 60px 100px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: rgb(14,14,14);
+      border-right: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .testimonios__tag {
+      display: block;
+      font-size: 0.65rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 20px;
+    }
+
+    .testimonios__divider {
+      width: 36px; height: 1px;
+      background: rgba(255,255,255,0.15);
+      margin-bottom: 24px;
+    }
+
+    .testimonios__title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+      font-size: clamp(2.8rem, 3.5vw, 4rem);
+      text-transform: uppercase; color: #fff; line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    .testimonios__sub {
+      font-size: 0.85rem; font-weight: 300; line-height: 1.8;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ─── RIGHT: masonry grid ───────────────────────────────────── */
+    .testimonios__right {
+      flex: 1;
+      padding: 80px 60px 80px 40px;
+      overflow: hidden;
+    }
+
+    .testimonios__grid {
+      columns: 3;
+      column-gap: 10px;
+    }
+
+    .testimonios__item {
+      break-inside: avoid;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.28s ease, opacity 0.28s ease;
+    }
+
+    .testimonios__item img { width: 100%; height: auto; display: block; }
+
+    .testimonios__grid:hover .testimonios__item { opacity: 0.4; transform: scale(0.98); }
+    .testimonios__grid:hover .testimonios__item:hover { opacity: 1; transform: scale(1.03); }
+
+    /* ─── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .testimonios { flex-direction: column; min-height: unset; }
+
+      .testimonios__left {
+        position: static;
+        width: 100%;
+        padding: 64px 28px 40px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.06);
+        align-items: center;
+        text-align: center;
+      }
+
+      .testimonios__divider { margin: 0 auto 24px; }
+
+      .testimonios__right {
+        padding: 40px 20px 72px;
+      }
+
+      .testimonios__grid { columns: 3; }
+    }
+
+    @media (max-width: 600px) {
+      .testimonios__grid { columns: 2; }
+    }
+
+    @media (max-width: 400px) {
+      .testimonios__right { padding: 32px 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="label-bar">v4 — split editorial (título izquierda + grid derecha)</div>
+
+  <section class="testimonios" style="margin-top: 32px;">
+    <div class="testimonios__left">
+      <span class="testimonios__tag">@cl4u8io · Instagram</span>
+      <div class="testimonios__divider"></div>
+      <h2 class="testimonios__title">Lo que<br>piensan</h2>
+      <p class="testimonios__sub">Reacciones reales de personas que se encontraron un claudio en la calle.</p>
+    </div>
+
+    <div class="testimonios__right">
+      <div class="testimonios__grid">
+        <div class="testimonios__item"><img src="assets/resenas-01.JPG" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-02.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-03.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-04.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-05.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-06.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-07.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-08.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-09.jpg" alt="" loading="lazy"></div>
+        <div class="testimonios__item"><img src="assets/resenas-10.jpg" alt="" loading="lazy"></div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

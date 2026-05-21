@@ -162,6 +162,18 @@
       width: 272px; height: 60px; background: rgba(0,0,0,0.2);
       border-radius: 50%; filter: blur(12px); margin-top: 24px; pointer-events: none;
     }
+    .drop__swatches {
+      display: flex; gap: 12px; align-items: center; justify-content: center;
+      margin-top: 20px;
+    }
+    .drop__swatches .swatch { width: 18px; height: 18px; }
+    @keyframes swatch-pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.18); }
+    }
+    @media (max-width: 768px) {
+      .drop__swatches .swatch.active { animation: swatch-pulse 1.6s ease-in-out infinite; }
+    }
 
     /* ─── INFO ────────────────────────────────────────────────── */
     .drop__info { display: flex; flex-direction: column; }
@@ -527,11 +539,11 @@
       <button class="preview-btn" onclick="setState('agotado')">Agotado</button>
     </div>
     <div class="preview-controls__row">
-      <div class="preview-swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
-      <div class="preview-swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
-      <div class="preview-swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
-      <div class="preview-swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
-      <div class="preview-swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
+      <div class="swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
+      <div class="swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
+      <div class="swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
+      <div class="swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
+      <div class="swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
     </div>
   </div>
 
@@ -555,6 +567,13 @@
           </div>
         </div>
         <div class="drop__shadow" id="painting-shadow"></div>
+        <div class="drop__swatches">
+          <div class="swatch"        data-color="#FF8C6C" style="background:#FF8C6C" title="Naranja"></div>
+          <div class="swatch active" data-color="#EC6768" style="background:#EC6768" title="Rojo"></div>
+          <div class="swatch"        data-color="#417DE1" style="background:#417DE1" title="Azul"></div>
+          <div class="swatch"        data-color="#EED004" style="background:#EED004" title="Amarillo"></div>
+          <div class="swatch"        data-color="#228761" style="background:#228761" title="Verde"></div>
+        </div>
       </div>
 
       <!-- Info -->
@@ -577,10 +596,10 @@
 
         <!-- ── ESTADO: DISPONIBLE ─────────────────────────────── -->
         <div class="drop__state is-active" id="state-disponible">
-          <p class="drop__edition">NUEVO DROP · 15 UNIDADES</p>
+          <p class="drop__edition">NUEVO DROP</p>
           <div class="drop__divider"></div>
           <h2 class="drop__title">
-            Quedan <span class="accent" id="stock-count">7</span> claudios<br>disponibles
+            No te quedes<br>sin tu <span class="accent">Claudio</span>
           </h2>
           <p class="drop__body">
             No esperes en hacerte con el tuyo.<br>
@@ -592,9 +611,9 @@
 
         <!-- ── ESTADO: AGOTADO ────────────────────────────────── -->
         <div class="drop__state" id="state-agotado">
-          <h2 class="drop__agotado-title">Claudios<br>agotados :(</h2>
+          <h2 class="drop__agotado-title">Claudios<br>agotados</h2>
           <p class="drop__agotado-wow">¡Habéis acabado el último drop a una velocidad nunca vista!</p>
-          <p class="drop__agotado-cta">¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie :)</p>
+          <p class="drop__agotado-cta">¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie.</p>
           <div class="drop__waitlist">
             <input type="email" placeholder="tu@email.com" />
             <button>Apúntame</button>
@@ -728,9 +747,9 @@
     }
 
     /* ─── SWATCHES ───────────────────────────────────────────────── */
-    document.querySelectorAll('.preview-swatch').forEach(sw => {
+    document.querySelectorAll('.swatch').forEach(sw => {
       sw.addEventListener('click', () => {
-        document.querySelectorAll('.preview-swatch').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
         sw.classList.add('active');
         updateColor(sw.dataset.color);
       });
