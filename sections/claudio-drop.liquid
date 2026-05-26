@@ -1,0 +1,717 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Drop (bajo demanda · 5 productos separados)
+  3 estados que se eligen MANUALMENTE desde el admin:
+    · countdown : cuenta atrás hasta el próximo drop
+    · disponible: 5 productos (uno por color) a la venta
+    · agotado   : ventas paradas + waitlist email
+  Pintura 3D giratoria + swatches que cambian color + imagen +
+  producto a añadir al carrito.
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- liquid
+  assign state = section.settings.drop_state
+
+  assign p_naranja  = section.settings.product_naranja
+  assign p_rojo     = section.settings.product_rojo
+  assign p_azul     = section.settings.product_azul
+  assign p_amarillo = section.settings.product_amarillo
+  assign p_verde    = section.settings.product_verde
+
+  assign price = section.settings.fallback_price
+  if p_rojo != blank
+    assign price = p_rojo.price | money_without_trailing_zeros
+  endif
+-%}
+
+<section class="claudio-drop" id="drop" data-state="{{ state }}" style="--accent: {{ section.settings.accent_color }};">
+
+  {%- comment -%}
+    Mapa nombre-de-color → datos del producto (id de la primera variante, image, available, price, url).
+    El JS lo lee al hacer click "quiero el mío" para añadir el producto del color seleccionado.
+    Si no asignas un producto a un color, ese color simplemente no se podrá comprar.
+  {%- endcomment -%}
+  {%- capture color_map_json -%}
+    {
+    {%- assign sep = '' -%}
+    {%- if p_naranja != blank -%}
+      {{ sep }}"naranja":{"id":{{ p_naranja.selected_or_first_available_variant.id }},"image":{% if p_naranja.featured_image %}{{ p_naranja.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %},"available":{{ p_naranja.selected_or_first_available_variant.available }},"price":{{ p_naranja.price | money | json }},"url":{{ p_naranja.url | json }}}
+      {%- assign sep = ',' -%}
+    {%- endif -%}
+    {%- if p_rojo != blank -%}
+      {{ sep }}"rojo":{"id":{{ p_rojo.selected_or_first_available_variant.id }},"image":{% if p_rojo.featured_image %}{{ p_rojo.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %},"available":{{ p_rojo.selected_or_first_available_variant.available }},"price":{{ p_rojo.price | money | json }},"url":{{ p_rojo.url | json }}}
+      {%- assign sep = ',' -%}
+    {%- endif -%}
+    {%- if p_azul != blank -%}
+      {{ sep }}"azul":{"id":{{ p_azul.selected_or_first_available_variant.id }},"image":{% if p_azul.featured_image %}{{ p_azul.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %},"available":{{ p_azul.selected_or_first_available_variant.available }},"price":{{ p_azul.price | money | json }},"url":{{ p_azul.url | json }}}
+      {%- assign sep = ',' -%}
+    {%- endif -%}
+    {%- if p_amarillo != blank -%}
+      {{ sep }}"amarillo":{"id":{{ p_amarillo.selected_or_first_available_variant.id }},"image":{% if p_amarillo.featured_image %}{{ p_amarillo.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %},"available":{{ p_amarillo.selected_or_first_available_variant.available }},"price":{{ p_amarillo.price | money | json }},"url":{{ p_amarillo.url | json }}}
+      {%- assign sep = ',' -%}
+    {%- endif -%}
+    {%- if p_verde != blank -%}
+      {{ sep }}"verde":{"id":{{ p_verde.selected_or_first_available_variant.id }},"image":{% if p_verde.featured_image %}{{ p_verde.featured_image | image_url: width: 800 | json }}{% else %}null{% endif %},"available":{{ p_verde.selected_or_first_available_variant.available }},"price":{{ p_verde.price | money | json }},"url":{{ p_verde.url | json }}}
+    {%- endif -%}
+    }
+  {%- endcapture -%}
+  <script type="application/json" id="claudio-drop-color-map">{{ color_map_json }}</script>
+
+  <div class="claudio-drop__inner">
+
+    <!-- Pintura 3D giratoria -->
+    <div class="claudio-drop__painting-outer">
+      <div class="claudio-drop__painting-scene">
+        <div class="claudio-drop__painting" id="claudio-painting">
+          <div class="claudio-painting__face claudio-painting__face--front">
+            <img id="claudio-painting-img-a" class="claudio-painting-img claudio-painting-img--active" src="{{ 'producto-claudio-rojo.jpg' | asset_url }}" alt="Claudio">
+            <img id="claudio-painting-img-b" class="claudio-painting-img" src="" alt="">
+          </div>
+          <div class="claudio-painting__face claudio-painting__face--back">
+            <img src="{{ 'producto-claudio-back.jpg' | asset_url }}" alt="">
+          </div>
+          <div class="claudio-painting__face claudio-painting__face--left"  style="background-image:url('{{ 'producto-claudio-back.jpg' | asset_url }}');"></div>
+          <div class="claudio-painting__face claudio-painting__face--right" style="background-image:url('{{ 'producto-claudio-back.jpg' | asset_url }}');"></div>
+        </div>
+      </div>
+      <div class="claudio-drop__shadow" id="claudio-painting-shadow"></div>
+
+      <!-- Swatches (cambian color + imagen + variante al añadir al carrito) -->
+      <div class="claudio-drop__swatches">
+        <div class="claudio-swatch"                       data-color="#FF8C6C" data-color-name="naranja"  data-img="{{ 'producto-claudio-naranja.jpg'  | asset_url }}" style="background:#FF8C6C" title="Naranja"></div>
+        <div class="claudio-swatch claudio-swatch--active" data-color="#EC6768" data-color-name="rojo"     data-img="{{ 'producto-claudio-rojo.jpg'     | asset_url }}" style="background:#EC6768" title="Rojo"></div>
+        <div class="claudio-swatch"                       data-color="#417DE1" data-color-name="azul"     data-img="{{ 'producto-claudio-azul.jpg'     | asset_url }}" style="background:#417DE1" title="Azul"></div>
+        <div class="claudio-swatch"                       data-color="#EED004" data-color-name="amarillo" data-img="{{ 'producto-claudio-amarillo.jpg' | asset_url }}" style="background:#EED004" title="Amarillo"></div>
+        <div class="claudio-swatch"                       data-color="#228761" data-color-name="verde"    data-img="{{ 'producto-claudio-verde.jpg'    | asset_url }}" style="background:#228761" title="Verde"></div>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="claudio-drop__info">
+
+      <!-- Estado: COUNTDOWN -->
+      <div class="claudio-drop__state {% if state == 'countdown' %}is-active{% endif %}" data-state-name="countdown">
+        <span class="claudio-cd__tag">Próximo drop</span>
+        <div class="claudio-cd__timer" data-target="{{ section.settings.drop_date }}">
+          <div class="claudio-cd__unit"><span class="claudio-cd__num" data-cd="days">00</span><span class="claudio-cd__unit-label">días</span></div>
+          <span class="claudio-cd__sep">:</span>
+          <div class="claudio-cd__unit"><span class="claudio-cd__num" data-cd="hours">00</span><span class="claudio-cd__unit-label">horas</span></div>
+          <span class="claudio-cd__sep">:</span>
+          <div class="claudio-cd__unit"><span class="claudio-cd__num" data-cd="mins">00</span><span class="claudio-cd__unit-label">min</span></div>
+          <span class="claudio-cd__sep">:</span>
+          <div class="claudio-cd__unit"><span class="claudio-cd__num" data-cd="secs">00</span><span class="claudio-cd__unit-label">seg</span></div>
+        </div>
+        <p class="claudio-cd__date"><strong data-cd-label></strong></p>
+      </div>
+
+      <!-- Estado: DISPONIBLE -->
+      <div class="claudio-drop__state {% if state == 'disponible' %}is-active{% endif %}" data-state-name="disponible">
+        {%- if section.settings.edition_label != blank -%}
+          <p class="claudio-drop__edition">{{ section.settings.edition_label }}</p>
+        {%- endif -%}
+        <div class="claudio-drop__divider"></div>
+        <h2 class="claudio-drop__title">
+          No te quedes<br>sin tu <span class="claudio-accent">Claudio</span>
+        </h2>
+        {%- if section.settings.disponible_body != blank -%}
+          <p class="claudio-drop__body">{{ section.settings.disponible_body }}</p>
+        {%- endif -%}
+        <p class="claudio-drop__price" data-drop-price>{{ price }}</p>
+
+        <button type="button" class="claudio-drop__btn" data-drop-add>
+          {{ section.settings.cta_label | default: '¡Quiero el mío!' }}
+        </button>
+        <p class="claudio-drop__add-err" data-drop-add-err hidden></p>
+      </div>
+
+      <!-- Estado: AGOTADO -->
+      <div class="claudio-drop__state {% if state == 'agotado' %}is-active{% endif %}" data-state-name="agotado">
+        <h2 class="claudio-drop__agotado-title">{{ section.settings.agotado_title }}</h2>
+        {%- if section.settings.agotado_wow != blank -%}
+          <p class="claudio-drop__agotado-wow">{{ section.settings.agotado_wow }}</p>
+        {%- endif -%}
+        {%- if section.settings.agotado_cta != blank -%}
+          <p class="claudio-drop__agotado-cta">{{ section.settings.agotado_cta }}</p>
+        {%- endif -%}
+
+        {%- form 'customer' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter,drop-waitlist">
+          {%- if form.posted_successfully? -%}
+            <p class="claudio-drop__waitlist-ok">Hecho. Te avisamos antes que a nadie.</p>
+          {%- else -%}
+            <div class="claudio-drop__waitlist">
+              <input type="email" name="contact[email]" placeholder="tu@email.com" required autocomplete="email">
+              <button type="submit">Apúntame</button>
+            </div>
+            {%- if form.errors -%}
+              <p class="claudio-drop__waitlist-err">{{ form.errors | default_errors }}</p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.claudio-drop {
+  position: relative;
+  min-height: 100vh;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  padding: 80px 40px 100px;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-drop__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px; align-items: center;
+  max-width: 1100px; width: 100%;
+}
+.claudio-drop__painting-outer {
+  display: flex; flex-direction: column; align-items: center;
+}
+.claudio-drop__painting-scene {
+  perspective: 900px; perspective-origin: 50% 50%;
+}
+.claudio-drop__painting {
+  width: 272px; height: 380px; position: relative;
+  transform-style: preserve-3d; cursor: grab; user-select: none;
+}
+.claudio-drop__painting:active { cursor: grabbing; }
+.claudio-drop__painting.is-paused::after {
+  content: '▶'; position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; color: rgba(0,0,0,0.25); z-index: 10; pointer-events: none;
+}
+.claudio-drop[data-state="agotado"] .claudio-drop__painting-outer { opacity: 0.7; }
+.claudio-painting__face {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+}
+.claudio-painting__face--front {
+  transform: translateZ(3px); overflow: hidden; background: #fff;
+}
+.claudio-painting-img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: contain; display: block; opacity: 0; transition: opacity 0.4s ease;
+}
+.claudio-painting-img--active { opacity: 1; }
+.claudio-painting__face--back { transform: rotateY(180deg) translateZ(3px); overflow: hidden; }
+.claudio-painting__face--back img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.claudio-painting__face--left {
+  position: absolute; width: 6px; height: 100%; top: 0; left: 0;
+  transform-origin: left center; transform: rotateY(-90deg) translateX(-3px);
+  background-size: cover; background-position: center;
+}
+.claudio-painting__face--right {
+  position: absolute; width: 6px; height: 100%; top: 0; right: 0;
+  transform-origin: right center; transform: rotateY(90deg) translateX(3px);
+  background-size: cover; background-position: center;
+}
+.claudio-drop__shadow {
+  width: 272px; height: 60px; background: rgba(0,0,0,0.2);
+  border-radius: 50%; filter: blur(12px); margin-top: 24px; pointer-events: none;
+}
+.claudio-drop__swatches {
+  display: flex; gap: 10px; margin-top: 28px;
+}
+.claudio-swatch {
+  width: 18px; height: 18px; border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s;
+}
+.claudio-swatch:hover { transform: scale(1.2); }
+.claudio-swatch--active { border-color: #000; }
+
+@keyframes claudio-swatch-pulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+@media (max-width: 768px) {
+  .claudio-drop__swatches .claudio-swatch--active {
+    animation: claudio-swatch-pulse 1.6s ease-in-out infinite;
+  }
+}
+
+.claudio-drop__add-err {
+  font-size: 0.78rem; color: var(--accent);
+  margin-top: 12px; max-width: 340px;
+}
+
+/* Info */
+.claudio-drop__info { display: flex; flex-direction: column; }
+.claudio-drop__edition {
+  font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 28px; transition: color 3s ease;
+}
+.claudio-drop__divider {
+  width: 40px; height: 1px; background: rgba(0,0,0,0.12); margin-bottom: 28px;
+}
+.claudio-drop__state { display: none; }
+.claudio-drop__state.is-active { display: block; }
+
+/* Countdown */
+.claudio-cd__tag {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--accent);
+  margin-bottom: 28px; transition: color 3s ease; display: block;
+}
+.claudio-cd__timer { display: flex; align-items: flex-start; gap: 0; margin-bottom: 24px; }
+.claudio-cd__unit { display: flex; flex-direction: column; align-items: center; min-width: 80px; }
+.claudio-cd__num {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 0.9; letter-spacing: -0.02em; color: #000;
+}
+.claudio-cd__unit-label {
+  font-size: 0.55rem; font-weight: 400; letter-spacing: 0.22em;
+  text-transform: uppercase; color: rgba(0,0,0,0.25); margin-top: 8px;
+}
+.claudio-cd__sep {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  line-height: 0.9; color: rgba(0,0,0,0.12); padding: 0 2px; align-self: flex-start;
+}
+.claudio-cd__date { font-size: 0.78rem; font-weight: 300; color: rgba(0,0,0,0.4); line-height: 1.6; }
+.claudio-cd__date strong { font-weight: 500; color: #000; }
+
+/* Disponible */
+.claudio-drop__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05;
+  text-transform: uppercase; color: #000; margin-bottom: 20px;
+}
+.claudio-drop__title .claudio-accent { color: var(--accent); transition: color 3s ease; }
+.claudio-drop__body {
+  font-size: 0.88rem; font-weight: 300; line-height: 1.7;
+  color: rgba(0,0,0,0.5); margin-bottom: 36px; max-width: 340px;
+}
+.claudio-drop__price {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 2.2rem; color: #000; margin-bottom: 32px;
+}
+.claudio-drop__btn {
+  display: inline-block; background: var(--accent); color: #000;
+  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; padding: 16px 44px;
+  border: none; cursor: pointer;
+  transition: background 3s ease, opacity 0.2s;
+  align-self: flex-start; font-family: inherit;
+}
+.claudio-drop__btn:hover { opacity: 0.8; }
+.claudio-drop__btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* Agotado */
+.claudio-drop__agotado-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(2.2rem, 4vw, 3.5rem); line-height: 1.05;
+  text-transform: uppercase; color: var(--accent);
+  transition: color 3s ease; margin-bottom: 16px;
+}
+.claudio-drop__agotado-wow {
+  font-size: 0.95rem; font-weight: 400; line-height: 1.6;
+  color: rgba(0,0,0,0.5); margin-bottom: 28px; max-width: 340px;
+}
+.claudio-drop__agotado-cta {
+  font-size: 0.88rem; font-weight: 300; line-height: 1.7;
+  color: var(--accent); transition: color 3s ease;
+  margin-bottom: 24px; max-width: 340px;
+}
+.claudio-drop__waitlist { display: flex; max-width: 380px; }
+.claudio-drop__waitlist input {
+  flex: 1; background: transparent;
+  border: 1px solid rgba(0,0,0,0.15); border-right: none;
+  padding: 12px 16px; font-size: 0.8rem; font-weight: 300;
+  color: #000; outline: none; font-family: inherit;
+}
+.claudio-drop__waitlist input::placeholder { color: rgba(0,0,0,0.25); }
+.claudio-drop__waitlist input:focus { border-color: rgba(0,0,0,0.4); }
+.claudio-drop__waitlist button {
+  background: var(--accent); border: 1px solid var(--accent);
+  padding: 12px 20px; font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase; color: #000;
+  cursor: pointer; font-family: inherit;
+  transition: background 3s ease, border-color 3s ease, opacity 0.2s;
+}
+.claudio-drop__waitlist button:hover { opacity: 0.8; }
+.claudio-drop__waitlist-ok { font-size: 0.85rem; color: rgba(0,0,0,0.6); }
+.claudio-drop__waitlist-err { font-size: 0.8rem; color: var(--accent); margin-top: 8px; }
+
+@media (max-width: 768px) {
+  .claudio-drop { padding: 60px 24px 80px; }
+  .claudio-drop__inner {
+    grid-template-columns: 1fr; gap: 48px;
+  }
+  .claudio-cd__unit { min-width: 60px; }
+}
+{% endstylesheet %}
+
+<script>
+(function(){
+  const root = document.getElementById('drop');
+  if (!root) return;
+
+  // ─── Pintura 3D ─────────────────────────────────────────────
+  const paintingEl = document.getElementById('claudio-painting');
+  const shadowEl = document.getElementById('claudio-painting-shadow');
+  let activeImg = document.getElementById('claudio-painting-img-a');
+  let inactiveImg = document.getElementById('claudio-painting-img-b');
+
+  let angle = 0, baseSpeed = 36, animState = 'normal', lastTime = performance.now();
+  let wPhase = '', wTimer = 0, wStartAngle = 0, wRecoilTarget = 0, wSnapStart = 0, wSnapTarget = 0;
+  let rSnapStart = 0, rSnapTarget = 0, rTimer = 0;
+  let isDragging = false, hasDragged = false, dragStartX = 0, dragStartAngle = 0, isPlaying = true;
+  let dropVisible = true;
+
+  function snapToFront() {
+    const norm = ((angle % 360) + 360) % 360;
+    const toFront = norm <= 180 ? -norm : (360 - norm);
+    rSnapStart = angle; rSnapTarget = angle + toFront; rTimer = 0;
+    animState = 'rest';
+  }
+
+  function animate(now) {
+    requestAnimationFrame(animate);
+    const dt = Math.min((now - lastTime) / 1000, 0.05);
+    lastTime = now;
+
+    if (!isDragging) {
+      switch (animState) {
+        case 'normal':
+          if (isPlaying) angle += baseSpeed * dt;
+          break;
+        case 'wobble':
+          if (wPhase === 'recoil') {
+            wTimer += dt;
+            const t = Math.min(wTimer / 0.13, 1);
+            const e = t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2;
+            angle = wStartAngle + (wRecoilTarget - wStartAngle) * e;
+            if (t >= 1) {
+              wPhase = 'snap'; wTimer = 0;
+              const norm = ((angle % 360) + 360) % 360;
+              const toFront = norm <= 180 ? -norm : (360 - norm);
+              wSnapStart = angle; wSnapTarget = angle + toFront;
+            }
+          } else if (wPhase === 'snap') {
+            wTimer += dt;
+            const t = Math.min(wTimer / 0.45, 1);
+            const e = 1 - Math.pow(1 - t, 3);
+            angle = wSnapStart + (wSnapTarget - wSnapStart) * e;
+            if (t >= 1) { angle = wSnapTarget; wPhase = 'hold'; wTimer = 0; }
+          } else if (wPhase === 'hold') {
+            wTimer += dt;
+            if (wTimer > 0.9) animState = 'normal';
+          }
+          break;
+        case 'rest':
+          rTimer += dt;
+          const rt = Math.min(rTimer / 0.6, 1);
+          const re = 1 - Math.pow(1 - rt, 3);
+          angle = rSnapStart + (rSnapTarget - rSnapStart) * re;
+          if (rt >= 1) { angle = rSnapTarget; animState = 'idle'; }
+          break;
+      }
+    }
+
+    const bobY = Math.sin(now / 1000 * 0.25 * Math.PI * 2) * 4;
+    paintingEl.style.transform = `translateY(${bobY.toFixed(2)}px) rotateY(${angle.toFixed(2)}deg)`;
+    const faceOn = Math.abs(Math.cos(angle * Math.PI / 180));
+    shadowEl.style.transform = `scaleX(${(faceOn * 0.7 + 0.15).toFixed(3)})`;
+  }
+  requestAnimationFrame(animate);
+
+  new IntersectionObserver(entries => {
+    const visible = entries[0].isIntersecting;
+    if (visible && !dropVisible) {
+      angle = Math.round(angle / 360) * 360;
+      animState = 'normal'; isPlaying = true;
+      paintingEl.classList.remove('is-paused');
+    } else if (!visible && dropVisible) { snapToFront(); }
+    dropVisible = visible;
+  }, { threshold: 0.05 }).observe(root);
+
+  // ─── Click pause ───────────────────────────────────────────
+  paintingEl.addEventListener('click', () => {
+    if (hasDragged) return;
+    isPlaying = !isPlaying;
+    paintingEl.classList.toggle('is-paused', !isPlaying);
+  });
+
+  // ─── Drag rotate ───────────────────────────────────────────
+  paintingEl.addEventListener('mousedown', e => {
+    e.preventDefault(); isDragging = true; hasDragged = false;
+    dragStartX = e.clientX; dragStartAngle = angle;
+    paintingEl.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    const delta = e.clientX - dragStartX;
+    if (Math.abs(delta) > 4) hasDragged = true;
+    angle = dragStartAngle + delta * 0.45;
+  });
+  document.addEventListener('mouseup', () => {
+    if (!isDragging) return;
+    isDragging = false; paintingEl.style.cursor = 'grab';
+  });
+  paintingEl.addEventListener('touchstart', e => {
+    e.preventDefault(); isDragging = true; hasDragged = false;
+    dragStartX = e.touches[0].clientX; dragStartAngle = angle;
+  }, { passive: false });
+  document.addEventListener('touchmove', e => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const delta = e.touches[0].clientX - dragStartX;
+    if (Math.abs(delta) > 4) hasDragged = true;
+    angle = dragStartAngle + delta * 0.45;
+  }, { passive: false });
+  document.addEventListener('touchend', () => { isDragging = false; });
+
+  // ─── Swatches: cambian color + imagen ───────────────────────
+  function updateColor(hex, imgUrl) {
+    document.documentElement.style.setProperty('--accent', hex);
+    root.style.setProperty('--accent', hex);
+    if (imgUrl) {
+      inactiveImg.src = imgUrl;
+      inactiveImg.classList.add('claudio-painting-img--active');
+      activeImg.classList.remove('claudio-painting-img--active');
+      [activeImg, inactiveImg] = [inactiveImg, activeImg];
+    }
+    animState = 'wobble'; wPhase = 'recoil'; wTimer = 0;
+    wStartAngle = angle; wRecoilTarget = angle - 28;
+  }
+
+  // Sincroniza estado activo entre TODOS los swatches del documento
+  // (incluyendo los del navbar) usando data-color como llave.
+  function syncSwatches(hex){
+    document.querySelectorAll('.claudio-swatch').forEach(s => {
+      s.classList.toggle('claudio-swatch--active',
+        (s.dataset.color || '').toLowerCase() === hex.toLowerCase()
+      );
+    });
+  }
+
+  root.querySelectorAll('.claudio-swatch').forEach(sw => {
+    sw.addEventListener('click', () => {
+      const hex = sw.dataset.color;
+      syncSwatches(hex);
+      updateColor(hex, sw.dataset.img);
+      // Actualiza precio si tenemos mapa de variantes
+      updatePriceFor(sw.dataset.colorName);
+    });
+  });
+
+  // Escucha clicks en swatches externos (navbar) — actualiza painting+precio aquí.
+  document.addEventListener('click', e => {
+    const ext = e.target.closest('.claudio-swatch');
+    if (!ext || root.contains(ext)) return;
+    const hex = ext.dataset.color;
+    if (!hex) return;
+    // Busca el swatch local que matchea el hex y dispara su lógica
+    const local = root.querySelector('.claudio-swatch[data-color="' + hex + '" i]');
+    if (local) {
+      syncSwatches(hex);
+      updateColor(hex, local.dataset.img);
+      updatePriceFor(local.dataset.colorName);
+    } else {
+      syncSwatches(hex);
+      document.documentElement.style.setProperty('--accent', hex);
+      root.style.setProperty('--accent', hex);
+    }
+  });
+
+  // ─── Color map (variant_id por color) ───────────────────────
+  let colorMap = null;
+  const mapEl = document.getElementById('claudio-drop-color-map');
+  if (mapEl) {
+    try { colorMap = JSON.parse(mapEl.textContent); }
+    catch (err) { console.warn('claudio-drop: color map inválido', err); }
+  }
+
+  const priceEl = root.querySelector('[data-drop-price]');
+  function updatePriceFor(colorName){
+    if (!colorMap || !priceEl) return;
+    const v = colorMap[colorName];
+    if (v && v.price) priceEl.textContent = v.price;
+  }
+
+  // ─── Add to cart ────────────────────────────────────────────
+  const addBtn = root.querySelector('[data-drop-add]');
+  const errEl  = root.querySelector('[data-drop-add-err]');
+  if (addBtn) {
+    addBtn.addEventListener('click', async () => {
+      if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+      if (!colorMap) {
+        if (errEl) { errEl.textContent = 'Configura el producto en el editor.'; errEl.hidden = false; }
+        return;
+      }
+      const activeSwatch = root.querySelector('.claudio-swatch--active');
+      const colorName = activeSwatch ? activeSwatch.dataset.colorName : null;
+      const variant = colorName ? colorMap[colorName] : null;
+      if (!variant || !variant.id) {
+        if (errEl) { errEl.textContent = 'No encontramos la variante de ese color.'; errEl.hidden = false; }
+        return;
+      }
+      addBtn.disabled = true;
+      try {
+        const res = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ items: [{ id: variant.id, quantity: 1 }] })
+        });
+        if (!res.ok) throw new Error('cart add failed');
+        window.location.href = '/cart';
+      } catch (err) {
+        if (errEl) { errEl.textContent = 'Algo ha ido mal. Inténtalo de nuevo.'; errEl.hidden = false; }
+        addBtn.disabled = false;
+      }
+    });
+  }
+
+  // ─── Countdown ──────────────────────────────────────────────
+  const cdTimer = root.querySelector('.claudio-cd__timer');
+  if (cdTimer) {
+    const target = cdTimer.dataset.target;
+    if (target) {
+      const targetDate = new Date(target);
+      const numDays  = cdTimer.querySelector('[data-cd="days"]');
+      const numHours = cdTimer.querySelector('[data-cd="hours"]');
+      const numMins  = cdTimer.querySelector('[data-cd="mins"]');
+      const numSecs  = cdTimer.querySelector('[data-cd="secs"]');
+      const labelEl  = root.querySelector('[data-cd-label]');
+
+      function p(n){ return String(Math.max(0, n)).padStart(2, '0'); }
+      function tick() {
+        const diff = targetDate - new Date();
+        if (diff <= 0) {
+          numDays.textContent = numHours.textContent = numMins.textContent = numSecs.textContent = '00';
+          return;
+        }
+        numDays.textContent  = p(Math.floor(diff / 86400000));
+        numHours.textContent = p(Math.floor(diff % 86400000 / 3600000));
+        numMins.textContent  = p(Math.floor(diff % 3600000 / 60000));
+        numSecs.textContent  = p(Math.floor(diff % 60000 / 1000));
+      }
+      tick();
+      setInterval(tick, 1000);
+
+      if (labelEl) {
+        labelEl.textContent =
+          targetDate.toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) +
+          ' a las ' +
+          targetDate.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+      }
+    }
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Claudio Drop",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Estado del drop"
+    },
+    {
+      "type": "select",
+      "id": "drop_state",
+      "label": "Estado actual",
+      "options": [
+        { "value": "countdown",  "label": "Cuenta atrás (próximo drop)" },
+        { "value": "disponible", "label": "Disponible (a la venta)" },
+        { "value": "agotado",    "label": "Agotado / pausado (waitlist)" }
+      ],
+      "default": "disponible",
+      "info": "Cambia manualmente entre los 3 estados según necesites."
+    },
+    {
+      "type": "text",
+      "id": "drop_date",
+      "label": "Fecha del próximo drop (solo si 'Cuenta atrás')",
+      "info": "Formato ISO: 2026-06-20T17:00:00"
+    },
+    {
+      "type": "header",
+      "content": "Productos (uno por color)"
+    },
+    {
+      "type": "paragraph",
+      "content": "Cada color del swatch apunta a un producto distinto. Para vender 'bajo demanda' (sin stock), en cada producto desactiva 'Track quantity' o pon 'Continue selling when out of stock'."
+    },
+    { "type": "product", "id": "product_naranja",  "label": "Producto Naranja" },
+    { "type": "product", "id": "product_rojo",     "label": "Producto Rojo" },
+    { "type": "product", "id": "product_azul",     "label": "Producto Azul" },
+    { "type": "product", "id": "product_amarillo", "label": "Producto Amarillo" },
+    { "type": "product", "id": "product_verde",    "label": "Producto Verde" },
+    {
+      "type": "text",
+      "id": "fallback_price",
+      "label": "Precio fallback (si no hay producto seleccionado)",
+      "default": "€ 150"
+    },
+    {
+      "type": "header",
+      "content": "Estado: Disponible"
+    },
+    {
+      "type": "text",
+      "id": "edition_label",
+      "label": "Etiqueta superior",
+      "default": "NUEVO DROP"
+    },
+    {
+      "type": "textarea",
+      "id": "disponible_body",
+      "label": "Texto descriptivo",
+      "default": "No esperes en hacerte con el tuyo. Cada pieza es única, pintada a mano."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Texto del botón",
+      "default": "¡Quiero el mío!"
+    },
+    {
+      "type": "header",
+      "content": "Estado: Agotado"
+    },
+    {
+      "type": "text",
+      "id": "agotado_title",
+      "label": "Titular",
+      "default": "Claudios agotados :("
+    },
+    {
+      "type": "textarea",
+      "id": "agotado_wow",
+      "label": "Texto efusivo",
+      "default": "¡Habéis acabado el último drop a una velocidad nunca vista!"
+    },
+    {
+      "type": "textarea",
+      "id": "agotado_cta",
+      "label": "Texto del CTA email",
+      "default": "¿Quieres no perderte el próximo drop? Déjanos tu email y te avisaremos antes que a nadie :)"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento",
+      "default": "#EC6768"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Claudio Drop"
+    }
+  ]
+}
+{% endschema %}

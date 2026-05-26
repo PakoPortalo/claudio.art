@@ -1,0 +1,327 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Camiseta
+  Dos estados:
+    · coming_soon: imagen + sello "Próximamente" + form email waitlist
+    · available:   imagen + precio + botón comprar (producto Shopify)
+  El sello tiene parallax 3D al pasar el ratón (solo en desktop).
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- liquid
+  assign state = section.settings.state_mode
+  assign producto = all_products[section.settings.producto]
+  assign img_url = section.settings.image | image_url: width: 1200
+  if img_url == blank
+    assign img_url = 'producto-camiseta.jpg' | asset_url
+  endif
+-%}
+
+<section class="claudio-camiseta" id="claudio-camiseta" data-state="{{ state }}" style="--accent: {{ section.settings.accent_color }};">
+  <div class="claudio-camiseta__bg">
+    {%- comment -%} En coming_soon ocultamos la imagen para no revelar el producto. {%- endcomment -%}
+    {%- if state == 'available' or section.settings.image -%}
+      {%- if state == 'available' or section.settings.show_image_coming_soon -%}
+        <img src="{{ img_url }}" alt="{{ section.settings.title | escape }}">
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+
+  {%- if state == 'coming_soon' -%}
+    <div class="claudio-camiseta__stamp">
+      <div class="claudio-camiseta__stamp-inner" data-stamp-inner>
+        <span class="claudio-camiseta__stamp-text">{{ section.settings.stamp_text }}</span>
+      </div>
+    </div>
+  {%- endif -%}
+
+  <div class="claudio-camiseta__copy">
+    {%- if section.settings.tag != blank -%}
+      <span class="claudio-camiseta__tag">{{ section.settings.tag }}</span>
+    {%- endif -%}
+    <h2 class="claudio-camiseta__title">
+      {%- assign title_parts = section.settings.title | split: ' — ' -%}
+      {{ title_parts[0] }}
+      {%- if title_parts.size > 1 -%}
+        <span class="claudio-camiseta__title-dash"> — </span><br class="claudio-camiseta__title-break">{{ title_parts[1] }}
+      {%- endif -%}
+    </h2>
+    {%- if section.settings.subtitle != blank -%}
+      <p class="claudio-camiseta__sub">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+
+    {%- if state == 'coming_soon' -%}
+      {%- form 'customer' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter,camiseta-waitlist">
+        {%- if form.posted_successfully? -%}
+          <p class="claudio-camiseta__ok">Hecho. Te avisamos cuando salga.</p>
+        {%- else -%}
+          <div class="claudio-camiseta__form">
+            <input class="claudio-camiseta__input" type="email" name="contact[email]" placeholder="tu@email.com" required autocomplete="email">
+            <button class="claudio-camiseta__btn" type="submit">Apuntarme</button>
+          </div>
+          {%- if form.errors -%}
+            <p class="claudio-camiseta__err">{{ form.errors | default_errors }}</p>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endform -%}
+    {%- else -%}
+      {%- if producto -%}
+        <p class="claudio-camiseta__price">{{ producto.price | money_without_trailing_zeros }}</p>
+        {%- form 'product', producto -%}
+          <input type="hidden" name="id" value="{{ producto.selected_or_first_available_variant.id }}">
+          <button
+            type="submit"
+            class="claudio-camiseta__btn claudio-camiseta__btn--buy"
+            {% unless producto.selected_or_first_available_variant.available %}disabled{% endunless %}
+          >
+            {%- if producto.selected_or_first_available_variant.available -%}
+              Comprar
+            {%- else -%}
+              Agotado
+            {%- endif -%}
+          </button>
+        {%- endform -%}
+      {%- else -%}
+        <p class="claudio-camiseta__sub">Selecciona un producto en el editor del tema.</p>
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+.claudio-camiseta {
+  position: relative; width: 100%; min-height: 90vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-camiseta__bg {
+  position: absolute; inset: 0; background: rgb(14,14,14);
+  display: flex; align-items: center; justify-content: center;
+}
+.claudio-camiseta__bg img {
+  width: auto; height: 88%; object-fit: contain; display: block;
+  filter: grayscale(20%); opacity: 0.5;
+}
+.claudio-camiseta[data-state="available"] .claudio-camiseta__bg img {
+  filter: none; opacity: 1;
+}
+.claudio-camiseta__stamp {
+  position: absolute; inset: 0; z-index: 1;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  perspective: 900px;
+}
+.claudio-camiseta__stamp-inner {
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform 0.08s linear;
+}
+.claudio-camiseta__stamp-text {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(5rem, 16vw, 14rem); line-height: 1;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.07);
+  transform: rotate(-22deg);
+  white-space: nowrap;
+  -webkit-text-stroke: 1px rgba(255,255,255,0.12);
+  display: block;
+}
+.claudio-camiseta::after {
+  content: ''; position: absolute; inset: 0; z-index: 2;
+  background:
+    radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.5) 100%),
+    linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 40%, transparent 60%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+}
+.claudio-camiseta__copy {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 3;
+  display: flex; flex-direction: column; align-items: center; gap: 18px;
+  padding: 48px 40px 56px; text-align: center; width: 100%;
+}
+.claudio-camiseta__tag {
+  font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.35em; text-transform: uppercase; color: var(--accent);
+}
+.claudio-camiseta__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1;
+  text-transform: uppercase; color: #fff;
+  letter-spacing: 0.06em;
+}
+.claudio-camiseta__title-break { display: none; }
+@media (max-width: 768px) {
+  .claudio-camiseta__title-dash  { display: none; }
+  .claudio-camiseta__title-break { display: inline; }
+}
+.claudio-camiseta__sub {
+  font-size: 0.72rem; font-weight: 300;
+  letter-spacing: 0.1em; color: rgba(255,255,255,0.65);
+}
+.claudio-camiseta__price {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 2rem; color: #fff; line-height: 1;
+}
+.claudio-camiseta__form { display: flex; margin-top: 6px; }
+.claudio-camiseta__input {
+  background: transparent; border: 1px solid rgba(255,255,255,0.18);
+  border-right: none; padding: 12px 18px;
+  font-family: inherit; font-size: 0.78rem; font-weight: 300;
+  color: #fff; outline: none; width: 220px;
+}
+.claudio-camiseta__input::placeholder { color: rgba(255,255,255,0.18); }
+.claudio-camiseta__input:focus { border-color: rgba(255,255,255,0.4); }
+.claudio-camiseta__btn {
+  background: var(--accent); color: #000; border: none; cursor: pointer;
+  font-family: inherit; font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; padding: 12px 20px;
+}
+.claudio-camiseta__btn:hover { opacity: 0.85; }
+.claudio-camiseta__btn--buy { padding: 14px 32px; font-size: 0.7rem; margin-top: 6px; }
+.claudio-camiseta__btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.claudio-camiseta__ok {
+  font-size: 0.85rem; font-weight: 400;
+  color: rgba(255,255,255,0.7); margin-top: 6px;
+}
+.claudio-camiseta__err {
+  font-size: 0.75rem; color: var(--accent); margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .claudio-camiseta__stamp-text { font-size: clamp(4rem, 22vw, 8rem); }
+  .claudio-camiseta__form { width: 100%; }
+  .claudio-camiseta__input { flex: 1; width: auto; }
+}
+{% endstylesheet %}
+
+<script>
+(function(){
+  const root = document.getElementById('claudio-camiseta');
+  if (!root) return;
+  const inner = root.querySelector('[data-stamp-inner]');
+  if (!inner) return;
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  let targetX = 0, targetY = 0, curX = 0, curY = 0;
+  let targetTX = 0, targetTY = 0, curTX = 0, curTY = 0;
+  const MAX_ROT = 7, MAX_MOVE = 14;
+
+  root.addEventListener('mousemove', e => {
+    const r = root.getBoundingClientRect();
+    const nx = (e.clientX - r.left) / r.width  - 0.5;
+    const ny = (e.clientY - r.top)  / r.height - 0.5;
+    targetY  =  nx * MAX_ROT;
+    targetX  = -ny * MAX_ROT;
+    targetTX =  nx * MAX_MOVE;
+    targetTY =  ny * MAX_MOVE;
+  });
+  root.addEventListener('mouseleave', () => {
+    targetX = 0; targetY = 0; targetTX = 0; targetTY = 0;
+  });
+
+  (function loop(){
+    curX  += (targetX  - curX)  * 0.06;
+    curY  += (targetY  - curY)  * 0.06;
+    curTX += (targetTX - curTX) * 0.06;
+    curTY += (targetTY - curTY) * 0.06;
+    inner.style.transform =
+      `translate(${curTX.toFixed(2)}px, ${curTY.toFixed(2)}px) ` +
+      `rotateX(${curX.toFixed(2)}deg) rotateY(${curY.toFixed(2)}deg)`;
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Claudio Camiseta",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Estado"
+    },
+    {
+      "type": "select",
+      "id": "state_mode",
+      "label": "Estado del módulo",
+      "options": [
+        { "value": "coming_soon", "label": "Próximamente (form email)" },
+        { "value": "available",   "label": "A la venta (botón comprar)" }
+      ],
+      "default": "coming_soon"
+    },
+    {
+      "type": "header",
+      "content": "Imagen"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Imagen camiseta",
+      "info": "Solo se muestra si el estado es 'A la venta', o si activas 'Mostrar en Próximamente'."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image_coming_soon",
+      "label": "Mostrar imagen también en 'Próximamente'",
+      "default": false,
+      "info": "Por defecto se oculta para mantener el secreto."
+    },
+    {
+      "type": "header",
+      "content": "Textos"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Etiqueta superior",
+      "default": "Edición limitada"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Novedades — Próximamente",
+      "info": "Si pones ' — ' el título se divide en 2 líneas en móvil (sin guión)."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "sé el primero en saberlo"
+    },
+    {
+      "type": "text",
+      "id": "stamp_text",
+      "label": "Texto del sello (solo Próximamente)",
+      "default": "Próximamente"
+    },
+    {
+      "type": "header",
+      "content": "Producto (solo cuando esté A la venta)"
+    },
+    {
+      "type": "product",
+      "id": "producto",
+      "label": "Producto camiseta"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento",
+      "default": "#EC6768"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Claudio Camiseta"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,237 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Footer
+  Fondo negro. Logo (3 partes con punto en accent) + tagline +
+  columnas de links (blocks) + bloque RGPD + legal con links a
+  policies de Shopify + socials (blocks).
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<footer class="claudio-footer" id="claudio-footer">
+  <div class="claudio-footer__top">
+    <div class="claudio-footer__brand">
+      <div class="claudio-footer__logo">
+        {{- section.settings.logo_main -}}
+        <span>{{- section.settings.logo_accent -}}</span>
+        {{- section.settings.logo_suffix -}}
+      </div>
+      {%- if section.settings.tagline != blank -%}
+        <p class="claudio-footer__tagline">{{ section.settings.tagline }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="claudio-footer__cols">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'column' -%}
+          <div class="claudio-footer__col" {{ block.shopify_attributes }}>
+            {%- if block.settings.title != blank -%}
+              <span class="claudio-footer__col-title">{{ block.settings.title }}</span>
+            {%- endif -%}
+            {%- if block.settings.link_1_label != blank -%}
+              <a href="{{ block.settings.link_1_url }}">{{ block.settings.link_1_label }}</a>
+            {%- endif -%}
+            {%- if block.settings.link_2_label != blank -%}
+              <a href="{{ block.settings.link_2_url }}">{{ block.settings.link_2_label }}</a>
+            {%- endif -%}
+            {%- if block.settings.link_3_label != blank -%}
+              <a href="{{ block.settings.link_3_url }}">{{ block.settings.link_3_label }}</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- if section.settings.privacy_text != blank -%}
+    <div class="claudio-footer__middle">
+      <p class="claudio-footer__privacy-title">{{ section.settings.privacy_title }}</p>
+      <div class="claudio-footer__privacy-text">{{ section.settings.privacy_text }}</div>
+    </div>
+  {%- endif -%}
+
+  <div class="claudio-footer__bottom">
+    <span class="claudio-footer__legal">
+      {{ section.settings.copyright }}
+      {%- if shop.privacy_policy != blank -%}
+        &nbsp;·&nbsp;<a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title | default: 'Política de privacidad' }}</a>
+      {%- endif -%}
+      {%- if section.settings.cookies_url != blank -%}
+        &nbsp;·&nbsp;<a href="{{ section.settings.cookies_url }}">Política de cookies</a>
+      {%- endif -%}
+      {%- if section.settings.legal_notice_url != blank -%}
+        &nbsp;·&nbsp;<a href="{{ section.settings.legal_notice_url }}">Aviso legal</a>
+      {%- endif -%}
+    </span>
+    <div class="claudio-footer__socials">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'social' -%}
+          <a href="{{ block.settings.url }}" {{ block.shopify_attributes }} target="_blank" rel="noopener">{{ block.settings.label }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+.claudio-footer {
+  background: #000; padding: 72px 72px 40px;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-footer__top {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.07);
+  gap: 48px;
+}
+.claudio-footer__brand {
+  display: flex; flex-direction: column; gap: 16px; max-width: 300px;
+}
+.claudio-footer__logo {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 2.8rem; text-transform: none; color: #fff;
+  letter-spacing: 0.02em; line-height: 1;
+}
+.claudio-footer__logo span {
+  color: var(--accent, #EC6768);
+  transition: color 3s ease;
+}
+.claudio-footer__tagline {
+  font-size: 0.78rem; font-weight: 300;
+  color: rgba(255,255,255,0.7); line-height: 1.65; margin: 0;
+}
+.claudio-footer__cols { display: flex; gap: 64px; }
+.claudio-footer__col { display: flex; flex-direction: column; gap: 16px; }
+.claudio-footer__col-title {
+  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+}
+.claudio-footer__col a {
+  font-size: 0.78rem; font-weight: 300; color: rgba(255,255,255,0.72);
+  text-decoration: none; transition: color 0.2s; display: block;
+}
+.claudio-footer__col a:hover { color: #fff; }
+
+.claudio-footer__middle {
+  padding: 32px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.claudio-footer__privacy-title {
+  font-size: 0.6rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(255,255,255,0.55); margin-bottom: 12px;
+}
+.claudio-footer__privacy-text {
+  font-size: 0.7rem; font-weight: 300; color: rgba(255,255,255,0.6);
+  line-height: 1.7; max-width: 720px;
+}
+.claudio-footer__privacy-text a {
+  color: rgba(255,255,255,0.75); text-decoration: underline; transition: color 0.2s;
+}
+.claudio-footer__privacy-text a:hover { color: #fff; }
+
+.claudio-footer__bottom {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 28px; gap: 24px; flex-wrap: wrap;
+}
+.claudio-footer__legal {
+  font-size: 0.65rem; color: rgba(255,255,255,0.55); letter-spacing: 0.05em;
+}
+.claudio-footer__legal a {
+  color: inherit; text-decoration: underline;
+}
+.claudio-footer__legal a:hover { color: #fff; }
+.claudio-footer__socials { display: flex; gap: 20px; }
+.claudio-footer__socials a {
+  font-size: 0.7rem; color: rgba(255,255,255,0.65);
+  text-decoration: none; transition: color 0.2s;
+}
+.claudio-footer__socials a:hover { color: var(--accent, #EC6768); }
+
+@media (max-width: 768px) {
+  .claudio-footer { padding: 48px 24px 32px; }
+  .claudio-footer__top { flex-direction: column; gap: 36px; padding-bottom: 36px; }
+  .claudio-footer__brand { max-width: 100%; }
+  .claudio-footer__cols { gap: 32px; flex-wrap: wrap; }
+  .claudio-footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Claudio Footer",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    { "type": "text", "id": "logo_main",   "label": "Logo — parte 1", "default": "soyclaudio" },
+    { "type": "text", "id": "logo_accent", "label": "Logo — parte 2 (accent)", "default": "." },
+    { "type": "text", "id": "logo_suffix", "label": "Logo — parte 3", "default": "es" },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "• encontrado • pintado • dejado en la calle •"
+    },
+
+    {
+      "type": "header",
+      "content": "Bloque RGPD"
+    },
+    { "type": "text",     "id": "privacy_title", "label": "Título RGPD", "default": "Privacidad y datos" },
+    { "type": "richtext", "id": "privacy_text",  "label": "Texto RGPD",
+      "default": "<p>Al suscribirte a la lista de correo, aceptas que Claudio trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros. Puedes darte de baja en cualquier momento mediante el enlace de cada correo o escribiéndonos a <a href=\"mailto:hola@soyclaudio.es\">hola@soyclaudio.es</a>. Tratamiento conforme al RGPD y la LOPDGDD.</p>" },
+
+    {
+      "type": "header",
+      "content": "Línea legal"
+    },
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Copyright",
+      "default": "© 2026 Claudio — Madrid"
+    },
+    {
+      "type": "paragraph",
+      "content": "La Política de privacidad se enlaza automáticamente desde Configuración → Políticas de Shopify."
+    },
+    {
+      "type": "url",
+      "id": "cookies_url",
+      "label": "URL Política de cookies",
+      "info": "Crea la página en Tienda online → Páginas (sugerencia: /pages/politica-de-cookies)."
+    },
+    {
+      "type": "url",
+      "id": "legal_notice_url",
+      "label": "URL Aviso legal",
+      "info": "Crea la página en Tienda online → Páginas (sugerencia: /pages/aviso-legal)."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Columna de enlaces",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Título columna" },
+        { "type": "text", "id": "link_1_label", "label": "Link 1 — texto" },
+        { "type": "url",  "id": "link_1_url",   "label": "Link 1 — URL" },
+        { "type": "text", "id": "link_2_label", "label": "Link 2 — texto" },
+        { "type": "url",  "id": "link_2_url",   "label": "Link 2 — URL" },
+        { "type": "text", "id": "link_3_label", "label": "Link 3 — texto" },
+        { "type": "url",  "id": "link_3_url",   "label": "Link 3 — URL" }
+      ]
+    },
+    {
+      "type": "social",
+      "name": "Link social",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Texto" },
+        { "type": "url",  "id": "url",   "label": "URL" }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

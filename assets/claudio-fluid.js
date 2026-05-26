@@ -111,7 +111,7 @@ export class FluidText {
       SPLAT_FORCE:   4000,
       DISTORT:       0.010,
       BG:            '#070410',
-      FONT_SCALE:    0.22,
+      FONT_SCALE:    0.10,
       LINE_HEIGHT:   1.3,
       MARGIN_X:      0.08,
       ...cfg,

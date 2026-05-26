@@ -1,0 +1,122 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Testimonios
+  Grid masonry de imágenes (capturas de IG/DMs/comentarios).
+  Cada testimonio es un bloque, editable desde el admin.
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<section class="claudio-testimonios" id="claudio-testimonios">
+  {%- if section.settings.title != blank -%}
+    <h2 class="claudio-testimonios__label">{{ section.settings.title }}</h2>
+  {%- endif -%}
+
+  <div class="claudio-testimonios__grid">
+    {%- for block in section.blocks -%}
+      {%- liquid
+        if block.settings.image != blank
+          assign img_url = block.settings.image | image_url: width: 600
+          assign img_alt = block.settings.image.alt | default: 'Testimonio'
+        else
+          assign img_url = block.settings.fallback_filename | asset_url
+          assign img_alt = 'Testimonio'
+        endif
+      -%}
+      <div class="claudio-testimonios__item" {{ block.shopify_attributes }}>
+        <img src="{{ img_url }}" alt="{{ img_alt | escape }}" loading="lazy">
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+.claudio-testimonios {
+  background: #fff;
+  padding: 100px 40px 110px;
+  display: flex; flex-direction: column; align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-testimonios__label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em;
+  color: #111; text-align: center; margin-bottom: 60px; line-height: 1;
+}
+.claudio-testimonios__grid {
+  width: 100%; max-width: 900px;
+  columns: 3; column-gap: 16px;
+}
+.claudio-testimonios__item {
+  break-inside: avoid; margin-bottom: 16px; border-radius: 12px;
+  overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+.claudio-testimonios__grid:hover .claudio-testimonios__item {
+  opacity: 0.35; transform: scale(0.97);
+}
+.claudio-testimonios__grid:hover .claudio-testimonios__item:hover {
+  opacity: 1; transform: scale(1.03);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.16);
+}
+.claudio-testimonios__item img { width: 100%; height: auto; display: block; }
+
+@media (max-width: 600px) {
+  .claudio-testimonios { padding: 60px 20px 70px; }
+  .claudio-testimonios__grid { columns: 2; column-gap: 10px; }
+  .claudio-testimonios__item { margin-bottom: 10px; border-radius: 8px; }
+  .claudio-testimonios__label { margin-bottom: 36px; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Claudio Testimonios",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Lo que piensa la gente"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonio",
+      "name": "Testimonio",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Imagen del testimonio"
+        },
+        {
+          "type": "text",
+          "id": "fallback_filename",
+          "label": "Fallback (nombre archivo del tema)",
+          "info": "Si no eliges imagen arriba, usa este archivo de /assets/. Ej: testimonio-1.jpg"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 30,
+  "presets": [
+    {
+      "name": "Claudio Testimonios",
+      "blocks": [
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-1.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-2.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-3.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-4.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-5.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-6.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-7.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-8.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-9.jpg" } },
+        { "type": "testimonio", "settings": { "fallback_filename": "testimonio-10.jpg" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,6 +1,6 @@
 # Web Brief — claudio.art
 > Documento de referencia para el desarrollo de la web. Se usa como contexto en cada conversación de desarrollo.
-> Última actualización: 2026-04-09
+> Última actualización: 2026-04-18
 
 ---
 
@@ -45,26 +45,35 @@ claudio.art (/)
 │   ├── Logo / firma "claudio" — elemento interactivo
 │   └── Sin texto de marketing. La imagen habla.
 │
-├── [MÓDULO 2] Drop — dos estados según si hay drop activo
+├── [MÓDULO 2] Drop — tres estados según el momento del drop
+│   │
+│   ├── ESTADO 0 — Cuenta atrás (drop anunciado, no activo aún):
+│   │   ├── Cuenta atrás hasta la hora del drop
+│   │   └── "X claudios. El [fecha] a las [hora]."
 │   │
 │   ├── ESTADO A — Drop activo:
 │   │   ├── "Drop — X claudios. Corre, quedan X."
 │   │   ├── Fotos de los claudios disponibles
-│   │   └── Botón de compra directo
+│   │   └── Botón de compra directo + stock en tiempo real
 │   │
 │   └── ESTADO B — Sin drop activo:
 │       ├── "Todos los claudios vendidos."
-│       ├── Camiseta disponible + botón comprar (siempre en stock)
 │       └── Captura de email: "¿Quieres saber cuándo es el próximo drop? Te avisamos."
 │
-├── [MÓDULO 3] Obra
-│   ├── Últimas 1-2 entradas del blog de Claudio (imagen + texto corto)
-│   └── CTA: "Ver más" → /obra (página completa del blog)
+├── [MÓDULO 2B] Camiseta — siempre visible, independiente del drop
+│   ├── Imagen de la camiseta (protagonismo total)
+│   ├── "La camiseta. Siempre en stock." + precio + botón comprar
+│   └── No desaparece ni cambia según el estado del drop
 │
-├── [MÓDULO 4] Sobre
-│   ├── Vídeo de Claudio (proceso, calle, quién es)
-│   ├── Texto editorial — en voz de Claudio, tono honesto
-│   └── Estética: editorial de moda / artístico, no corporativo
+├── [MÓDULO 3] Testimonios
+│   ├── Título: "Lo que piensan nuestros seguidores" (pendiente confirmar)
+│   ├── Grid/scroll de capturas de Instagram de compradores reales
+│   └── Estética: screenshots reales, solo recortados (sin espacio en blanco extra)
+│
+├── [MÓDULO 4] Sobre — estilo Instagram
+│   ├── Grid visual de momentos del proceso (contenedor → taller → calle → casa)
+│   ├── Texto corto en voz de Claudio — quién es, qué hace
+│   └── CTA: "Sígueme en Instagram @cl4u8io"
 │
 ├── [MÓDULO 5] Newsletter / Contacto
 │   └── "No te pierdas las últimas novedades." + captura de email
@@ -76,55 +85,44 @@ claudio.art (/)
 ### Páginas internas
 
 ```
-/obra          — Blog completo. CMS: Claudio lo gestiona desde el admin de Shopify.
 /politica-de-envios-y-devoluciones — Texto legal.
-(No hay /sobre ni /contacto como páginas separadas — están en la home como módulos)
+(No hay /obra, /sobre ni /contacto como páginas separadas en fase 1)
 ```
+
+**Nota /obra:** El blog de Shopify se configura pero no se expone en la web en fase 1. Sin contenido aún. Se reactiva en fase 2.
 
 ---
 
-## El problema de "pocos productos" — y cómo lo resolvemos
+## El modelo de venta — drops + camiseta permanente
 
-La tienda no es una tienda convencional. El modelo es drop: hay un evento de venta periódico con 8-20 piezas que se agotan en minutos. La mayor parte del tiempo la tienda está vacía. Eso no es un problema — es la propuesta.
+La tienda tiene dos tipos de producto con lógicas distintas:
 
-**La página `/tienda` tiene dos estados:**
+**Claudios** — modelo drop. Evento de venta periódico con 8-20 piezas que se agotan en minutos. La escasez es el producto. Una tienda "vacía" que dice "sold out" comunica más valor que una tienda llena con poca venta.
 
-**Estado activo (durante el drop):**
+**Camiseta** — siempre en stock. Producto permanente con módulo propio en la home. No depende del drop. Visible en todo momento.
+
+**El módulo Drop tiene tres estados:**
+
+**Estado 0 — Cuenta atrás:**
+- Drop anunciado pero no activo aún
+- Cuenta atrás en tiempo real hasta la hora del drop
+- "X claudios. El [fecha] a las [hora]."
+
+**Estado A — Drop activo:**
 - Fotos grandes de los claudios disponibles
 - Precio y botón de compra claro
 - Stock visible en tiempo real ("quedan 3")
 
-**Estado inactivo (entre drops):**
-- Mensaje directo: "No hay ninguno disponible ahora mismo."
-- CTA a Instagram: "Sigue @cl4u8io para enterarte del próximo drop"
-- Opcionalmente: foto del último drop con "sold out" — comunica que hay demanda real
-
-**La escasez es el producto.** Una tienda "vacía" que dice "sold out" comunica más valor que una tienda llena con poca venta.
+**Estado B — Sin drop activo (sold out):**
+- Mensaje directo: "Todos los claudios vendidos."
+- Captura de email: "¿Quieres saber cuándo es el próximo drop?"
 
 **Lo que llena la web de vida entre drops:**
-- `/obra` — Claudio puede subir contenido aquí cuando quiera, sin presión comercial
-- El home puede mostrar siempre la última entrada de /obra
-- La narrativa general de la web (el /sobre) da contexto que convierte visitantes fríos
+- Módulo camiseta — siempre activo, siempre visible
+- Módulo Sobre estilo Instagram — quién es Claudio, el proceso
+- Módulo Testimonios — capturas de compradores reales
 
 ---
-
-## Sección /obra — cómo funciona el CMS
-
-Shopify tiene un sistema de blog nativo que funciona exactamente como un CMS ligero. No hace falta ninguna herramienta externa.
-
-**Cómo lo usará Claudio:**
-1. Entra al panel de administración de Shopify (desde el móvil o el ordenador)
-2. Va a "Contenido > Blog"
-3. Crea una entrada: sube foto(s), escribe un texto breve (o no escribe nada), guarda
-4. La entrada aparece en claudio.art/obra inmediatamente
-
-**Formato de cada entrada:**
-- Imagen principal (la obra, el proceso, lo que sea)
-- Título opcional (puede ser una fecha o una frase corta)
-- Texto corto opcional — Claudio decide si escribe o no
-- Si la obra es vendible: link de contacto
-
-No hay categorías, no hay tags, no hay complicación. Es un archivo visual y cronológico.
 
 ---
 
@@ -134,9 +132,7 @@ No hay categorías, no hay tags, no hay complicación. Es un archivo visual y cr
 |---|---|---|
 | Claudio estándar (naranja + negro) | 150€ | Core — lanzar en mayo |
 | Claudio edición color (verde/azul/amarillo) | 200-250€ | Lanzar con tienda |
-| Camisetas (firma "claudio") | 35-50€ | Diferido — 3-6 meses post-lanzamiento |
-
-**Nota:** las camisetas no se lanzan en mayo. La tienda empieza solo con claudios.
+| Camiseta (firma "claudio") | 35-50€ | **Activa desde mayo — siempre en stock** |
 
 ---
 
@@ -226,5 +222,7 @@ La voz es Claudio. Directa, sin marketing, sin palabras vacías. Primera persona
 - [ ] Confirmar dominio: ¿`claudio.art` o arrancamos con otro y migramos?
 - [ ] Confirmar política de devoluciones: ¿opción A (14 días) u opción B (bien personalizado)?
 - [ ] Email de contacto de la tienda — definir cuál
-- [ ] Fotos de producto para el lanzamiento — ¿están listas?
-- [ ] Texto de /sobre — en voz de Claudio, pendiente de redactar
+- [ ] Fotos de producto para el lanzamiento — claudios y camiseta, ¿están listas?
+- [ ] Texto de módulo Sobre — en voz de Claudio, pendiente de redactar
+- [ ] Título del módulo Testimonios — "Lo que piensan nuestros seguidores" vs "Anécdotas"
+- [ ] Recortar y preparar las 10 capturas de la carpeta RESEÑAS INSTAGRAM

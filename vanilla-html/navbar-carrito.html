@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pruebas navbar + carrito · Claudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --accent: #EC6768; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { font-family: 'Inter', sans-serif; background: #f4f4f4; color: #000; }
+
+  .lab {
+    max-width: 1280px; margin: 0 auto; padding: 48px 24px;
+  }
+  .lab h1 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 2rem; text-transform: uppercase; letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .lab p.sub { color: rgba(0,0,0,0.6); margin-bottom: 36px; font-size: 0.9rem; }
+
+  .variant {
+    margin-bottom: 56px;
+    background: #fff;
+    border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .variant__head {
+    padding: 20px 24px; border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .variant__head h2 {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 1.3rem; text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  .variant__head span { font-size: 0.75rem; color: rgba(0,0,0,0.5); }
+  .variant__demo {
+    position: relative; height: 100px; background: #222;
+    overflow: hidden;
+  }
+  .variant__mobile-demo {
+    position: relative; height: 100px; background: #222;
+    overflow: hidden; max-width: 414px;
+    border-left: 1px solid rgba(0,0,0,0.1);
+    border-right: 1px solid rgba(0,0,0,0.1);
+  }
+  .variant__demos {
+    display: grid; grid-template-columns: 1fr 414px;
+  }
+  .variant__demo-label {
+    position: absolute; bottom: 6px; left: 12px;
+    font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase;
+    z-index: 10;
+  }
+
+  /* ─── NAVBAR base (común a las 3) ───────────────────────────── */
+  .nav {
+    position: absolute; top: 24px; left: 0; right: 0;
+    background: var(--accent);
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    align-items: center; gap: 32px;
+    padding: 0 32px; height: 52px;
+  }
+  .nav__logo svg { height: 26px; width: auto; display: block; fill: #000; }
+  .nav__center {
+    display: flex; gap: 28px; justify-self: start; padding-left: 24px;
+  }
+  .nav__link {
+    font-size: 0.8rem; font-weight: 500; color: #000;
+    text-decoration: none; letter-spacing: 0.05em;
+    opacity: 0.85; transition: opacity 0.15s;
+  }
+  .nav__link:hover { opacity: 1; font-weight: 700; }
+  .nav__swatches {
+    display: flex; gap: 8px; align-items: center;
+  }
+  .swatch {
+    width: 16px; height: 16px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.15s, border-color 0.15s;
+  }
+  .swatch:hover { transform: scale(1.2); }
+  .swatch.active { border-color: #000; }
+
+  /* ─── NAVBAR mobile (común) ─────────────────────────────────── */
+  .nav--mobile {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 0 20px; gap: 0;
+    align-items: center;
+  }
+
+  .nav--mobile .nav__burger {
+    grid-column: 1; justify-self: start;
+    display: flex; flex-direction: column; gap: 5px;
+    align-items: center; justify-content: center;
+    width: 26px; height: 22px;
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .nav--mobile .nav__burger span {
+    display: block; width: 22px; height: 2px; background: #000;
+  }
+  .nav--mobile .nav__logo {
+    grid-column: 2; justify-self: center;
+    display: flex; align-items: center;
+  }
+  .nav--mobile .nav__cart-wrap {
+    grid-column: 3; justify-self: end;
+    display: flex; align-items: center;
+  }
+  .nav--mobile .nav__center,
+  .nav--mobile .nav__swatches { display: none; }
+
+  /* ═════════════════════════════════════════════════════════════
+     VARIANTE 1 — BOLSA MINIMAL (Lucide style, badge bottom-right)
+     ═════════════════════════════════════════════════════════════ */
+  .cart-v1 {
+    position: relative;
+    background: none; border: none; cursor: pointer;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    color: #000;
+    transition: opacity 0.15s;
+  }
+  .cart-v1:hover { opacity: 0.7; }
+  .cart-v1 svg { display: block; }
+  .cart-v1__badge {
+    position: absolute; bottom: -2px; right: -4px;
+    min-width: 16px; height: 16px; padding: 0 4px;
+    border-radius: 50%; background: #000; color: var(--accent);
+    font-size: 0.6rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    border: 2px solid var(--accent);
+  }
+
+  /* ═════════════════════════════════════════════════════════════
+     VARIANTE 2 — BOLSA SOLID (filled, badge integrado dentro)
+     ═════════════════════════════════════════════════════════════ */
+  .cart-v2 {
+    position: relative;
+    background: none; border: none; cursor: pointer;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    color: #000;
+    transition: transform 0.15s;
+  }
+  .cart-v2:hover { transform: translateY(-2px); }
+  .cart-v2 svg { display: block; }
+  .cart-v2__badge {
+    position: absolute; bottom: 4px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+    font-size: 0.7rem; color: var(--accent);
+    line-height: 1; pointer-events: none;
+  }
+
+  /* ═════════════════════════════════════════════════════════════
+     VARIANTE 3 — BOLSA TIPO TOTE (alargada con doble asa, número al lado)
+     ═════════════════════════════════════════════════════════════ */
+  .cart-v3 {
+    position: relative;
+    background: none; border: none; cursor: pointer;
+    display: flex; align-items: center; gap: 6px;
+    color: #000;
+    font-family: 'Inter', sans-serif;
+    transition: opacity 0.15s;
+    padding: 0;
+  }
+  .cart-v3:hover { opacity: 0.7; }
+  .cart-v3 svg { display: block; }
+  .cart-v3__label {
+    font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em;
+    font-variant-numeric: tabular-nums;
+  }
+  .cart-v3__label strong {
+    font-weight: 700;
+  }
+
+  /* Etiquetas pequeñas debajo */
+  .variant__notes {
+    padding: 16px 24px; font-size: 0.78rem; color: rgba(0,0,0,0.55);
+    line-height: 1.6; background: #fafafa; border-top: 1px solid rgba(0,0,0,0.04);
+  }
+  .variant__notes code {
+    background: rgba(0,0,0,0.06); padding: 1px 6px; border-radius: 3px;
+    font-size: 0.72rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="lab">
+  <h1>Pruebas de carrito en navbar</h1>
+  <p class="sub">Dame el número de la variante que más te guste (1, 2 o 3). El icono va siempre a la derecha del todo en desktop, y a la derecha también en móvil.</p>
+
+  <!-- ──────────────────────────────────────────────────────────
+       VARIANTE 1 — Bolsa minimal Lucide + badge bottom-right
+       ────────────────────────────────────────────────────────── -->
+  <div class="variant">
+    <div class="variant__head">
+      <h2>Variante 1 · Bolsa minimal</h2>
+      <span>Lucide style. Badge negro circular en esquina inferior derecha. Sobrio, limpio.</span>
+    </div>
+    <div class="variant__demos">
+      <div class="variant__demo">
+        <span class="variant__demo-label">desktop</span>
+        <nav class="nav">
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__center">
+            <a href="#" class="nav__link">obra</a>
+            <a href="#" class="nav__link">sobre</a>
+          </div>
+          <div class="nav__swatches">
+            <div class="swatch" style="background:#FF8C6C"></div>
+            <div class="swatch active" style="background:#EC6768"></div>
+            <div class="swatch" style="background:#417DE1"></div>
+            <div class="swatch" style="background:#EED004"></div>
+            <div class="swatch" style="background:#228761"></div>
+          </div>
+          <button class="cart-v1" aria-label="Carrito">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+              <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+            </svg>
+            <span class="cart-v1__badge">0</span>
+          </button>
+        </nav>
+      </div>
+      <div class="variant__mobile-demo">
+        <span class="variant__demo-label">móvil</span>
+        <nav class="nav nav--mobile">
+          <button class="nav__burger" aria-label="Menú">
+            <span></span><span></span><span></span>
+          </button>
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__cart-wrap">
+            <button class="cart-v1" aria-label="Carrito">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+                <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+              </svg>
+              <span class="cart-v1__badge">0</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <p class="variant__notes">
+      Bolsa con stroke fino. Badge <code>0</code> circular negro con número en color accent, esquina inferior derecha.
+    </p>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       VARIANTE 2 — Bolsa solid (filled) con número DENTRO
+       ────────────────────────────────────────────────────────── -->
+  <div class="variant">
+    <div class="variant__head">
+      <h2>Variante 2 · Bolsa filled con número dentro</h2>
+      <span>Bolsa rellena negro. El número aparece dentro de la propia bolsa en color accent. Más bold, menos minimal.</span>
+    </div>
+    <div class="variant__demos">
+      <div class="variant__demo">
+        <span class="variant__demo-label">desktop</span>
+        <nav class="nav">
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__center">
+            <a href="#" class="nav__link">obra</a>
+            <a href="#" class="nav__link">sobre</a>
+          </div>
+          <div class="nav__swatches">
+            <div class="swatch" style="background:#FF8C6C"></div>
+            <div class="swatch active" style="background:#EC6768"></div>
+            <div class="swatch" style="background:#417DE1"></div>
+            <div class="swatch" style="background:#EED004"></div>
+            <div class="swatch" style="background:#228761"></div>
+          </div>
+          <button class="cart-v2" aria-label="Carrito">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+              <path d="M9 11V8a7 7 0 0 1 14 0v3h3l-1.4 17a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8L6 11h3zm2 0h10V8a5 5 0 0 0-10 0v3z"/>
+            </svg>
+            <span class="cart-v2__badge">0</span>
+          </button>
+        </nav>
+      </div>
+      <div class="variant__mobile-demo">
+        <span class="variant__demo-label">móvil</span>
+        <nav class="nav nav--mobile">
+          <button class="nav__burger" aria-label="Menú">
+            <span></span><span></span><span></span>
+          </button>
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__cart-wrap">
+            <button class="cart-v2" aria-label="Carrito">
+              <svg width="32" height="32" viewBox="0 0 32 32" fill="currentColor">
+                <path d="M9 11V8a7 7 0 0 1 14 0v3h3l-1.4 17a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8L6 11h3zm2 0h10V8a5 5 0 0 0-10 0v3z"/>
+              </svg>
+              <span class="cart-v2__badge">0</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <p class="variant__notes">
+      Bolsa sólida con asa. El número va dentro de la propia bolsa, fuente Barlow Condensed. Más presencia visual.
+    </p>
+  </div>
+
+  <!-- ──────────────────────────────────────────────────────────
+       VARIANTE 3 — Bolsa minimal + texto "carrito (0)" al lado
+       ────────────────────────────────────────────────────────── -->
+  <div class="variant">
+    <div class="variant__head">
+      <h2>Variante 3 · Bolsa minimal + texto "carrito (0)"</h2>
+      <span>Icono pequeño con texto descriptivo al lado. Más explícito, ocupa más ancho horizontal.</span>
+    </div>
+    <div class="variant__demos">
+      <div class="variant__demo">
+        <span class="variant__demo-label">desktop</span>
+        <nav class="nav">
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__center">
+            <a href="#" class="nav__link">obra</a>
+            <a href="#" class="nav__link">sobre</a>
+          </div>
+          <div class="nav__swatches">
+            <div class="swatch" style="background:#FF8C6C"></div>
+            <div class="swatch active" style="background:#EC6768"></div>
+            <div class="swatch" style="background:#417DE1"></div>
+            <div class="swatch" style="background:#EED004"></div>
+            <div class="swatch" style="background:#228761"></div>
+          </div>
+          <button class="cart-v3" aria-label="Carrito">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+              <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+            </svg>
+            <span class="cart-v3__label">carrito <strong>(0)</strong></span>
+          </button>
+        </nav>
+      </div>
+      <div class="variant__mobile-demo">
+        <span class="variant__demo-label">móvil</span>
+        <nav class="nav nav--mobile">
+          <button class="nav__burger" aria-label="Menú">
+            <span></span><span></span><span></span>
+          </button>
+          <a href="#" class="nav__logo">
+            <svg viewBox="0 0 100 30"><text x="0" y="24" font-family="Barlow Condensed" font-size="26" font-weight="800">CLAUDIO</text></svg>
+          </a>
+          <div class="nav__cart-wrap">
+            <button class="cart-v3" aria-label="Carrito">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+                <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+              </svg>
+              <span class="cart-v3__label"><strong>(0)</strong></span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </div>
+    <p class="variant__notes">
+      En desktop muestra <code>carrito (0)</code> con el icono. En móvil solo el icono + número entre paréntesis (ahorra espacio).
+    </p>
+  </div>
+
+  <p class="sub" style="text-align:center; margin-top: 40px;">
+    Dime: <strong>1, 2 o 3</strong>. Lo paso al Liquid y arreglo el bug del posicionamiento.
+  </p>
+</div>
+
+</body>
+</html>

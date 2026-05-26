@@ -1,184 +1,71 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
+  "name": "t:sections.footer.name",
   "type": "footer",
-  "name": "t:names.footer",
   "sections": {
-    "footer_QAE7jb": {
-      "type": "footer",
+    "claudio-newsletter": {
+      "type": "claudio-newsletter",
+      "settings": {}
+    },
+    "claudio-footer": {
+      "type": "claudio-footer",
       "blocks": {
-        "menu_ywDwTf": {
-          "type": "menu",
-          "name": "t:names.menu",
+        "tienda": {
+          "type": "column",
           "settings": {
-            "menu": "footer",
-            "heading": "SHOP",
-            "menu_spacing": 12,
-            "show_as_accordion": false,
-            "accordion_icon": "caret",
-            "accordion_dividers": false,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "heading_preset": "h5",
-            "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "title": "Tienda",
+            "link_1_label": "Claudios",
+            "link_1_url": "/#drop",
+            "link_2_label": "Camiseta",
+            "link_2_url": "/#camiseta"
+          }
         },
-        "menu_UR3gWa": {
-          "type": "menu",
-          "name": "t:names.menu",
+        "mas": {
+          "type": "column",
           "settings": {
-            "menu": "",
-            "heading": "BRAND",
-            "menu_spacing": 12,
-            "show_as_accordion": false,
-            "accordion_icon": "caret",
-            "accordion_dividers": false,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "heading_preset": "h5",
-            "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "title": "Más",
+            "link_1_label": "Sobre Claudio",
+            "link_1_url": "/#sobre",
+            "link_2_label": "Contacto",
+            "link_2_url": "mailto:hola@soyclaudio.es"
+          }
         },
-        "menu_4KapTg": {
-          "type": "menu",
-          "name": "t:names.menu",
+        "redes": {
+          "type": "column",
           "settings": {
-            "menu": "",
-            "heading": "CONNECT",
-            "menu_spacing": 12,
-            "show_as_accordion": false,
-            "accordion_icon": "caret",
-            "accordion_dividers": false,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "heading_preset": "h5",
-            "link_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "title": "Redes",
+            "link_1_label": "Instagram",
+            "link_1_url": "https://instagram.com/cl4u8io",
+            "link_2_label": "TikTok",
+            "link_2_url": "https://tiktok.com/@cl4u8io"
+          }
         },
-        "email_signup_tBDzRh": {
-          "type": "email-signup",
-          "name": "t:names.email_signup",
+        "social_1": {
+          "type": "social",
           "settings": {
-            "width": "fill",
-            "custom_width": 32,
-            "inherit_color_scheme": true,
-            "heading": "Get on the list",
-            "heading_preset": "h5",
-            "color_scheme": "scheme-1",
-            "border_style": "underline",
-            "border_width": 2,
-            "border_radius": 0,
-            "input_type_preset": "paragraph",
-            "style_class": "button-unstyled",
-            "display_type": "text",
-            "label": "OK",
-            "integrated_button": true,
-            "button_type_preset": "paragraph",
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "label": "@cl4u8io",
+            "url": "https://instagram.com/cl4u8io"
+          }
+        },
+        "social_2": {
+          "type": "social",
+          "settings": {
+            "label": "Instagram",
+            "url": "https://instagram.com/cl4u8io"
+          }
         }
       },
       "block_order": [
-        "menu_ywDwTf",
-        "menu_UR3gWa",
-        "menu_4KapTg",
-        "email_signup_tBDzRh"
+        "tienda",
+        "mas",
+        "redes",
+        "social_1",
+        "social_2"
       ],
-      "name": "t:names.footer",
-      "settings": {
-        "section_width": "page-width",
-        "gap": 24,
-        "color_scheme": "scheme-2",
-        "padding-block-start": 46,
-        "padding-block-end": 36
-      }
-    },
-    "logo_Rpw4dD": {
-      "type": "logo",
-      "name": "t:names.logo",
-      "settings": {
-        "inverse": false,
-        "font": "heading",
-        "unit": "percent",
-        "pixel_height": 48,
-        "percent_width": 100,
-        "custom_mobile_size": false,
-        "unit_mobile": "percent",
-        "percent_width_mobile": 100,
-        "pixel_height_mobile": 120,
-        "section_width": "page-width",
-        "alignment_horizontal": "center",
-        "color_scheme": "scheme-2",
-        "padding-block-start": 32,
-        "padding-block-end": 32
-      }
-    },
-    "utilities": {
-      "type": "footer-utilities",
-      "blocks": {
-        "footer_copyright_gF93Yj": {
-          "type": "footer-copyright",
-          "name": "t:names.copyright",
-          "settings": {
-            "show_powered_by": true,
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "footer_policy_list_d67hbx": {
-          "type": "footer-policy-list",
-          "name": "t:names.policy_list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "footer_copyright_gF93Yj",
-        "footer_policy_list_d67hbx"
-      ],
-      "settings": {
-        "section_width": "page-width",
-        "gap": 24,
-        "divider_thickness": 1,
-        "color_scheme": "scheme-2",
-        "padding-block-start": 0,
-        "padding-block-end": 36
-      }
+      "settings": {}
     }
   },
   "order": [
-    "footer_QAE7jb",
-    "logo_Rpw4dD",
-    "utilities"
+    "claudio-newsletter",
+    "claudio-footer"
   ]
 }

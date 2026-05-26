@@ -1,0 +1,126 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Newsletter
+  Fondo color accent. Form de email → Shopify Customers con tag "newsletter".
+  Aparece en footer-group, presente en todas las páginas.
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<section class="claudio-newsletter" id="claudio-newsletter">
+  {%- if section.settings.tag != blank -%}
+    <span class="claudio-newsletter__tag">{{ section.settings.tag }}</span>
+  {%- endif -%}
+
+  {%- if section.settings.title_html != blank -%}
+    <h2 class="claudio-newsletter__title">{{ section.settings.title_html }}</h2>
+  {%- endif -%}
+
+  {%- if section.settings.sub != blank -%}
+    <p class="claudio-newsletter__sub">{{ section.settings.sub }}</p>
+  {%- endif -%}
+
+  {%- form 'customer' -%}
+    <input type="hidden" name="contact[tags]" value="newsletter">
+    {%- if form.posted_successfully? -%}
+      <p class="claudio-newsletter__ok">Hecho. Te avisamos antes que a nadie.</p>
+    {%- else -%}
+      <div class="claudio-newsletter__form">
+        <input
+          class="claudio-newsletter__input"
+          type="email"
+          name="contact[email]"
+          placeholder="{{ section.settings.input_placeholder }}"
+          required
+          autocomplete="email">
+        <button class="claudio-newsletter__btn" type="submit">{{ section.settings.cta_label }}</button>
+      </div>
+      {%- if form.errors -%}
+        <p class="claudio-newsletter__err">{{ form.errors | default_errors }}</p>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endform -%}
+
+  {%- if section.settings.legal != blank -%}
+    <span class="claudio-newsletter__legal">{{ section.settings.legal }}</span>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+.claudio-newsletter {
+  background: var(--accent);
+  padding: 100px 72px;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 40px; text-align: center;
+  transition: background 3s ease;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-newsletter__tag {
+  font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: rgba(0,0,0,0.5);
+}
+.claudio-newsletter__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(3rem, 6vw, 5.5rem); text-transform: uppercase;
+  color: #000; line-height: 0.95; max-width: 700px; margin: 0;
+}
+.claudio-newsletter__sub {
+  font-size: 0.85rem; font-weight: 300; color: rgba(0,0,0,0.6);
+  max-width: 460px; line-height: 1.7; margin: 0;
+}
+.claudio-newsletter__form {
+  display: flex; gap: 0; width: 100%; max-width: 440px;
+}
+.claudio-newsletter__input {
+  flex: 1; background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(0,0,0,0.25); border-right: none;
+  color: #000; font-family: inherit;
+  font-size: 0.8rem; padding: 16px 20px; outline: none;
+  transition: border-color 0.2s;
+}
+.claudio-newsletter__input::placeholder { color: rgba(0,0,0,0.3); }
+.claudio-newsletter__input:focus { border-color: rgba(0,0,0,0.6); }
+.claudio-newsletter__btn {
+  background: #000; color: #fff; border: none; cursor: pointer;
+  font-family: inherit; font-size: 0.7rem; font-weight: 500;
+  letter-spacing: 0.2em; text-transform: uppercase; padding: 16px 28px;
+  transition: opacity 0.2s; white-space: nowrap;
+}
+.claudio-newsletter__btn:hover { opacity: 0.7; }
+.claudio-newsletter__legal {
+  font-size: 0.65rem; color: rgba(0,0,0,0.45); letter-spacing: 0.05em;
+}
+.claudio-newsletter__ok {
+  font-size: 0.95rem; color: #000; font-weight: 500;
+}
+.claudio-newsletter__err {
+  font-size: 0.8rem; color: #b00020; margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .claudio-newsletter { padding: 70px 28px; gap: 28px; }
+  .claudio-newsletter__form { flex-direction: column; gap: 8px; }
+  .claudio-newsletter__input { border-right: 1px solid rgba(0,0,0,0.25); }
+  .claudio-newsletter__btn { width: 100%; }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Claudio Newsletter",
+  "tag": "section",
+  "settings": [
+    { "type": "text",     "id": "tag",   "label": "Etiqueta superior", "default": "Próximo drop" },
+    { "type": "richtext", "id": "title_html", "label": "Título (HTML)",
+      "default": "<p>No te<br>lo pierdas</p>" },
+    { "type": "text",     "id": "sub",   "label": "Subtítulo",
+      "default": "Los claudios duran minutos. Si no estás en lista, te enteras tarde." },
+    { "type": "text",     "id": "cta_label", "label": "Texto botón", "default": "Entrar" },
+    { "type": "text",     "id": "input_placeholder", "label": "Placeholder email", "default": "tu@email.com" },
+    { "type": "text",     "id": "legal", "label": "Texto legal", "default": "Sin spam. Baja cuando quieras." }
+  ],
+  "enabled_on": {
+    "groups": ["footer"]
+  }
+}
+{% endschema %}

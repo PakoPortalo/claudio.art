@@ -1,0 +1,502 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Navbar (fixed, top)
+  Logo SVG centrado + 3 links + 5 swatches que cambian --accent global.
+  En móvil: burger menu con overlay y links animados.
+  Los swatches comparten clase con los del drop (.claudio-swatch),
+  por lo que el JS del drop sincroniza el estado activo entre ambos.
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<style>
+  :root { --accent: {{ section.settings.color_2 }}; }
+  html { scroll-behavior: smooth; }
+</style>
+
+<nav class="claudio-navbar" style="--accent: {{ section.settings.color_2 }};">
+  <a class="claudio-navbar__logo" href="/">
+    {%- if section.settings.logo != blank -%}
+      <img src="{{ section.settings.logo | image_url: width: 200 }}" alt="Claudio" style="height:28px;width:auto;display:block;">
+    {%- else -%}
+      <span class="claudio-navbar__logo-svg">{{ 'claudio-logo.svg' | inline_asset_content }}</span>
+    {%- endif -%}
+  </a>
+
+  <div class="claudio-navbar__center">
+    {%- if section.settings.link_obra_label != blank -%}
+      <a class="claudio-navbar__link" href="{{ section.settings.link_obra }}">{{ section.settings.link_obra_label }}</a>
+    {%- endif -%}
+    {%- if section.settings.link_sobre_label != blank -%}
+      <a class="claudio-navbar__link" href="{{ section.settings.link_sobre }}">{{ section.settings.link_sobre_label }}</a>
+    {%- endif -%}
+  </div>
+
+  <div class="claudio-navbar__swatches">
+    <div class="claudio-swatch"                       data-color="{{ section.settings.color_1 }}" data-color-name="naranja"  style="background:{{ section.settings.color_1 }}" title="Naranja"></div>
+    <div class="claudio-swatch claudio-swatch--active" data-color="{{ section.settings.color_2 }}" data-color-name="rojo"     style="background:{{ section.settings.color_2 }}" title="Rojo"></div>
+    <div class="claudio-swatch"                       data-color="{{ section.settings.color_3 }}" data-color-name="azul"     style="background:{{ section.settings.color_3 }}" title="Azul"></div>
+    <div class="claudio-swatch"                       data-color="{{ section.settings.color_4 }}" data-color-name="amarillo" style="background:{{ section.settings.color_4 }}" title="Amarillo"></div>
+    <div class="claudio-swatch"                       data-color="{{ section.settings.color_5 }}" data-color-name="verde"    style="background:{{ section.settings.color_5 }}" title="Verde"></div>
+  </div>
+
+  <button class="claudio-navbar__cart" id="claudio-navbar-cart" type="button" aria-label="Carrito ({{ cart.item_count }})">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M5 8h14l-1.2 12.2a1 1 0 0 1-1 .8H7.2a1 1 0 0 1-1-.8L5 8z"/>
+      <path d="M9 8V6a3 3 0 0 1 6 0v2"/>
+    </svg>
+    <span class="claudio-navbar__cart-count" data-cart-count>{{ cart.item_count }}</span>
+  </button>
+
+  <button class="claudio-navbar__burger" id="claudio-navbar-burger" aria-label="Menú" type="button">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══ CART DRAWER ═══ -->
+<div class="claudio-cart-drawer" id="claudio-cart-drawer" aria-hidden="true">
+  <div class="claudio-cart-drawer__backdrop" data-cart-close></div>
+  <aside class="claudio-cart-drawer__panel" role="dialog" aria-label="Carrito">
+    <header class="claudio-cart-drawer__header">
+      <h3 class="claudio-cart-drawer__title">Tu carrito · <span data-cart-count-text>{{ cart.item_count }}</span></h3>
+      <button class="claudio-cart-drawer__close" data-cart-close type="button" aria-label="Cerrar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="claudio-cart-drawer__body">
+      {%- if cart.item_count == 0 -%}
+        <p class="claudio-cart-drawer__empty">Tu carrito está vacío.<br>Elige un color y hazte con tu Claudio.</p>
+      {%- else -%}
+        <ul class="claudio-cart-drawer__items">
+          {%- for item in cart.items -%}
+            <li class="claudio-cart-drawer__item">
+              <a href="{{ item.url }}" class="claudio-cart-drawer__item-img">
+                {%- if item.image -%}
+                  <img src="{{ item.image | image_url: width: 160 }}" alt="{{ item.product.title | escape }}">
+                {%- endif -%}
+              </a>
+              <div class="claudio-cart-drawer__item-info">
+                <a href="{{ item.url }}" class="claudio-cart-drawer__item-title">{{ item.product.title }}</a>
+                {%- if item.variant.title != 'Default Title' -%}
+                  <span class="claudio-cart-drawer__item-variant">{{ item.variant.title }}</span>
+                {%- endif -%}
+                <span class="claudio-cart-drawer__item-qty">Qty: {{ item.quantity }}</span>
+                <span class="claudio-cart-drawer__item-price">{{ item.final_line_price | money }}</span>
+              </div>
+              <form action="{{ routes.cart_change_url }}" method="POST" class="claudio-cart-drawer__item-remove">
+                <input type="hidden" name="id" value="{{ item.key }}">
+                <input type="hidden" name="quantity" value="0">
+                <button type="submit" aria-label="Quitar">×</button>
+              </form>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      <footer class="claudio-cart-drawer__footer">
+        <div class="claudio-cart-drawer__total">
+          <span>Total</span>
+          <span class="claudio-cart-drawer__total-amount">{{ cart.total_price | money }}</span>
+        </div>
+        <a href="/checkout" class="claudio-cart-drawer__checkout">Ir al pago</a>
+        <a href="/cart" class="claudio-cart-drawer__view">Ver carrito completo</a>
+      </footer>
+    {%- endif -%}
+  </aside>
+</div>
+
+<div class="claudio-navbar__mobile-menu" id="claudio-navbar-mobile-menu">
+  <ul class="claudio-navbar__mobile-links">
+    {%- if section.settings.link_obra_label != blank -%}
+      <li><a href="{{ section.settings.link_obra }}" data-claudio-close>{{ section.settings.link_obra_label }}</a></li>
+    {%- endif -%}
+    {%- if section.settings.link_sobre_label != blank -%}
+      <li><a href="{{ section.settings.link_sobre }}" data-claudio-close>{{ section.settings.link_sobre_label }}</a></li>
+    {%- endif -%}
+    {%- if section.settings.link_extra_label != blank -%}
+      <li><a href="{{ section.settings.link_extra }}" data-claudio-close>{{ section.settings.link_extra_label }}</a></li>
+    {%- endif -%}
+  </ul>
+</div>
+
+{% stylesheet %}
+.claudio-navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  width: 100%;
+  background: var(--accent);
+  transition: background 3s ease;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 32px;
+  align-items: center; padding: 0 32px; height: 52px;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-navbar__logo {
+  display: flex; align-items: center; text-decoration: none;
+  transition: opacity 0.25s ease;
+  line-height: 0;
+  /* ▼▼ ajuste fino vertical del logo (mueve arriba/abajo) ▼▼ */
+  transform: translateY(-4px);
+  /* ▲▲ cambia el -3px: -5px sube más, 0px lo deja centrado, +3px lo baja ▲▲ */
+}
+.claudio-navbar__logo-svg { display: flex; align-items: center; }
+.claudio-navbar__logo-svg svg { height: 28px; width: auto; display: block; }
+.claudio-navbar__logo img { display: block; }
+.claudio-navbar__center {
+  display: flex; align-items: center; gap: 28px;
+  margin: 0; padding-left: 24px;
+  justify-self: start;
+}
+.claudio-navbar__link {
+  font-size: 0.8rem; font-weight: 500;
+  color: #000; text-decoration: none; letter-spacing: 0.1em;
+  text-transform: none; opacity: 0.85; transition: opacity 0.15s;
+}
+.claudio-navbar__link:hover { opacity: 1; font-weight: 700; }
+
+.claudio-navbar__swatches {
+  display: flex; gap: 8px; align-items: center; justify-content: flex-end;
+}
+.claudio-navbar__swatches .claudio-swatch {
+  width: 16px; height: 16px;
+  border-radius: 50%; cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.claudio-navbar__swatches .claudio-swatch:hover { transform: scale(1.2); }
+.claudio-navbar__swatches .claudio-swatch--active { border-color: #000; }
+
+/* Cart icon — Variante 1: bolsa minimal + badge circular bottom-right */
+.claudio-navbar__cart {
+  position: relative;
+  background: none; border: none; cursor: pointer;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  color: #000;
+  transition: opacity 0.15s;
+}
+.claudio-navbar__cart:hover { opacity: 0.7; }
+.claudio-navbar__cart svg { display: block; }
+.claudio-navbar__cart-count {
+  position: absolute; bottom: -2px; right: -4px;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 50%; background: #000; color: var(--accent);
+  font-family: 'Inter', sans-serif; font-size: 0.6rem; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+  border: 2px solid var(--accent);
+}
+
+/* Burger */
+.claudio-navbar__burger { display: none; }
+.claudio-navbar__mobile-menu { display: none; }
+
+@media (max-width: 768px) {
+  .claudio-navbar {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    gap: 0;
+    grid-template-columns: none;
+  }
+  .claudio-navbar__center   { display: none !important; }
+  .claudio-navbar__swatches { display: none !important; }
+
+  .claudio-navbar__burger {
+    order: 1;
+    display: flex; position: static; transform: none;
+    flex-direction: column; gap: 5px;
+    align-items: center; justify-content: center;
+    width: 26px; height: 22px; flex: 0 0 auto;
+    background: none; border: none; cursor: pointer; padding: 0;
+  }
+  .claudio-navbar__logo {
+    order: 2;
+    display: flex; align-items: center;
+    padding-left: 0; flex: 0 0 auto;
+  }
+  .claudio-navbar__cart {
+    order: 3;
+    display: flex; align-items: center;
+    flex: 0 0 auto;
+  }
+  .claudio-navbar__burger span {
+    display: block; width: 22px; height: 2px; background: #000;
+    transition: transform 0.25s, opacity 0.25s;
+  }
+  .claudio-navbar__burger.is-open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .claudio-navbar__burger.is-open span:nth-child(2) { opacity: 0; }
+  .claudio-navbar__burger.is-open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  .claudio-navbar__mobile-menu {
+    display: flex; position: fixed; top: 17px; left: 0; right: 0;
+    background: var(--accent);
+    flex-direction: column; align-items: stretch; justify-content: flex-start;
+    padding-top: 36px; z-index: 99;
+    visibility: hidden; opacity: 0; transform: translateY(-12px);
+    transition: opacity 0.28s ease, transform 0.28s ease, visibility 0s linear 0.28s;
+  }
+  .claudio-navbar__mobile-menu.is-open {
+    visibility: visible; opacity: 1; transform: translateY(0);
+    transition: opacity 0.28s ease, transform 0.28s ease, visibility 0s;
+  }
+  .claudio-navbar__mobile-links { list-style: none; width: 100%; margin: 0; padding: 0; }
+  .claudio-navbar__mobile-links li {
+    border-top: 1px solid rgba(0,0,0,0.12);
+    opacity: 0; transform: translateX(-12px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .claudio-navbar__mobile-links li:last-child {
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+  }
+  .claudio-navbar__mobile-menu.is-open li:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.10s; }
+  .claudio-navbar__mobile-menu.is-open li:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.17s; }
+  .claudio-navbar__mobile-menu.is-open li:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.24s; }
+  .claudio-navbar__mobile-menu.is-open li:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.31s; }
+  .claudio-navbar__mobile-links a {
+    display: block; width: 100%; padding: 14px 28px;
+    font-family: 'Inter', sans-serif; font-weight: 400;
+    font-size: 0.85rem; color: #000; text-decoration: none;
+    text-transform: uppercase; letter-spacing: 0.18em; line-height: 1; opacity: 0.75;
+  }
+  .claudio-navbar__mobile-links a:active { opacity: 1; background: rgba(0,0,0,0.05); }
+}
+
+/* ─── Cart drawer ─────────────────────────────────────────── */
+.claudio-cart-drawer {
+  position: fixed; inset: 0; z-index: 200;
+  visibility: hidden; opacity: 0;
+  transition: opacity 0.28s ease, visibility 0s linear 0.28s;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-cart-drawer.is-open {
+  visibility: visible; opacity: 1;
+  transition: opacity 0.28s ease, visibility 0s;
+}
+.claudio-cart-drawer__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+.claudio-cart-drawer__panel {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 100%; max-width: 420px;
+  background: #fff; color: #000;
+  display: flex; flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.25);
+}
+.claudio-cart-drawer.is-open .claudio-cart-drawer__panel { transform: translateX(0); }
+
+.claudio-cart-drawer__header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 24px; border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.claudio-cart-drawer__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.04em;
+  margin: 0;
+}
+.claudio-cart-drawer__close {
+  background: none; border: none; cursor: pointer; color: #000;
+  padding: 4px; display: flex; align-items: center;
+  transition: opacity 0.15s;
+}
+.claudio-cart-drawer__close:hover { opacity: 0.6; }
+
+.claudio-cart-drawer__body {
+  flex: 1; overflow-y: auto;
+  padding: 8px 24px 24px;
+}
+.claudio-cart-drawer__empty {
+  font-size: 0.85rem; font-weight: 300; color: rgba(0,0,0,0.55);
+  line-height: 1.7; text-align: center;
+  padding: 60px 20px;
+}
+.claudio-cart-drawer__items {
+  list-style: none; margin: 0; padding: 0;
+}
+.claudio-cart-drawer__item {
+  display: grid; grid-template-columns: 70px 1fr auto;
+  gap: 14px; align-items: center;
+  padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.claudio-cart-drawer__item-img {
+  display: block; width: 70px; height: 70px;
+  background: rgba(0,0,0,0.04); border-radius: 6px;
+  overflow: hidden;
+}
+.claudio-cart-drawer__item-img img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.claudio-cart-drawer__item-info {
+  display: flex; flex-direction: column; gap: 3px;
+  font-size: 0.78rem;
+}
+.claudio-cart-drawer__item-title {
+  font-weight: 500; color: #000; text-decoration: none;
+  font-size: 0.85rem;
+}
+.claudio-cart-drawer__item-title:hover { color: var(--accent); }
+.claudio-cart-drawer__item-variant,
+.claudio-cart-drawer__item-qty {
+  font-size: 0.7rem; color: rgba(0,0,0,0.5);
+}
+.claudio-cart-drawer__item-price {
+  font-weight: 600; font-size: 0.85rem; margin-top: 2px;
+}
+.claudio-cart-drawer__item-remove button {
+  background: none; border: none; cursor: pointer;
+  font-size: 1.4rem; color: rgba(0,0,0,0.35);
+  padding: 4px 8px; line-height: 1;
+  transition: color 0.15s;
+}
+.claudio-cart-drawer__item-remove button:hover { color: var(--accent); }
+
+.claudio-cart-drawer__footer {
+  padding: 20px 24px 24px;
+  border-top: 1px solid rgba(0,0,0,0.08);
+  display: flex; flex-direction: column; gap: 12px;
+}
+.claudio-cart-drawer__total {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.85rem; font-weight: 500;
+  margin-bottom: 4px;
+}
+.claudio-cart-drawer__total-amount {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 1.4rem;
+}
+.claudio-cart-drawer__checkout,
+.claudio-cart-drawer__view {
+  display: block; text-align: center;
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 14px 20px; text-decoration: none;
+  transition: opacity 0.15s;
+}
+.claudio-cart-drawer__checkout {
+  background: var(--accent); color: #000;
+}
+.claudio-cart-drawer__checkout:hover { opacity: 0.85; }
+.claudio-cart-drawer__view {
+  background: transparent; color: #000;
+  border: 1px solid rgba(0,0,0,0.18);
+}
+.claudio-cart-drawer__view:hover { border-color: #000; }
+
+@media (max-width: 480px) {
+  .claudio-cart-drawer__panel { max-width: 100%; }
+}
+{% endstylesheet %}
+
+<script>
+(function(){
+  var navbar = document.querySelector('.claudio-navbar');
+  if (!navbar) return;
+
+  // ─── Swatches: cambian --accent global (el JS del drop sincroniza el resto) ─
+  navbar.querySelectorAll('.claudio-swatch').forEach(function(sw){
+    sw.addEventListener('click', function(){
+      var hex = sw.dataset.color;
+      if (!hex) return;
+      // sync visual aquí (por si no hay drop en página)
+      document.querySelectorAll('.claudio-swatch').forEach(function(s){
+        s.classList.toggle('claudio-swatch--active',
+          (s.dataset.color || '').toLowerCase() === hex.toLowerCase()
+        );
+      });
+      document.documentElement.style.setProperty('--accent', hex);
+      navbar.style.setProperty('--accent', hex);
+    });
+  });
+
+  // ─── Burger ─────────────────────────────────────────────────
+  var burger = document.getElementById('claudio-navbar-burger');
+  var menu   = document.getElementById('claudio-navbar-mobile-menu');
+  if (burger && menu) {
+    burger.addEventListener('click', function(){
+      var open = burger.classList.toggle('is-open');
+      menu.classList.toggle('is-open', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    });
+    menu.querySelectorAll('[data-claudio-close]').forEach(function(a){
+      a.addEventListener('click', function(){
+        burger.classList.remove('is-open');
+        menu.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  // ─── Cart drawer ────────────────────────────────────────────
+  var cartBtn   = document.getElementById('claudio-navbar-cart');
+  var drawer    = document.getElementById('claudio-cart-drawer');
+  if (cartBtn && drawer) {
+    var openDrawer = function(){
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+    var closeDrawer = function(){
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    cartBtn.addEventListener('click', openDrawer);
+    drawer.querySelectorAll('[data-cart-close]').forEach(function(el){
+      el.addEventListener('click', closeDrawer);
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) closeDrawer();
+    });
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Claudio Navbar",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo (opcional)",
+      "info": "Si no eliges nada, usa claudio-logo.svg del tema."
+    },
+    {
+      "type": "header",
+      "content": "Links de navegación"
+    },
+    { "type": "text", "id": "link_obra_label",  "label": "Link 1 — texto", "default": "obra" },
+    { "type": "text", "id": "link_obra",         "label": "Link 1 — URL",   "default": "/#drop" },
+    { "type": "text", "id": "link_sobre_label", "label": "Link 2 — texto", "default": "sobre" },
+    { "type": "text", "id": "link_sobre",        "label": "Link 2 — URL",   "default": "/#sobre" },
+    { "type": "text", "id": "link_extra_label", "label": "Link extra — texto (solo móvil)" },
+    { "type": "text", "id": "link_extra",        "label": "Link extra — URL (solo móvil)" },
+
+    {
+      "type": "header",
+      "content": "Paleta de colores (swatches)"
+    },
+    { "type": "color", "id": "color_1", "label": "Naranja",         "default": "#FF8C6C" },
+    { "type": "color", "id": "color_2", "label": "Rojo (default)",   "default": "#EC6768" },
+    { "type": "color", "id": "color_3", "label": "Azul",             "default": "#417DE1" },
+    { "type": "color", "id": "color_4", "label": "Amarillo",         "default": "#EED004" },
+    { "type": "color", "id": "color_5", "label": "Verde",            "default": "#228761" }
+  ],
+  "enabled_on": {
+    "groups": ["header"]
+  }
+}
+{% endschema %}

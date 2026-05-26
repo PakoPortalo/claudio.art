@@ -1,0 +1,377 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Página /cart (vanilla v1: 2 columnas)
+  Items izquierda + summary sticky a la derecha.
+  Qty +/-, quitar item, ir al pago.
+  Si el carrito está vacío → mensaje + link a /
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+<section class="claudio-cart-page" id="claudio-cart-page">
+
+  {%- if cart.item_count == 0 -%}
+    <div class="claudio-cart-page__empty">
+      <h1 class="claudio-cart-page__title">{{ section.settings.title_empty | default: 'Tu carrito está vacío' }}</h1>
+      <p class="claudio-cart-page__empty-sub">{{ section.settings.empty_sub | default: 'Elige tu color favorito y hazte con un Claudio.' }}</p>
+      <a href="/#drop" class="claudio-cart-page__cta">{{ section.settings.empty_cta | default: 'Volver a la tienda' }}</a>
+    </div>
+
+  {%- else -%}
+    <header class="claudio-cart-page__header">
+      <h1 class="claudio-cart-page__title">{{ section.settings.title | default: 'Tu carrito' }}</h1>
+      <span class="claudio-cart-page__count">
+        {{ cart.item_count }} {% if cart.item_count == 1 %}pieza{% else %}piezas{% endif %}
+      </span>
+    </header>
+
+    <div class="claudio-cart-page__layout">
+      <ul class="claudio-cart-page__items">
+        {%- for item in cart.items -%}
+          {%- liquid
+            assign title_lower = item.product.title | downcase
+            assign item_color = '#cccccc'
+            if title_lower contains 'naranja'
+              assign item_color = '#FF8C6C'
+            elsif title_lower contains 'rojo'
+              assign item_color = '#EC6768'
+            elsif title_lower contains 'azul'
+              assign item_color = '#417DE1'
+            elsif title_lower contains 'amarillo'
+              assign item_color = '#EED004'
+            elsif title_lower contains 'verde'
+              assign item_color = '#228761'
+            endif
+          -%}
+          <li class="claudio-cart-page__item">
+            <a href="{{ item.url }}" class="claudio-cart-page__item-img">
+              <span class="claudio-cart-page__item-circle" style="background:{{ item_color }};"></span>
+              <img class="claudio-cart-page__item-logo" src="{{ 'claudio-logo.svg' | asset_url }}" alt="claudio" loading="lazy" width="120" height="32">
+            </a>
+
+            <div class="claudio-cart-page__item-info">
+              <a href="{{ item.url }}" class="claudio-cart-page__item-title">{{ item.product.title }}</a>
+              {%- if item.variant.title != 'Default Title' -%}
+                <span class="claudio-cart-page__item-variant">{{ item.variant.title }}</span>
+              {%- else -%}
+                <span class="claudio-cart-page__item-variant">Edición única · pintado a mano</span>
+              {%- endif -%}
+
+              <div class="claudio-cart-page__item-actions">
+                <div class="claudio-cart-page__qty" data-cart-line="{{ forloop.index }}">
+                  <button type="button" data-cart-qty="decrease" data-key="{{ item.key }}" data-qty="{{ item.quantity | minus: 1 }}" aria-label="Menos">−</button>
+                  <input type="number" value="{{ item.quantity }}" min="1" data-qty-input data-key="{{ item.key }}">
+                  <button type="button" data-cart-qty="increase" data-key="{{ item.key }}" data-qty="{{ item.quantity | plus: 1 }}" aria-label="Más">+</button>
+                </div>
+                <button type="button" class="claudio-cart-page__remove" data-cart-remove data-key="{{ item.key }}">quitar</button>
+              </div>
+            </div>
+
+            <span class="claudio-cart-page__item-price">{{ item.final_line_price | money }}</span>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <aside class="claudio-cart-page__summary">
+        <h3 class="claudio-cart-page__summary-title">{{ section.settings.summary_title | default: 'Resumen del pedido' }}</h3>
+        <div class="claudio-cart-page__summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart.items_subtotal_price | money }}</span>
+        </div>
+        <div class="claudio-cart-page__summary-row">
+          <span>Envío</span>
+          <span>{{ section.settings.shipping_note | default: 'Calculado en checkout' }}</span>
+        </div>
+        <div class="claudio-cart-page__summary-row claudio-cart-page__summary-row--total">
+          <span>Total</span>
+          <span class="claudio-cart-page__summary-amount">{{ cart.total_price | money }}</span>
+        </div>
+
+        <form action="{{ routes.cart_url }}" method="POST">
+          <button type="submit" name="checkout" class="claudio-cart-page__checkout">
+            {{ section.settings.checkout_label | default: 'Ir al pago' }}
+          </button>
+        </form>
+        <a href="/" class="claudio-cart-page__continue">← seguir mirando</a>
+      </aside>
+    </div>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+.claudio-cart-page {
+  padding: 60px 60px 80px;
+  background: #fff;
+  font-family: 'Inter', sans-serif;
+  min-height: 80vh;
+}
+
+/* Empty state */
+.claudio-cart-page__empty {
+  text-align: center;
+  padding: 100px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+}
+.claudio-cart-page__empty .claudio-cart-page__title {
+  margin-bottom: 0;
+}
+.claudio-cart-page__empty-sub {
+  font-size: 0.95rem; color: rgba(0,0,0,0.55);
+  max-width: 380px; line-height: 1.6;
+}
+.claudio-cart-page__cta {
+  display: inline-block; margin-top: 16px;
+  background: var(--accent); color: #000; text-decoration: none;
+  padding: 16px 36px; font-family: inherit;
+  font-size: 0.78rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  transition: opacity 0.15s;
+}
+.claudio-cart-page__cta:hover { opacity: 0.85; }
+
+/* Header */
+.claudio-cart-page__header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  margin-bottom: 40px;
+}
+.claudio-cart-page__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(2.5rem, 4vw, 3.5rem); line-height: 1;
+  text-transform: uppercase; letter-spacing: 0.02em;
+  margin: 0;
+}
+.claudio-cart-page__count {
+  font-size: 0.85rem; font-weight: 400;
+  color: rgba(0,0,0,0.55);
+}
+
+/* Layout 2 columnas */
+.claudio-cart-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 60px; align-items: start;
+}
+.claudio-cart-page__items {
+  display: flex; flex-direction: column;
+  list-style: none; margin: 0; padding: 0;
+}
+
+/* Item */
+.claudio-cart-page__item {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  gap: 28px; align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+.claudio-cart-page__item:first-child { padding-top: 0; }
+.claudio-cart-page__item-img {
+  position: relative;
+  width: 120px; height: 120px;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+}
+.claudio-cart-page__item-circle {
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  opacity: 1;
+}
+.claudio-cart-page__item-logo {
+  position: relative; z-index: 1;
+  width: 105%; height: auto;
+  display: block;
+}
+.claudio-cart-page__item-info {
+  display: flex; flex-direction: column; gap: 8px;
+}
+.claudio-cart-page__item-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.02em;
+  color: #000; text-decoration: none;
+  transition: color 0.15s;
+}
+.claudio-cart-page__item-title:hover { color: var(--accent); }
+.claudio-cart-page__item-variant {
+  font-size: 0.75rem; color: rgba(0,0,0,0.5);
+}
+
+/* Acciones por item */
+.claudio-cart-page__item-actions {
+  display: flex; align-items: center; gap: 16px; margin-top: 6px;
+}
+.claudio-cart-page__qty {
+  display: inline-flex; align-items: center;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 4px;
+}
+.claudio-cart-page__qty button {
+  width: 28px; height: 28px;
+  background: none; border: none; cursor: pointer;
+  font-size: 1rem; color: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  transition: color 0.15s;
+}
+.claudio-cart-page__qty button:hover { color: #000; }
+.claudio-cart-page__qty button:disabled { opacity: 0.3; cursor: not-allowed; }
+.claudio-cart-page__qty input {
+  width: 32px; height: 28px;
+  border: none; text-align: center;
+  font-family: inherit; font-size: 0.85rem; font-weight: 500;
+  color: #000; -moz-appearance: textfield;
+  background: transparent;
+}
+.claudio-cart-page__qty input::-webkit-outer-spin-button,
+.claudio-cart-page__qty input::-webkit-inner-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+.claudio-cart-page__remove {
+  background: none; border: none; cursor: pointer;
+  font-size: 0.72rem; font-weight: 400;
+  color: rgba(0,0,0,0.5);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: underline; text-underline-offset: 3px;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.claudio-cart-page__remove:hover { color: var(--accent); }
+.claudio-cart-page__item-price {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 1.6rem; color: #000;
+  justify-self: end;
+}
+
+/* Summary sticky */
+.claudio-cart-page__summary {
+  background: rgba(0,0,0,0.03);
+  padding: 32px;
+  border-radius: 8px;
+  position: sticky; top: 80px;
+}
+.claudio-cart-page__summary-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.16em;
+  margin: 0 0 24px;
+}
+.claudio-cart-page__summary-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0; font-size: 0.85rem;
+  color: rgba(0,0,0,0.7);
+}
+.claudio-cart-page__summary-row--total {
+  margin-top: 16px; padding-top: 20px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+  font-size: 1rem; font-weight: 600; color: #000;
+}
+.claudio-cart-page__summary-amount {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: 1.8rem;
+}
+.claudio-cart-page__checkout {
+  display: block; width: 100%;
+  background: var(--accent); color: #000; border: none;
+  padding: 18px 24px; margin-top: 24px;
+  font-family: inherit; font-size: 0.8rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  cursor: pointer; text-align: center; text-decoration: none;
+  transition: opacity 0.15s;
+}
+.claudio-cart-page__checkout:hover { opacity: 0.85; }
+.claudio-cart-page__continue {
+  display: block; text-align: center; margin-top: 16px;
+  font-size: 0.75rem; color: rgba(0,0,0,0.55);
+  text-decoration: none; letter-spacing: 0.06em;
+  padding: 8px;
+}
+.claudio-cart-page__continue:hover { color: #000; }
+
+@media (max-width: 768px) {
+  .claudio-cart-page { padding: 40px 24px 60px; }
+  .claudio-cart-page__layout { grid-template-columns: 1fr; gap: 36px; }
+  .claudio-cart-page__item { grid-template-columns: 80px 1fr; gap: 16px; }
+  .claudio-cart-page__item-img { width: 80px; height: 80px; }
+  .claudio-cart-page__item-logo { width: 100%; }
+  .claudio-cart-page__item-price {
+    grid-column: 1 / -1; justify-self: start; font-size: 1.3rem; margin-top: 8px;
+  }
+  .claudio-cart-page__summary { position: static; padding: 24px; }
+}
+{% endstylesheet %}
+
+<script>
+(function(){
+  var page = document.getElementById('claudio-cart-page');
+  if (!page) return;
+
+  function changeQty(key, qty){
+    fetch('{{ routes.cart_change_url }}.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: qty })
+    }).then(function(res){
+      if (res.ok) window.location.reload();
+      else { console.warn('cart change failed', res.status); }
+    }).catch(function(err){ console.error('cart change error', err); });
+  }
+
+  // Botones +/- por item
+  page.querySelectorAll('[data-cart-qty]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.dataset.key;
+      var qty = parseInt(btn.dataset.qty, 10);
+      if (qty < 0) qty = 0;
+      changeQty(key, qty);
+    });
+  });
+
+  // Quitar item
+  page.querySelectorAll('[data-cart-remove]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      changeQty(btn.dataset.key, 0);
+    });
+  });
+
+  // Input manual de qty (enter o blur)
+  page.querySelectorAll('[data-qty-input]').forEach(function(input){
+    var commit = function(){
+      var qty = parseInt(input.value, 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      changeQty(input.dataset.key, qty);
+    };
+    input.addEventListener('change', commit);
+    input.addEventListener('keydown', function(e){
+      if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Claudio Cart Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Textos — carrito con items"
+    },
+    { "type": "text", "id": "title", "label": "Título", "default": "Tu carrito" },
+    { "type": "text", "id": "summary_title", "label": "Título sumario", "default": "Resumen del pedido" },
+    { "type": "text", "id": "shipping_note", "label": "Texto de envío", "default": "Calculado en checkout" },
+    { "type": "text", "id": "checkout_label", "label": "Texto botón pago", "default": "Ir al pago" },
+    {
+      "type": "header",
+      "content": "Textos — carrito vacío"
+    },
+    { "type": "text", "id": "title_empty", "label": "Título vacío", "default": "Tu carrito está vacío" },
+    { "type": "text", "id": "empty_sub", "label": "Subtítulo vacío", "default": "Elige tu color favorito y hazte con un Claudio." },
+    { "type": "text", "id": "empty_cta", "label": "Botón vacío", "default": "Volver a la tienda" }
+  ],
+  "presets": [
+    {
+      "name": "Claudio Cart Page"
+    }
+  ]
+}
+{% endschema %}

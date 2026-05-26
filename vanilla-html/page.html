@@ -418,6 +418,11 @@
       font-size: clamp(2.2rem, 5vw, 3.8rem); line-height: 1;
       text-transform: uppercase; color: #fff; letter-spacing: 0.06em;
     }
+    .camisa__title-break { display: none; }
+    @media (max-width: 768px) {
+      .camisa__title-dash  { display: none; }
+      .camisa__title-break { display: inline; }
+    }
     .camisa__sub {
       font-family: 'Inter', sans-serif; font-size: 0.72rem; font-weight: 300;
       letter-spacing: 0.1em; color: rgba(255,255,255,0.65);
@@ -842,7 +847,7 @@
     </div>
     <div class="camisa__copy">
       <span class="camisa__tag">Edición limitada</span>
-      <h2 class="camisa__title">Novedades — Próximamente</h2>
+      <h2 class="camisa__title">Novedades<span class="camisa__title-dash"> — </span><br class="camisa__title-break">Próximamente</h2>
       <p class="camisa__sub">sé el primero en saberlo</p>
       <div class="camisa__form">
         <input class="camisa__input" type="email" placeholder="tu@email.com">

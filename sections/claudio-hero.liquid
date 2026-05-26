@@ -1,0 +1,370 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Hero
+  Vídeo en grayscale + overlay multiply + canvas WebGL con logo
+  distorsionado mediante simulación de fluidos (THREE.js + GLSL).
+  En móvil se muestra el logo estático (el canvas es desktop only).
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- liquid
+  if section.settings.hero_fallback
+    assign fallback_url = section.settings.hero_fallback | image_url: width: 1920
+  else
+    assign fallback_url = 'screenshot-hero.png' | asset_url
+  endif
+
+  assign video_url = section.settings.video_file
+  if video_url == blank
+    assign video_url = 'hero-web.mp4' | asset_url
+  endif
+-%}
+
+<section class="claudio-hero" id="claudio-hero" style="--accent: {{ section.settings.accent_color }};">
+  <video
+    class="claudio-hero__video"
+    src="{{ video_url }}"
+    muted
+    playsinline
+    autoplay
+    loop
+    preload="auto"
+  ></video>
+
+  <div class="claudio-hero__poster" style="background-image: url('{{ fallback_url }}');"></div>
+
+  <div class="claudio-hero__overlay"></div>
+
+  <canvas id="claudio-hero-canvas" class="claudio-hero__canvas"></canvas>
+
+  <img
+    class="claudio-hero__logo-static"
+    src="{{ 'claudio-logo.svg' | asset_url }}"
+    alt="Claudio"
+  >
+
+  <p class="claudio-hero__subtitle">{{ section.settings.subtitle }}</p>
+
+  <div class="claudio-hero__scroll" onclick="document.getElementById('drop')?.scrollIntoView({behavior:'smooth'})">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+  </div>
+</section>
+
+<script>
+  (function(){
+    var hero = document.getElementById('claudio-hero');
+    if (!hero) return;
+    var video = hero.querySelector('.claudio-hero__video');
+    if (!video) return;
+    var showFallback = function(){ hero.classList.add('is-fallback'); };
+    video.addEventListener('error', showFallback);
+    video.addEventListener('stalled', showFallback);
+    // autoplay may be silently blocked (no error event) — sanity check after 2s
+    setTimeout(function(){
+      if (video.paused && video.currentTime === 0) showFallback();
+    }, 2000);
+  })();
+</script>
+
+<script type="importmap">
+  { "imports": { "three": "https://unpkg.com/three@0.158.0/build/three.module.js" } }
+</script>
+
+<script type="module">
+  import * as THREE from 'three';
+
+  const VS=`varying vec2 vUv;
+  #ifdef USE_OFFSETS
+  varying vec2 vL,vR,vT,vB;
+  uniform vec2 texelSize;
+  #endif
+  void main(){
+    vUv=uv;
+    #ifdef USE_OFFSETS
+    vL=uv-vec2(texelSize.x,0.0);
+    vR=uv+vec2(texelSize.x,0.0);
+    vT=uv+vec2(0.0,texelSize.y);
+    vB=uv-vec2(0.0,texelSize.y);
+    #endif
+    gl_Position=vec4(position,1.0);
+  }`;
+  const FS_CLEAR=`precision highp float;varying vec2 vUv;uniform sampler2D uTexture;uniform float uClearValue;void main(){gl_FragColor=uClearValue*texture2D(uTexture,vUv);}`;
+  const FS_CURL=`precision highp float;varying vec2 vL,vR,vT,vB;uniform sampler2D uVelocity;void main(){float L=texture2D(uVelocity,vL).y,R=texture2D(uVelocity,vR).y,T=texture2D(uVelocity,vT).x,B=texture2D(uVelocity,vB).x;gl_FragColor=vec4(R-L-T+B,0,0,1);}`;
+  const FS_VORTICITY=`precision highp float;varying vec2 vUv,vL,vR,vT,vB;uniform sampler2D uVelocity,uCurl;uniform float uCurlValue,dt;void main(){float L=texture2D(uCurl,vL).x,R=texture2D(uCurl,vR).x,T=texture2D(uCurl,vT).x,B=texture2D(uCurl,vB).x,C=texture2D(uCurl,vUv).x;vec2 f=vec2(abs(T)-abs(B),abs(R)-abs(L))*0.5;f/=length(f)+1.;f*=uCurlValue*C;f.y*=-1.;gl_FragColor=vec4(texture2D(uVelocity,vUv).xy+f*dt,0,1);}`;
+  const FS_DIVERGENCE=`precision highp float;varying vec2 vUv,vL,vR,vT,vB;uniform sampler2D uVelocity;void main(){float L=texture2D(uVelocity,vL).x,R=texture2D(uVelocity,vR).x,T=texture2D(uVelocity,vT).y,B=texture2D(uVelocity,vB).y;vec2 C=texture2D(uVelocity,vUv).xy;if(vL.x<0.)L=-C.x;if(vR.x>1.)R=-C.x;if(vT.y>1.)T=-C.y;if(vB.y<0.)B=-C.y;gl_FragColor=vec4(.5*(R-L+T-B),0,0,1);}`;
+  const FS_PRESSURE=`precision highp float;varying vec2 vUv,vL,vR,vT,vB;uniform sampler2D uPressure,uDivergence;void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x;gl_FragColor=vec4((L+R+B+T-texture2D(uDivergence,vUv).x)*.25,0,0,1);}`;
+  const FS_GRADIENT=`precision highp float;varying vec2 vUv,vL,vR,vT,vB;uniform sampler2D uPressure,uVelocity;void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x;vec2 v=texture2D(uVelocity,vUv).xy;v-=vec2(R-L,T-B);gl_FragColor=vec4(v,0,1);}`;
+  const FS_SPLAT=`precision highp float;varying vec2 vUv;uniform sampler2D uTarget;uniform float aspectRatio,uRadius;uniform vec3 uColor;uniform vec2 uPointer;void main(){vec2 p=vUv-uPointer;p.x*=aspectRatio;vec2 velDir=length(uColor.xy)>0.0001?normalize(uColor.xy):vec2(1,0);float along=dot(p,velDir),perp=length(p-along*velDir),d=along*along/uRadius+perp*perp/uRadius;gl_FragColor=vec4(texture2D(uTarget,vUv).xyz+exp(-d)*uColor,1);}`;
+  const FS_ADVECTION=`precision highp float;varying vec2 vUv;uniform sampler2D uVelocity,uSource;uniform vec2 texelSize;uniform float dt,uDissipation;void main(){vec2 c=vUv-dt*texture2D(uVelocity,vUv).xy*texelSize;gl_FragColor=uDissipation*texture2D(uSource,c);gl_FragColor.a=1.;}`;
+  const FS_DISPLAY=`precision highp float;varying vec2 vUv;uniform sampler2D tVelocity,tText;uniform float uDistort;void main(){vec2 vel=texture2D(tVelocity,vUv).xy,distUv=clamp(vUv-vel*uDistort,0.,1.);vec4 text=texture2D(tText,distUv);gl_FragColor=vec4(text.rgb,text.a);}`;
+
+  class FluidText {
+    constructor(canvasEl,logoImg,cfg={}){
+      this.canvas=canvasEl;this._logoImg=logoImg;
+      this.cfg={SIM_RES:128,PRESSURE_ITE:25,CURL:0.8,PRESSURE:0.8,VELOCITY_DISS:0.97,SPLAT_RADIUS:0.0015,SPLAT_FORCE:1200,DISTORT:0.010,FONT_SCALE:0.44,LINE_HEIGHT:1.3,MARGIN_X:0.08,...cfg};
+      this._ptr={x:-1,y:-1};this._momentum={x:0,y:0};this._lastPos={x:.5,y:.5};this._hasPos=false;this._movedThisFrame=false;this._dpr=Math.min(devicePixelRatio,2);
+      this._init();this._bindEvents();
+    }
+    _init(){
+      const{canvas,cfg}=this,S=cfg.SIM_RES;
+      this.renderer=new THREE.WebGLRenderer({canvas,antialias:false,alpha:true});
+      this.renderer.setPixelRatio(this._dpr);this.renderer.setSize(canvas.clientWidth,canvas.clientHeight);this.renderer.setClearColor(0,0);
+      this.camera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);this.scene=new THREE.Scene();this.quad=new THREE.Mesh(new THREE.PlaneGeometry(2,2));this.scene.add(this.quad);
+      const pp=(w,h)=>{const o={minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,type:THREE.HalfFloatType,format:THREE.RGBAFormat,depthBuffer:false};const a=new THREE.WebGLRenderTarget(w,h,o),b=new THREE.WebGLRenderTarget(w,h,o);return{read:a,write:b,swap(){const t=this.read;this.read=this.write;this.write=t;}};};
+      const rt=(w,h)=>new THREE.WebGLRenderTarget(w,h,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter,type:THREE.HalfFloatType,format:THREE.RGBAFormat,depthBuffer:false});
+      this.rtVel=pp(S,S);this.rtPres=pp(S,S);this.rtDiv=rt(S,S);this.rtCurl=rt(S,S);
+      const mk=(fs,def={})=>new THREE.ShaderMaterial({vertexShader:VS,fragmentShader:fs,uniforms:{},defines:def,depthTest:false,depthWrite:false});
+      const ts=new THREE.Vector2(1/S,1/S);
+      this.mClear=mk(FS_CLEAR);this.mClear.uniforms={uTexture:{value:null},uClearValue:{value:cfg.PRESSURE}};
+      this.mCurl=mk(FS_CURL,{USE_OFFSETS:''});this.mCurl.uniforms={uVelocity:{value:null},texelSize:{value:ts.clone()}};
+      this.mVort=mk(FS_VORTICITY,{USE_OFFSETS:''});this.mVort.uniforms={uVelocity:{value:null},uCurl:{value:null},uCurlValue:{value:cfg.CURL},dt:{value:1/60},texelSize:{value:ts.clone()}};
+      this.mDiv=mk(FS_DIVERGENCE,{USE_OFFSETS:''});this.mDiv.uniforms={uVelocity:{value:null},texelSize:{value:ts.clone()}};
+      this.mPres=mk(FS_PRESSURE,{USE_OFFSETS:''});this.mPres.uniforms={uPressure:{value:null},uDivergence:{value:null},texelSize:{value:ts.clone()}};
+      this.mGrad=mk(FS_GRADIENT,{USE_OFFSETS:''});this.mGrad.uniforms={uPressure:{value:null},uVelocity:{value:null},texelSize:{value:ts.clone()}};
+      this.mSplat=mk(FS_SPLAT);this.mSplat.uniforms={uTarget:{value:null},aspectRatio:{value:canvas.clientWidth/canvas.clientHeight},uColor:{value:new THREE.Vector3()},uPointer:{value:new THREE.Vector2()},uRadius:{value:cfg.SPLAT_RADIUS}};
+      this.mAdv=mk(FS_ADVECTION);this.mAdv.uniforms={uVelocity:{value:null},uSource:{value:null},texelSize:{value:ts.clone()},dt:{value:1/60},uDissipation:{value:cfg.VELOCITY_DISS}};
+      this.mDisplay=mk(FS_DISPLAY);this.mDisplay.uniforms={tVelocity:{value:null},tText:{value:this._buildTex()},uDistort:{value:cfg.DISTORT}};
+    }
+    _buildTex(){
+      const{canvas,_dpr,_logoImg}=this,w=Math.ceil(canvas.clientWidth*_dpr),h=Math.ceil(canvas.clientHeight*_dpr);
+      const c=document.createElement('canvas');c.width=w;c.height=h;
+      const ctx=c.getContext('2d');ctx.clearRect(0,0,w,h);
+      const margin=w*0.12,maxW=w-margin*2,maxH=h*0.4;
+      const ratio=_logoImg.naturalWidth/_logoImg.naturalHeight;
+      let lw=maxW,lh=lw/ratio;if(lh>maxH){lh=maxH;lw=lh*ratio;}
+      const lx=(w-lw)/2,ly=(h-lh)/2-h*0.1;
+      ctx.filter='invert(1)';ctx.drawImage(_logoImg,lx,ly,lw,lh);ctx.filter='none';
+      const tex=new THREE.CanvasTexture(c);tex.needsUpdate=true;return tex;
+    }
+    _r(mat,target){this.quad.material=mat;this.renderer.setRenderTarget(target??null);this.renderer.render(this.scene,this.camera);}
+    _simulate(dt){
+      const{mVort,mAdv,mCurl,mVort:mv,mDiv,mPres,mGrad,mClear,rtVel,rtPres,rtDiv,rtCurl,cfg}=this,S=cfg.SIM_RES;
+      mVort.uniforms.dt.value=dt;mAdv.uniforms.dt.value=dt;
+      mCurl.uniforms.uVelocity.value=rtVel.read.texture;this._r(mCurl,rtCurl);
+      mv.uniforms.uVelocity.value=rtVel.read.texture;mv.uniforms.uCurl.value=rtCurl.texture;this._r(mv,rtVel.write);rtVel.swap();
+      mDiv.uniforms.uVelocity.value=rtVel.read.texture;this._r(mDiv,rtDiv);
+      mClear.uniforms.uTexture.value=rtPres.read.texture;this._r(mClear,rtPres.write);rtPres.swap();
+      for(let i=0;i<cfg.PRESSURE_ITE;i++){mPres.uniforms.uPressure.value=rtPres.read.texture;mPres.uniforms.uDivergence.value=rtDiv.texture;this._r(mPres,rtPres.write);rtPres.swap();}
+      mGrad.uniforms.uPressure.value=rtPres.read.texture;mGrad.uniforms.uVelocity.value=rtVel.read.texture;this._r(mGrad,rtVel.write);rtVel.swap();
+      mAdv.uniforms.uVelocity.value=rtVel.read.texture;mAdv.uniforms.uSource.value=rtVel.read.texture;mAdv.uniforms.texelSize.value.set(1/S,1/S);mAdv.uniforms.uDissipation.value=cfg.VELOCITY_DISS;this._r(mAdv,rtVel.write);rtVel.swap();
+    }
+    _splat(x,y,dx,dy){const{mSplat,rtVel,cfg,canvas}=this;mSplat.uniforms.aspectRatio.value=canvas.clientWidth/canvas.clientHeight;mSplat.uniforms.uPointer.value.set(x,y);mSplat.uniforms.uRadius.value=cfg.SPLAT_RADIUS;mSplat.uniforms.uTarget.value=rtVel.read.texture;mSplat.uniforms.uColor.value.set(dx,dy,0);this._r(mSplat,rtVel.write);rtVel.swap();}
+    _bindEvents(){
+      const move=(cx,cy)=>{
+        const rect=this.canvas.getBoundingClientRect(),nx=(cx-rect.left)/rect.width,ny=1-(cy-rect.top)/rect.height,p=this._ptr;
+        if(p.x>=0){const rdx=(nx-p.x)*this.cfg.SPLAT_FORCE,rdy=(ny-p.y)*this.cfg.SPLAT_FORCE,b=0.18;this._momentum.x=this._momentum.x*(1-b)+rdx*b;this._momentum.y=this._momentum.y*(1-b)+rdy*b;if(Math.abs(rdx)+Math.abs(rdy)>0.5)this._splat(nx,ny,this._momentum.x,this._momentum.y);}
+        p.x=nx;p.y=ny;this._lastPos.x=nx;this._lastPos.y=ny;this._hasPos=true;this._movedThisFrame=true;
+      };
+      this.canvas.addEventListener('mousemove',e=>move(e.clientX,e.clientY));
+      this.canvas.addEventListener('touchmove',e=>{e.preventDefault();move(e.touches[0].clientX,e.touches[0].clientY);},{passive:false});
+      this.canvas.addEventListener('mouseleave',()=>{this._ptr.x=-1;this._ptr.y=-1;});
+    }
+    resize(){const{canvas,renderer,mSplat,mDisplay,_dpr}=this;renderer.setSize(canvas.clientWidth,canvas.clientHeight);mSplat.uniforms.aspectRatio.value=canvas.clientWidth/canvas.clientHeight;const old=mDisplay.uniforms.tText.value;mDisplay.uniforms.tText.value=this._buildTex();old.dispose();}
+    tick(dt){
+      this._simulate(dt);
+      if(!this._movedThisFrame&&this._hasPos){const mag=Math.sqrt(this._momentum.x**2+this._momentum.y**2);if(mag>40){this._splat(this._lastPos.x,this._lastPos.y,this._momentum.x*0.4,this._momentum.y*0.4);this._momentum.x*=0.92;this._momentum.y*=0.92;}}
+      this._movedThisFrame=false;this.mDisplay.uniforms.tVelocity.value=this.rtVel.read.texture;this._r(this.mDisplay,null);
+    }
+  }
+
+  function setSubtitleBelowLogo(logoBottomPx){
+    const subtitle=document.querySelector('.claudio-hero__subtitle');
+    if(subtitle) subtitle.style.top=(logoBottomPx+20)+'px';
+  }
+
+  fetch('{{ 'claudio-logo.svg' | asset_url }}')
+    .then(r=>r.text())
+    .then(svgText=>{
+      const fixed=svgText.replace('width="100%" height="100%"','width="4502" height="1209"');
+      const blob=new Blob([fixed],{type:'image/svg+xml'});
+      const url=URL.createObjectURL(blob);
+      const logoImg=new Image();
+      logoImg.onload=()=>{
+        URL.revokeObjectURL(url);
+        const isMobile=window.matchMedia('(max-width: 768px)').matches;
+        if(!isMobile){
+          const canvas=document.getElementById('claudio-hero-canvas');
+          if(!canvas) return;
+          function calcDesktopSubtitle(){
+            const dpr=window.devicePixelRatio||1;
+            const w=Math.ceil(canvas.clientWidth*dpr),h=Math.ceil(canvas.clientHeight*dpr);
+            const maxW=w*0.8,maxH=h*0.45;
+            const ratio=logoImg.naturalWidth/logoImg.naturalHeight;
+            let lw=maxW,lh=lw/ratio;if(lh>maxH){lh=maxH;lw=lh*ratio;}
+            const ly=(h-lh)/2-h*0.1;
+            setSubtitleBelowLogo((ly+lh)/h*canvas.clientHeight);
+          }
+          const fluid=new FluidText(canvas,logoImg,{FONT_SCALE:0.44});
+          window.addEventListener('resize',()=>{fluid.resize();calcDesktopSubtitle();});
+          let last=performance.now();
+          (function loop(now){requestAnimationFrame(loop);const dt=Math.min((now-last)/1000,1/30);last=now;fluid.tick(dt);})(performance.now());
+          calcDesktopSubtitle();
+        } else {
+          function calcMobileSubtitle(){
+            const hero=document.querySelector('.claudio-hero');
+            if(!hero) return;
+            const heroH=hero.clientHeight,heroW=hero.clientWidth;
+            const imgW=Math.min(heroW*0.8,400);
+            const lh=imgW/(4502/1209);
+            setSubtitleBelowLogo(heroH*0.4+lh/2);
+          }
+          calcMobileSubtitle();
+          window.addEventListener('resize',calcMobileSubtitle);
+        }
+      };
+      logoImg.src=url;
+    })
+    .catch(err=>console.error('claudio-hero: error cargando SVG',err));
+</script>
+
+{% stylesheet %}
+.claudio-hero {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  overflow: hidden;
+  background: #000;
+}
+.claudio-hero__video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  z-index: 0;
+  filter: grayscale(100%);
+}
+.claudio-hero__poster {
+  display: none;
+  position: absolute; inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+}
+.claudio-hero.is-fallback .claudio-hero__poster { display: block; }
+.claudio-hero.is-fallback .claudio-hero__video  { display: none; }
+.claudio-hero__overlay {
+  position: absolute; inset: 0;
+  background: var(--accent);
+  mix-blend-mode: multiply;
+  z-index: 1;
+  pointer-events: none;
+}
+.claudio-hero__canvas {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  display: block;
+  z-index: 2;
+}
+.claudio-hero__logo-static {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 400px;
+  height: auto;
+  filter: invert(1);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.claudio-hero__subtitle {
+  position: absolute;
+  top: 67%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  text-align: center;
+  opacity: 0.65;
+  pointer-events: none;
+  width: 90vw;
+  max-width: 600px;
+}
+.claudio-hero__scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.2s;
+  animation: claudio-hero-bounce 2s ease-in-out infinite;
+}
+.claudio-hero__scroll:hover { opacity: 1; }
+.claudio-hero__scroll svg { display: block; }
+@keyframes claudio-hero-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0);   opacity: 0.55; }
+  50%      { transform: translateX(-50%) translateY(8px); opacity: 0.9; }
+}
+@media (max-width: 768px) {
+  .claudio-hero__canvas { display: none; }
+  .claudio-hero__logo-static { display: block; }
+  .claudio-hero__subtitle {
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Claudio Hero",
+  "tag": "section",
+  "class": "section-claudio-hero",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Vídeo"
+    },
+    {
+      "type": "url",
+      "id": "video_file",
+      "label": "URL del vídeo (.mp4)",
+      "info": "Sube el vídeo en Contenido → Archivos y pega aquí la URL del archivo."
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_fallback",
+      "label": "Imagen fallback (si el vídeo falla)",
+      "info": "Si no eliges nada, usa screenshot-hero.png del tema."
+    },
+    {
+      "type": "header",
+      "content": "Texto"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtítulo",
+      "default": "yo tan sólo soy un inquilino en este mundo de plástico, un chatarrero limpiando el espacio"
+    },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento (overlay)",
+      "default": "#EC6768"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Claudio Hero"
+    }
+  ]
+}
+{% endschema %}

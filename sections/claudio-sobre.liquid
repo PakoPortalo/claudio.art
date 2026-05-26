@@ -1,0 +1,518 @@
+{%- comment -%}
+  ─────────────────────────────────────────────────────────────────
+  CLAUDIO — Sobre
+  Cluster de 8 shots (imágenes + vídeos) + 1 reel mockup centrado.
+  Lateral derecho: tag, título, descripción, botones IG/TikTok.
+  En móvil: cluster oculto, vídeo cover grande con texto encima.
+  ─────────────────────────────────────────────────────────────────
+{%- endcomment -%}
+
+{%- liquid
+  assign s1_img = section.settings.shot1_image | image_url: width: 600
+  if s1_img == blank
+    assign s1_img = 'sobre-05.jpg' | asset_url
+  endif
+  assign s4_img = section.settings.shot4_image | image_url: width: 600
+  if s4_img == blank
+    assign s4_img = 'sobre-04.jpg' | asset_url
+  endif
+  assign s5_img = section.settings.shot5_image | image_url: width: 600
+  if s5_img == blank
+    assign s5_img = 'sobre-01.jpg' | asset_url
+  endif
+  assign s6_img = section.settings.shot6_image | image_url: width: 600
+  if s6_img == blank
+    assign s6_img = 'sobre-02.jpg' | asset_url
+  endif
+
+  assign s2_video = section.settings.shot2_video
+  if s2_video == blank
+    assign s2_video = 'sobre-video-s2.mp4' | asset_url
+  endif
+  assign s3_video = section.settings.shot3_video
+  if s3_video == blank
+    assign s3_video = 'sobre-video-s3.mp4' | asset_url
+  endif
+  assign s7_video = section.settings.shot7_video
+  if s7_video == blank
+    assign s7_video = 'sobre-video-s7.mp4' | asset_url
+  endif
+  assign s8_video = section.settings.shot8_video
+  if s8_video == blank
+    assign s8_video = 'sobre-video-s8.mp4' | asset_url
+  endif
+  assign reel_url = section.settings.reel_video
+  if reel_url == blank
+    assign reel_url = 'sobre-reel.mp4' | asset_url
+  endif
+-%}
+
+<section class="claudio-sobre" id="sobre" style="--accent: {{ section.settings.accent_color }};">
+
+  <!-- Cluster (desktop) -->
+  <div class="claudio-sobre__cluster claudio-ca">
+    <div class="claudio-shot s1">
+      <img src="{{ s1_img }}" alt="" loading="lazy">
+      <span class="claudio-shot-label">{{ section.settings.shot1_label }}</span>
+    </div>
+    <div class="claudio-shot s2 claudio-shot--dark">
+      <video src="{{ s2_video }}" autoplay loop muted playsinline></video>
+      <span class="claudio-shot-label">{{ section.settings.shot2_label }}</span>
+    </div>
+    <div class="claudio-shot s3">
+      <video src="{{ s3_video }}" autoplay loop muted playsinline></video>
+      <span class="claudio-shot-label">{{ section.settings.shot3_label }}</span>
+    </div>
+    <div class="claudio-shot s4">
+      <img src="{{ s4_img }}" alt="" loading="lazy">
+      <span class="claudio-shot-label">{{ section.settings.shot4_label }}</span>
+    </div>
+    <div class="claudio-shot s5 claudio-shot--dark">
+      <img src="{{ s5_img }}" alt="" loading="lazy">
+      <span class="claudio-shot-label">{{ section.settings.shot5_label }}</span>
+    </div>
+    <div class="claudio-shot s6">
+      <img src="{{ s6_img }}" alt="" loading="lazy">
+      <span class="claudio-shot-label">{{ section.settings.shot6_label }}</span>
+    </div>
+    <div class="claudio-shot s7">
+      <video src="{{ s7_video }}" autoplay loop muted playsinline></video>
+      <span class="claudio-shot-label">{{ section.settings.shot7_label }}</span>
+    </div>
+    <div class="claudio-shot s8 claudio-shot--dark">
+      <video src="{{ s8_video }}" autoplay loop muted playsinline></video>
+      <span class="claudio-shot-label">{{ section.settings.shot8_label }}</span>
+    </div>
+    <div class="claudio-shot claudio-shot--reel sreel">
+      <video src="{{ reel_url }}" autoplay loop muted playsinline></video>
+      <div class="claudio-reel-overlay">
+        <div class="claudio-reel-top-grad"></div>
+        <div class="claudio-reel-bot-grad"></div>
+        <div class="claudio-reel-progress"><div class="claudio-reel-progress-fill"></div></div>
+        <div class="claudio-reel-actions">
+          <div class="claudio-reel-action">
+            <svg viewBox="0 0 24 24" fill="#fff"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            <span class="claudio-reel-action-count">{{ section.settings.reel_likes }}</span>
+          </div>
+          <div class="claudio-reel-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span class="claudio-reel-action-count">{{ section.settings.reel_comments }}</span>
+          </div>
+          <div class="claudio-reel-action">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="#fff" stroke="none"/></svg>
+            <span class="claudio-reel-action-count">{{ section.settings.reel_shares }}</span>
+          </div>
+          <div class="claudio-reel-vinyl-wrap"><div class="claudio-reel-vinyl-dot"></div></div>
+        </div>
+        <div class="claudio-reel-bottom">
+          <div class="claudio-reel-user">
+            <div class="claudio-reel-avatar"></div>
+            <span class="claudio-reel-username">{{ section.settings.ig_username }}</span>
+            <button class="claudio-reel-follow">Seguir</button>
+          </div>
+          <p class="claudio-reel-caption">{{ section.settings.reel_caption }}</p>
+          <div class="claudio-reel-audio-row">
+            <span class="claudio-reel-audio-note">♪</span>
+            <span class="claudio-reel-audio-text">Audio original · {{ section.settings.ig_username }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vídeo cover (móvil) -->
+  <div class="claudio-sobre__video-cover">
+    <video src="{{ reel_url }}" autoplay loop muted playsinline></video>
+    <div class="claudio-sobre__video-text">
+      <span class="claudio-sobre__tag">{{ section.settings.tag }}</span>
+      <h2 class="claudio-sobre__title">{{ section.settings.title }}</h2>
+    </div>
+  </div>
+
+  <!-- Texto inferior (móvil) -->
+  <div class="claudio-sobre__text-below">
+    <div class="claudio-sobre__body-mobile">{{ section.settings.body }}</div>
+    {%- if section.settings.est_text != blank -%}
+      <p class="claudio-sobre__est">{{ section.settings.est_text }}</p>
+    {%- endif -%}
+    <div class="claudio-sobre__btns">
+      {%- if section.settings.instagram_url != blank -%}
+        <a class="claudio-sobre__btn" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+      {%- endif -%}
+      {%- if section.settings.tiktok_url != blank -%}
+        <a class="claudio-sobre__btn" href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  <!-- Info (desktop) -->
+  <div class="claudio-sobre__info">
+    <p class="claudio-sobre__tag">{{ section.settings.tag }}</p>
+    <div class="claudio-sobre__divider"></div>
+    <h2 class="claudio-sobre__title">{{ section.settings.title }}</h2>
+    <div class="claudio-sobre__body">{{ section.settings.body }}</div>
+    {%- if section.settings.est_text != blank -%}
+      <p class="claudio-sobre__est">{{ section.settings.est_text }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank -%}
+      <p class="claudio-sobre__cta-label">{{ section.settings.cta_label }}</p>
+    {%- endif -%}
+    <div class="claudio-sobre__btns">
+      {%- if section.settings.instagram_url != blank -%}
+        <a class="claudio-sobre__btn" href="{{ section.settings.instagram_url }}" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          Instagram
+        </a>
+      {%- endif -%}
+      {%- if section.settings.tiktok_url != blank -%}
+        <a class="claudio-sobre__btn" href="{{ section.settings.tiktok_url }}" target="_blank" rel="noopener">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.19 8.19 0 004.79 1.52V6.77a4.85 4.85 0 01-1.02-.08z"/></svg>
+          TikTok
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+.claudio-sobre {
+  background: rgb(14,14,14);
+  min-height: 100vh; padding: 100px 80px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 80px; overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+.claudio-sobre__cluster { position: relative; width: 580px; height: 540px; flex-shrink: 0; }
+.claudio-shot {
+  position: absolute; border-radius: 10px; overflow: hidden;
+  background: #1c1c1c;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.claudio-shot::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; z-index: 2;
+  background: linear-gradient(90deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+.claudio-shot img, .claudio-shot video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.claudio-shot-label {
+  position: absolute; bottom: 10px; left: 0; right: 0; text-align: center; z-index: 1;
+  font-size: 0.55rem; font-weight: 300;
+  letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.12);
+}
+.claudio-shot--dark { background: #161616; }
+
+/* Posiciones del cluster */
+.claudio-ca .s1 { width:200px; height:250px; left:140px; top:100px; transform:rotate(-4deg); z-index:4; }
+.claudio-ca .s2 { width:185px; height:231px; left:308px; top:158px; transform:rotate(6deg); z-index:5; }
+.claudio-ca .s3 { width:120px; height:260px; left:8px;   top:122px; transform:rotate(-8deg); z-index:2; }
+.claudio-ca .s4 { width:195px; height:244px; left:55px;  top:252px; transform:rotate(3deg); z-index:3; }
+.claudio-ca .s5 { width:118px; height:255px; left:432px; top:95px; transform:rotate(7deg); z-index:2; }
+.claudio-ca .s6 { width:180px; height:225px; left:318px; top:292px; transform:rotate(-5deg); z-index:6; }
+.claudio-ca .s7 { width:165px; height:220px; left:190px; top:300px; transform:rotate(2deg); z-index:3; }
+.claudio-ca .s8 { width:112px; height:242px; left:455px; top:250px; transform:rotate(-9deg); z-index:1; }
+.claudio-ca .sreel {
+  width: 190px; height: 336px;
+  left: 195px; top: 102px;
+  transform: rotate(-3deg); z-index: 10;
+  box-shadow: 0 20px 64px rgba(0,0,0,0.85), 0 4px 16px rgba(0,0,0,0.6);
+}
+.claudio-ca .s1:hover { transform:rotate(-4deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s2:hover { transform:rotate(6deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s3:hover { transform:rotate(-8deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s4:hover { transform:rotate(3deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s5:hover { transform:rotate(7deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s6:hover { transform:rotate(-5deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s7:hover { transform:rotate(2deg)  scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .s8:hover { transform:rotate(-9deg) scale(1.05); z-index:20; box-shadow:0 16px 48px rgba(0,0,0,0.85); }
+.claudio-ca .sreel:hover { transform:rotate(-3deg) scale(1.04); z-index:20; box-shadow:0 24px 72px rgba(0,0,0,0.9); }
+
+/* Reel UI */
+@keyframes claudio-spin-vinyl { to { transform: rotate(360deg); } }
+.claudio-shot--reel { background: #000; }
+.claudio-shot--reel::before { display: none; }
+.claudio-shot--reel video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+.claudio-reel-overlay { position: absolute; inset: 0; pointer-events: none; }
+.claudio-reel-top-grad { position: absolute; top: 0; left: 0; right: 0; height: 30%; background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%, transparent 100%); }
+.claudio-reel-bot-grad { position: absolute; bottom: 0; left: 0; right: 0; height: 58%; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 50%, transparent 100%); }
+.claudio-reel-progress { position: absolute; top: 5px; left: 6px; right: 6px; height: 2px; background: rgba(255,255,255,0.22); border-radius: 1px; z-index: 2; }
+.claudio-reel-progress-fill { height: 100%; width: 32%; background: #fff; border-radius: 1px; }
+.claudio-reel-actions { position: absolute; right: 5px; bottom: 54px; display: flex; flex-direction: column; align-items: center; gap: 9px; }
+.claudio-reel-action { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.claudio-reel-action svg { width: 15px; height: 15px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.6)); }
+.claudio-reel-action-count { font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); line-height: 1; }
+.claudio-reel-vinyl-wrap { width: 19px; height: 19px; border-radius: 50%; background: radial-gradient(circle, #444 0%, #111 100%); border: 1.5px solid rgba(255,255,255,0.25); display: flex; align-items: center; justify-content: center; animation: claudio-spin-vinyl 4s linear infinite; }
+.claudio-reel-vinyl-dot { width: 5px; height: 5px; border-radius: 50%; background: #000; border: 1px solid rgba(255,255,255,0.2); }
+.claudio-reel-bottom { position: absolute; bottom: 6px; left: 6px; right: 26px; }
+.claudio-reel-user { display: flex; align-items: center; gap: 4px; margin-bottom: 3px; }
+.claudio-reel-avatar { width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0; background: var(--accent); border: 1.5px solid #fff; }
+.claudio-reel-username { font-family: -apple-system, sans-serif; font-size: 7.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,0.6); white-space: nowrap; }
+.claudio-reel-follow { margin-left: 2px; border: 1px solid rgba(255,255,255,0.85); background: transparent; font-family: -apple-system, sans-serif; font-size: 5.5px; font-weight: 700; color: #fff; padding: 1.5px 4px; border-radius: 3px; cursor: pointer; white-space: nowrap; }
+.claudio-reel-caption { font-family: -apple-system, sans-serif; font-size: 6.5px; font-weight: 400; color: rgba(255,255,255,0.92); line-height: 1.35; margin-bottom: 4px; text-shadow: 0 1px 2px rgba(0,0,0,0.6); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; }
+.claudio-reel-audio-row { display: flex; align-items: center; gap: 3px; overflow: hidden; }
+.claudio-reel-audio-note { font-size: 7px; color: #fff; flex-shrink: 0; }
+.claudio-reel-audio-text { font-family: -apple-system, sans-serif; font-size: 6px; font-weight: 400; color: rgba(255,255,255,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Info lateral (desktop) */
+.claudio-sobre__info { display: flex; flex-direction: column; max-width: 360px; }
+.claudio-sobre__tag {
+  font-size: 0.65rem; font-weight: 500;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 24px; transition: color 3s ease;
+}
+.claudio-sobre__divider { width: 40px; height: 1px; background: rgba(255,255,255,0.12); margin-bottom: 28px; }
+.claudio-sobre__title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800;
+  font-size: clamp(2.8rem, 4.5vw, 4.2rem); line-height: 1;
+  text-transform: uppercase; color: #fff; margin-bottom: 24px;
+}
+.claudio-sobre__body, .claudio-sobre__body p {
+  font-size: 0.92rem; font-weight: 300; line-height: 1.9;
+  color: rgba(255,255,255,0.72); margin-bottom: 40px;
+}
+.claudio-sobre__est {
+  display: block; margin-top: -28px; margin-bottom: 40px;
+  font-size: 0.92rem; font-weight: 300;
+  color: rgba(255,255,255,0.72);
+}
+.claudio-sobre__cta-label {
+  font-size: 1.1rem; font-weight: 400;
+  color: rgba(255,255,255,0.55); margin-bottom: 16px;
+}
+.claudio-sobre__btns { display: flex; gap: 12px; flex-wrap: wrap; }
+.claudio-sobre__btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none;
+  background: transparent; border: 1px solid rgba(255,255,255,0.18);
+  color: var(--accent);
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.18em; text-transform: uppercase; padding: 14px 24px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.claudio-sobre__btn:hover { border-color: var(--accent); background: rgba(236,103,104,0.08); }
+.claudio-sobre__btn svg { flex-shrink: 0; }
+
+/* Móvil */
+.claudio-sobre__video-cover { display: none; }
+.claudio-sobre__text-below { display: none; }
+
+@media (max-width: 768px) {
+  .claudio-sobre {
+    padding: 0; flex-direction: column; gap: 0;
+    min-height: unset; overflow: visible;
+  }
+  .claudio-sobre__cluster { display: none; }
+  .claudio-sobre__info { display: none; }
+  .claudio-sobre__video-cover {
+    display: flex; position: relative;
+    width: 100%; height: 70vh; min-height: 480px;
+    overflow: hidden; align-items: flex-end;
+  }
+  .claudio-sobre__video-cover video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+  }
+  .claudio-sobre__video-cover::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+    z-index: 1;
+  }
+  .claudio-sobre__video-text {
+    position: relative; z-index: 2;
+    padding: 0 28px 36px; width: 100%;
+  }
+  .claudio-sobre__video-text .claudio-sobre__tag {
+    color: var(--accent); margin-bottom: 12px; display: block;
+  }
+  .claudio-sobre__video-text .claudio-sobre__title {
+    font-size: clamp(2.4rem, 9vw, 3.2rem); color: #fff; margin-bottom: 0;
+  }
+  .claudio-sobre__text-below {
+    display: block; padding: 36px 28px 72px; text-align: center;
+  }
+  .claudio-sobre__text-below .claudio-sobre__body-mobile,
+  .claudio-sobre__text-below .claudio-sobre__body-mobile p {
+    font-size: 0.9rem; font-weight: 300; line-height: 1.9;
+    color: rgba(255,255,255,0.72); margin-bottom: 8px;
+  }
+  .claudio-sobre__text-below .claudio-sobre__est {
+    font-size: 0.9rem; margin-top: 0; margin-bottom: 28px;
+    color: rgba(255,255,255,0.72);
+  }
+  .claudio-sobre__text-below .claudio-sobre__btns {
+    justify-content: center; gap: 12px;
+  }
+  .claudio-sobre__text-below .claudio-sobre__btn {
+    border-color: rgba(255,255,255,0.25);
+    padding: 12px 20px; font-size: 0.7rem;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Claudio Sobre",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Textos"
+    },
+    {
+      "type": "text",
+      "id": "tag",
+      "label": "Etiqueta superior",
+      "default": "@cl4u8io · Instagram"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Título",
+      "default": "Todo empieza en la calle"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Cuerpo del texto",
+      "default": "<p>• encontrado • pintado • dejado en la calle •</p>"
+    },
+    {
+      "type": "text",
+      "id": "est_text",
+      "label": "Línea secundaria (debajo del cuerpo)",
+      "default": "est. 2023 — by claudio portalo"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Label antes de los botones (déjalo vacío para no mostrarlo)"
+    },
+    {
+      "type": "header",
+      "content": "Redes"
+    },
+    {
+      "type": "text",
+      "id": "ig_username",
+      "label": "Usuario IG (sin @)",
+      "default": "cl4u8io"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "URL Instagram"
+    },
+    {
+      "type": "url",
+      "id": "tiktok_url",
+      "label": "URL TikTok"
+    },
+    {
+      "type": "header",
+      "content": "Vídeo Reel (centro del cluster + cover móvil)"
+    },
+    {
+      "type": "url",
+      "id": "reel_video",
+      "label": "URL del vídeo reel (.mp4)",
+      "info": "Súbelo en Contenido → Archivos y pega la URL aquí."
+    },
+    {
+      "type": "text",
+      "id": "reel_caption",
+      "label": "Caption del reel",
+      "default": "encontrado, pintado, dejado en la calle 🎨"
+    },
+    {
+      "type": "text",
+      "id": "reel_likes",
+      "label": "Likes (texto)",
+      "default": "8.4K"
+    },
+    {
+      "type": "text",
+      "id": "reel_comments",
+      "label": "Comentarios (texto)",
+      "default": "312"
+    },
+    {
+      "type": "text",
+      "id": "reel_shares",
+      "label": "Compartidos (texto)",
+      "default": "1.2K"
+    },
+    {
+      "type": "header",
+      "content": "Shot 1 — Imagen"
+    },
+    { "type": "image_picker", "id": "shot1_image", "label": "Imagen (default sobre-05.jpg)" },
+    { "type": "text", "id": "shot1_label", "label": "Etiqueta", "default": "post · claudio pintado" },
+    {
+      "type": "header",
+      "content": "Shot 2 — Vídeo"
+    },
+    { "type": "url", "id": "shot2_video", "label": "URL vídeo (.mp4)" },
+    { "type": "text", "id": "shot2_label", "label": "Etiqueta", "default": "post · claudio en la calle" },
+    {
+      "type": "header",
+      "content": "Shot 3 — Vídeo"
+    },
+    { "type": "url", "id": "shot3_video", "label": "URL vídeo (.mp4)" },
+    { "type": "text", "id": "shot3_label", "label": "Etiqueta", "default": "story · proceso" },
+    {
+      "type": "header",
+      "content": "Shot 4 — Imagen"
+    },
+    { "type": "image_picker", "id": "shot4_image", "label": "Imagen (default sobre-04.jpg)" },
+    { "type": "text", "id": "shot4_label", "label": "Etiqueta", "default": "post · madera encontrada" },
+    {
+      "type": "header",
+      "content": "Shot 5 — Imagen"
+    },
+    { "type": "image_picker", "id": "shot5_image", "label": "Imagen (default sobre-01.jpg)" },
+    { "type": "text", "id": "shot5_label", "label": "Etiqueta", "default": "story · reacción" },
+    {
+      "type": "header",
+      "content": "Shot 6 — Imagen"
+    },
+    { "type": "image_picker", "id": "shot6_image", "label": "Imagen (default sobre-02.jpg)" },
+    { "type": "text", "id": "shot6_label", "label": "Etiqueta", "default": "dm · dónde comprar" },
+    {
+      "type": "header",
+      "content": "Shot 7 — Vídeo"
+    },
+    { "type": "url", "id": "shot7_video", "label": "URL vídeo (.mp4)" },
+    { "type": "text", "id": "shot7_label", "label": "Etiqueta", "default": "perfil · @cl4u8io" },
+    {
+      "type": "header",
+      "content": "Shot 8 — Vídeo"
+    },
+    { "type": "url", "id": "shot8_video", "label": "URL vídeo (.mp4)" },
+    { "type": "text", "id": "shot8_label", "label": "Etiqueta", "default": "story · drop" },
+    {
+      "type": "header",
+      "content": "Color"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Color de acento",
+      "default": "#EC6768"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Claudio Sobre",
+      "settings": {
+        "instagram_url": "https://instagram.com/cl4u8io",
+        "tiktok_url": "https://tiktok.com/@cl4u8io"
+      }
+    }
+  ]
+}
+{% endschema %}
