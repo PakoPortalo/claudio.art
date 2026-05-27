@@ -25,7 +25,12 @@
   endif
 -%}
 
-<section class="claudio-drop" id="drop" data-state="{{ state }}" style="--accent: {{ section.settings.accent_color }};">
+<section class="claudio-drop"
+  id="drop"
+  data-state="{{ state }}"
+  data-purchases-enabled="{{ section.settings.purchases_enabled }}"
+  data-purchases-disabled-msg="{{ section.settings.purchases_disabled_msg | escape }}"
+  style="--accent: {{ section.settings.accent_color }};">
 
   {%- comment -%}
     Mapa nombre-de-color → datos del producto (id de la primera variante, image, available, price, url).
@@ -345,6 +350,11 @@
     grid-template-columns: 1fr; gap: 48px;
   }
   .claudio-cd__unit { min-width: 60px; }
+  /* Bloque "Disponible" centrado horizontalmente en móvil. */
+  .claudio-drop__info { align-items: center; text-align: center; }
+  .claudio-drop__divider { margin-left: auto; margin-right: auto; }
+  .claudio-drop__body { margin-left: auto; margin-right: auto; }
+  .claudio-drop__btn { align-self: center; }
 }
 {% endstylesheet %}
 
@@ -539,9 +549,15 @@
   // ─── Add to cart ────────────────────────────────────────────
   const addBtn = root.querySelector('[data-drop-add]');
   const errEl  = root.querySelector('[data-drop-add-err]');
+  const purchasesEnabled = root.dataset.purchasesEnabled === 'true';
+  const disabledMsg = root.dataset.purchasesDisabledMsg || 'Actualmente no disponibles.';
   if (addBtn) {
     addBtn.addEventListener('click', async () => {
       if (errEl) { errEl.hidden = true; errEl.textContent = ''; }
+      if (!purchasesEnabled) {
+        if (errEl) { errEl.textContent = disabledMsg; errEl.hidden = false; }
+        return;
+      }
       if (!colorMap) {
         if (errEl) { errEl.textContent = 'Configura el producto en el editor.'; errEl.hidden = false; }
         return;
@@ -706,6 +722,23 @@
       "id": "accent_color",
       "label": "Color de acento",
       "default": "#EC6768"
+    },
+    {
+      "type": "header",
+      "content": "Ventas"
+    },
+    {
+      "type": "checkbox",
+      "id": "purchases_enabled",
+      "label": "Compras activadas",
+      "default": false,
+      "info": "Si está desactivado, el botón muestra un mensaje en vez de añadir al carrito."
+    },
+    {
+      "type": "text",
+      "id": "purchases_disabled_msg",
+      "label": "Mensaje cuando compras desactivadas",
+      "default": "Actualmente no disponibles. ¡Muy pronto os avisaremos!"
     }
   ],
   "presets": [

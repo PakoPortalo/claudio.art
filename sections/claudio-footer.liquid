@@ -27,15 +27,19 @@
             {%- if block.settings.title != blank -%}
               <span class="claudio-footer__col-title">{{ block.settings.title }}</span>
             {%- endif -%}
-            {%- if block.settings.link_1_label != blank -%}
-              <a href="{{ block.settings.link_1_url }}">{{ block.settings.link_1_label }}</a>
-            {%- endif -%}
-            {%- if block.settings.link_2_label != blank -%}
-              <a href="{{ block.settings.link_2_url }}">{{ block.settings.link_2_label }}</a>
-            {%- endif -%}
-            {%- if block.settings.link_3_label != blank -%}
-              <a href="{{ block.settings.link_3_url }}">{{ block.settings.link_3_label }}</a>
-            {%- endif -%}
+            {%- for i in (1..3) -%}
+              {%- assign label_key = 'link_' | append: i | append: '_label' -%}
+              {%- assign url_key   = 'link_' | append: i | append: '_url' -%}
+              {%- assign label = block.settings[label_key] -%}
+              {%- assign url   = block.settings[url_key] -%}
+              {%- if label != blank -%}
+                {%- if url contains 'http' -%}
+                  <a href="{{ url }}" target="_blank" rel="noopener">{{ label }}</a>
+                {%- else -%}
+                  <a href="{{ url }}">{{ label }}</a>
+                {%- endif -%}
+              {%- endif -%}
+            {%- endfor -%}
           </div>
         {%- endif -%}
       {%- endfor -%}
@@ -53,19 +57,31 @@
     <span class="claudio-footer__legal">
       {{ section.settings.copyright }}
       {%- if shop.privacy_policy != blank -%}
-        &nbsp;·&nbsp;<a href="{{ shop.privacy_policy.url }}">{{ shop.privacy_policy.title | default: 'Política de privacidad' }}</a>
+        &nbsp;·&nbsp;<a href="{{ shop.privacy_policy.url }}">Política de privacidad</a>
+      {%- endif -%}
+      {%- if shop.refund_policy != blank -%}
+        &nbsp;·&nbsp;<a href="{{ shop.refund_policy.url }}">Política de devoluciones</a>
+      {%- endif -%}
+      {%- if shop.shipping_policy != blank -%}
+        &nbsp;·&nbsp;<a href="{{ shop.shipping_policy.url }}">Política de envíos</a>
+      {%- endif -%}
+      {%- if shop.terms_of_service != blank -%}
+        &nbsp;·&nbsp;<a href="{{ shop.terms_of_service.url }}">Términos del servicio</a>
+      {%- endif -%}
+      {%- if shop.legal_notice != blank -%}
+        &nbsp;·&nbsp;<a href="{{ shop.legal_notice.url }}">Aviso legal</a>
       {%- endif -%}
       {%- if section.settings.cookies_url != blank -%}
         &nbsp;·&nbsp;<a href="{{ section.settings.cookies_url }}">Política de cookies</a>
-      {%- endif -%}
-      {%- if section.settings.legal_notice_url != blank -%}
-        &nbsp;·&nbsp;<a href="{{ section.settings.legal_notice_url }}">Aviso legal</a>
       {%- endif -%}
     </span>
     <div class="claudio-footer__socials">
       {%- for block in section.blocks -%}
         {%- if block.type == 'social' -%}
-          <a href="{{ block.settings.url }}" {{ block.shopify_attributes }} target="_blank" rel="noopener">{{ block.settings.label }}</a>
+          <a class="claudio-footer__social" href="{{ block.settings.url }}" {{ block.shopify_attributes }} data-claudio-reveal>
+            <span class="claudio-footer__social-label">{{ block.settings.label }}</span>
+            <img class="claudio-footer__social-logo" src="{{ 'claudio-logo.svg' | asset_url }}" alt="Claudio" aria-hidden="true" width="82" height="22">
+          </a>
         {%- endif -%}
       {%- endfor -%}
     </div>
@@ -137,12 +153,30 @@
   color: inherit; text-decoration: underline;
 }
 .claudio-footer__legal a:hover { color: #fff; }
-.claudio-footer__socials { display: flex; gap: 20px; }
-.claudio-footer__socials a {
+.claudio-footer__socials { display: flex; gap: 20px; align-items: center; }
+.claudio-footer__social {
+  /* Texto y logo apilados en la misma celda → ocupan exactamente el mismo
+     espacio. Al hacer toggle, uno se desvanece y el otro aparece en el sitio. */
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  align-items: center; justify-items: end;
   font-size: 0.7rem; color: rgba(255,255,255,0.65);
   text-decoration: none; transition: color 0.2s;
 }
-.claudio-footer__socials a:hover { color: var(--accent, #EC6768); }
+.claudio-footer__social:hover { color: var(--accent, #EC6768); }
+.claudio-footer__social-label,
+.claudio-footer__social-logo {
+  grid-area: 1 / 1;
+  transition: opacity 0.6s ease;
+}
+.claudio-footer__social-logo {
+  height: 22px; width: auto;
+  opacity: 0;
+  pointer-events: none;
+  filter: invert(1);
+}
+.claudio-footer__social.is-revealed .claudio-footer__social-label { opacity: 0; }
+.claudio-footer__social.is-revealed .claudio-footer__social-logo { opacity: 0.9; }
 
 @media (max-width: 768px) {
   .claudio-footer { padding: 48px 24px 32px; }
@@ -152,6 +186,17 @@
   .claudio-footer__bottom { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
 {% endstylesheet %}
+
+<script>
+  (function(){
+    document.querySelectorAll('.claudio-footer__social[data-claudio-reveal]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        el.classList.toggle('is-revealed');
+      });
+    });
+  })();
+</script>
 
 {% schema %}
 {
@@ -178,7 +223,7 @@
     },
     { "type": "text",     "id": "privacy_title", "label": "Título RGPD", "default": "Privacidad y datos" },
     { "type": "richtext", "id": "privacy_text",  "label": "Texto RGPD",
-      "default": "<p>Al suscribirte a la lista de correo, aceptas que Claudio trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros. Puedes darte de baja en cualquier momento mediante el enlace de cada correo o escribiéndonos a <a href=\"mailto:hola@soyclaudio.es\">hola@soyclaudio.es</a>. Tratamiento conforme al RGPD y la LOPDGDD.</p>" },
+      "default": "<p>Al suscribirte a la lista de correo, aceptas que Claudio trate tu dirección de email con el único fin de enviarte comunicaciones sobre drops, obras y novedades. Tus datos no se ceden a terceros. Puedes darte de baja en cualquier momento mediante el enlace de cada correo o escribiéndonos a <a href=\"mailto:hipermodernism@gmail.com\">hipermodernism@gmail.com</a>. Tratamiento conforme al RGPD y la LOPDGDD.</p>" },
 
     {
       "type": "header",
@@ -192,19 +237,13 @@
     },
     {
       "type": "paragraph",
-      "content": "La Política de privacidad se enlaza automáticamente desde Configuración → Políticas de Shopify."
+      "content": "Privacy, devoluciones, envíos, términos y aviso legal se enlazan automáticamente desde Settings → Policies de Shopify."
     },
     {
       "type": "url",
       "id": "cookies_url",
       "label": "URL Política de cookies",
-      "info": "Crea la página en Tienda online → Páginas (sugerencia: /pages/politica-de-cookies)."
-    },
-    {
-      "type": "url",
-      "id": "legal_notice_url",
-      "label": "URL Aviso legal",
-      "info": "Crea la página en Tienda online → Páginas (sugerencia: /pages/aviso-legal)."
+      "info": "Crea la página manualmente en Online Store → Pages (sugerencia: /pages/politica-de-cookies). Shopify no tiene este campo en Policies."
     }
   ],
   "blocks": [

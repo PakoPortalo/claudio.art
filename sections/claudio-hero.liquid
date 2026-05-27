@@ -43,7 +43,7 @@
     alt="Claudio"
   >
 
-  <p class="claudio-hero__subtitle">{{ section.settings.subtitle }}</p>
+  <p class="claudio-hero__subtitle">{{ section.settings.subtitle | newline_to_br }}</p>
 
   <div class="claudio-hero__scroll" onclick="document.getElementById('drop')?.scrollIntoView({behavior:'smooth'})">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -58,13 +58,9 @@
     if (!hero) return;
     var video = hero.querySelector('.claudio-hero__video');
     if (!video) return;
-    var showFallback = function(){ hero.classList.add('is-fallback'); };
-    video.addEventListener('error', showFallback);
-    video.addEventListener('stalled', showFallback);
-    // autoplay may be silently blocked (no error event) — sanity check after 2s
-    setTimeout(function(){
-      if (video.paused && video.currentTime === 0) showFallback();
-    }, 2000);
+    // Empujón explícito al autoplay; si falla (iOS bajo consumo), el navegador
+    // muestra su propio botón play nativo encima del vídeo.
+    video.play().catch(function(){});
   })();
 </script>
 
@@ -208,7 +204,9 @@
             const heroH=hero.clientHeight,heroW=hero.clientWidth;
             const imgW=Math.min(heroW*0.8,400);
             const lh=imgW/(4502/1209);
-            setSubtitleBelowLogo(heroH*0.4+lh/2);
+            // El 0.28 debe coincidir con el `top:` del .claudio-hero__logo-static
+            // en el media query de móvil (más abajo en el stylesheet).
+            setSubtitleBelowLogo(heroH*0.26+lh/2);
           }
           calcMobileSubtitle();
           window.addEventListener('resize',calcMobileSubtitle);
@@ -244,8 +242,8 @@
   background-repeat: no-repeat;
   filter: grayscale(100%);
 }
-.claudio-hero.is-fallback .claudio-hero__poster { display: block; }
-.claudio-hero.is-fallback .claudio-hero__video  { display: none; }
+/* Poster screenshot deshabilitado por petición — nunca aparece. */
+.claudio-hero__poster { display: none !important; }
 .claudio-hero__overlay {
   position: absolute; inset: 0;
   background: var(--accent);
@@ -310,10 +308,18 @@
 }
 @media (max-width: 768px) {
   .claudio-hero__canvas { display: none; }
-  .claudio-hero__logo-static { display: block; }
+  .claudio-hero__logo-static {
+    display: block;
+    /* Subimos logo y subtítulo en móvil para que queden encima del botón
+       nativo de iOS (que se dibuja centrado al 50% y no se puede mover).
+       Ajusta este `top` a gusto: menor = más arriba. */
+    top: 28%;
+  }
   .claudio-hero__subtitle {
     font-size: 0.6rem;
     letter-spacing: 0.04em;
+    /* Antes 67%; lo subimos para que se vea encima del botón nativo iOS. */
+    top: 38%;
   }
 }
 {% endstylesheet %}
@@ -345,10 +351,11 @@
       "content": "Texto"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "subtitle",
       "label": "Subtítulo",
-      "default": "yo tan sólo soy un inquilino en este mundo de plástico, un chatarrero limpiando el espacio"
+      "info": "Pulsa Enter donde quieras un salto de línea.",
+      "default": "yo tan sólo soy un inquilino en este mundo de plástico,\nun chatarrero limpiando el espacio"
     },
     {
       "type": "header",

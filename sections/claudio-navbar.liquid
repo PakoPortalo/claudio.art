@@ -124,6 +124,12 @@
 </div>
 
 {% stylesheet %}
+/* Páginas legales y page genéricas no tienen hero a pantalla completa,
+   así que el navbar fijo (52px) tapa el título. Empujamos el contenido. */
+main.claudio-padded-top {
+  padding-top: 80px;
+}
+
 .claudio-navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   width: 100%;

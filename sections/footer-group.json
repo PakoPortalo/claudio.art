@@ -15,8 +15,8 @@
             "title": "Tienda",
             "link_1_label": "Claudios",
             "link_1_url": "/#drop",
-            "link_2_label": "Camiseta",
-            "link_2_url": "/#camiseta"
+            "link_2_label": "Carrito",
+            "link_2_url": "/cart"
           }
         },
         "mas": {
@@ -26,7 +26,7 @@
             "link_1_label": "Sobre Claudio",
             "link_1_url": "/#sobre",
             "link_2_label": "Contacto",
-            "link_2_url": "mailto:hola@soyclaudio.es"
+            "link_2_url": "mailto:hipermodernism@gmail.com"
           }
         },
         "redes": {
@@ -45,21 +45,13 @@
             "label": "@cl4u8io",
             "url": "https://instagram.com/cl4u8io"
           }
-        },
-        "social_2": {
-          "type": "social",
-          "settings": {
-            "label": "Instagram",
-            "url": "https://instagram.com/cl4u8io"
-          }
         }
       },
       "block_order": [
         "tienda",
         "mas",
         "redes",
-        "social_1",
-        "social_2"
+        "social_1"
       ],
       "settings": {}
     }

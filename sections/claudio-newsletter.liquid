@@ -2,9 +2,17 @@
   ─────────────────────────────────────────────────────────────────
   CLAUDIO — Newsletter
   Fondo color accent. Form de email → Shopify Customers con tag "newsletter".
-  Aparece en footer-group, presente en todas las páginas.
+  Aparece en footer-group salvo en páginas legales (policies/page) donde
+  rompe el tono.
   ─────────────────────────────────────────────────────────────────
 {%- endcomment -%}
+
+{%- assign hide_newsletter = false -%}
+{%- if request.page_type == 'policy' or request.page_type == 'page' -%}
+  {%- assign hide_newsletter = true -%}
+{%- endif -%}
+
+{%- unless hide_newsletter -%}
 
 <section class="claudio-newsletter" id="claudio-newsletter">
   {%- if section.settings.tag != blank -%}
@@ -44,6 +52,8 @@
     <span class="claudio-newsletter__legal">{{ section.settings.legal }}</span>
   {%- endif -%}
 </section>
+
+{%- endunless -%}
 
 {% stylesheet %}
 .claudio-newsletter {
@@ -120,6 +130,7 @@
     { "type": "text",     "id": "legal", "label": "Texto legal", "default": "Sin spam. Baja cuando quieras." }
   ],
   "enabled_on": {
+    "templates": ["index"],
     "groups": ["footer"]
   }
 }

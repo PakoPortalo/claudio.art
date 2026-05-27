@@ -354,6 +354,38 @@
 }
 {% endstylesheet %}
 
+<script>
+  (function(){
+    var sobre = document.querySelector('.claudio-sobre');
+    if (!sobre) return;
+    var videos = sobre.querySelectorAll('video');
+    // Intento explícito de play(): algunos móviles (iOS) ignoran el atributo
+    // autoplay pero sí permiten play() programático cuando hay energía.
+    var nudge = function(){ videos.forEach(function(v){ v.play().catch(function(){}); }); };
+    nudge();
+    // Re-intentar al entrar al viewport (cubre el reel móvil que está más abajo).
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if (e.isIntersecting) {
+            var v = e.target;
+            if (v.paused) v.play().catch(function(){});
+          }
+        });
+      }, { threshold: 0.2 });
+      videos.forEach(function(v){ io.observe(v); });
+    }
+    // Tap en el reel móvil para forzar play cuando bajo consumo bloquea autoplay.
+    var cover = sobre.querySelector('.claudio-sobre__video-cover');
+    if (cover) {
+      cover.addEventListener('click', function(){
+        var v = cover.querySelector('video');
+        if (v && v.paused) v.play().catch(function(){});
+      });
+    }
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Claudio Sobre",
